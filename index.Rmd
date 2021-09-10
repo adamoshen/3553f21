@@ -1,0 +1,29 @@
+---
+title: "Stat 3553: Regression Modelling"
+subtitle: "Fall 2021"
+author: "Adam Shen"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+site: bookdown::bookdown_site
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, message=FALSE, warning=FALSE)
+```
+
+# Session info {.unlisted .unnumbered}
+
+```{r, echo=FALSE, eval=FALSE}
+cat(
+  R.version.string,
+  paste("RStudio version", rstudioapi::getVersion()),
+  sessioninfo::os_name(),
+  sep="\n"
+)
+```
+
+```
+R version 4.0.3 (2020-10-10)
+RStudio version 1.4.1106
+Windows 10 x64
+```
+

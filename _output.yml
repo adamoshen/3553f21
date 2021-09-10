@@ -1,0 +1,10 @@
+bookdown::bs4_book:
+  theme:
+    primary: "#ff6c00"
+    base_font:
+      google: "IBM Plex Sans"
+    heading_font:
+      google: "IBM Plex Sans"
+    code_font:
+      google: "IBM Plex Mono"
+  md_extensions: -smart
