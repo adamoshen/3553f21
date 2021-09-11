@@ -7,12 +7,12 @@ site: bookdown::bookdown_site
 ---
 
 ```{r, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE, message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 ```
 
-# Session info {.unlisted .unnumbered}
+# Session info {-}
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE}
 cat(
   R.version.string,
   paste("RStudio version", rstudioapi::getVersion()),
@@ -27,3 +27,9 @@ RStudio version 1.4.1106
 Windows 10 x64
 ```
 
+```{r}
+sessioninfo::package_info(
+  pkgs = c("knitr", "rmarkdown", "bookdown", "bslib", "downlit"),
+  dependencies = FALSE
+)
+```

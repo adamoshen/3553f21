@@ -7,4 +7,7 @@ bookdown::bs4_book:
       google: "IBM Plex Sans"
     code_font:
       google: "IBM Plex Mono"
+  repo:
+    base: "https://github.com/adamoshen/3553f21"
+    branch: "main"
   md_extensions: -smart

@@ -3,5 +3,11 @@ review-of-r-basics
 configure-rstudio-settings
 console-pane
 source-pane
+environment-pane
+comments
 variables
 vectors
+data-frames
+file-and-folder-paths
+reading-in-data
+getting-help

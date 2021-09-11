@@ -9,11 +9,15 @@ knitr::opts_chunk$set(
 ## Review of R basics
 
 **R** is the name of the programming language. **RStudio** is the name of the integrated development
-environment (IDE). The program you should be running is **RStudio**.
+environment (IDE). The application you should be running is **RStudio**.
 
 If you do not already have these, **R** can be downloaded [here](https://utstat.toronto.edu/cran/). 
 **RStudio** (desktop version) can be downloaded 
-[here](https://www.rstudio.com/products/rstudio/#rstudio-desktop).
+[here](https://www.rstudio.com/products/rstudio/#rstudio-desktop). **R** should be installed before
+installing **RStudio**. 
+
+If you already have **R** installed on your device, ensure that the version is >= 4.0.0. Otherwise,
+use the links above to install the latest version.
 
 
 ### Configure RStudio settings
@@ -44,28 +48,148 @@ create line breaks.
 
 ### Source pane
 
+When the RStudio application is opened, the **Source** pane is hidden by default. The **Source**
+pane is where you modify your R scripts. It is strongly recommended that you save all your important
+code (code that you may need to revisit at a later date) inside a R script file. A new R script can
+be created using:
+
+-   `File -> New File -> R Script`, or
+-   <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>N</kbd>, or
+-   Clicking <img src="./img/new-file.png"> and selecting "R Script"
+
+The **Source** pane will appear in the top left when there is an open R script. 
+*(Open the below image in a new tab if it is too small)*
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("./img/rstudio-source.png")
+```
+
+Code that is typed in a script file is not evaluated upon pressing <kbd>Enter</kbd>. Code must be
+sent from the **Source** to the **Console** for evaluation.
+
+-   To run a single line of code, place the typing cursor anywhere on the line and press
+<kbd>Ctrl</kbd> + <kbd>Enter</kbd>.
+-   To run multiple lines of code, highlight the desired lines and press <kbd>Ctrl</kbd> + 
+<kbd>Enter</kbd>.
+-   To run an entire script from start to finish, click <img src="./img/source-button.png"> .
 
 
+### Environment pane
+
+The **Environment** pane is the top right pane of RStudio. This pane shows all variables that have
+been initialised in your current R session. All variables in the current R session can be removed
+by clicking the broom icon. Alternatively, switching from *Grid* view to *List* view will allow you
+remove only selected variables.
+
+
+### Comments
+
+Comments can be added to an R script by prepending them with a `#` symbol.
 
 
 ### Variables
 
-Variables are created using the convention `name <- value`. The value of a 
+Variables are created using the convention `name <- value`.
 
 ```{r}
-v1 <- 3
+var1 <- 3
+```
+
+Once a variable has been successfully initialised, it should appear in the **Environment** pane. For
+simple variables, the value of the variable can be seen in the **Environment** pane. For variables
+whose values are not visible in the **Environment** pane, their values can be checked by calling
+them in the **Console**:
+
+```{r}
+var1
+```
+
+or by using RStudio's built-in viewer by typing in the **Console**:
+
+```{r, eval=FALSE}
+View(var1)
 ```
 
 
 ### Vectors
 
-Vectors can be created using the `c()` function with elements separated by commas.
+Vectors are univariate data structures. Vectors can be created using the `c()` function with 
+elements separated by commas.
 
 ```{r}
 nums <- c(9, 12, 20)
 words <- c("apple", "orange", "banana")
 ```
 
+Note that in the example
 
+```{r, eval=FALSE}
+var1 <- 3
+```
+
+`var1` is actually a vector of length 1.
+
+When calling vectors in the **Console**, note that the numbers in the square brackets of the 
+corresponding output represent the position number of the first element of the line.
+
+```{r}
+var2 <- 1:30
+
+var2
+```
+
+The elements of vectors can be extracted by supplying a vector of positive integers inside square 
+brackets. **Note that in R, indices begin at 1.**
+
+```{r}
+var2[7]
+var2[c(2, 7, 9, 11, 20)]
+```
+
+The elements of vectors can be deleted by supplying a vector of negative integers inside square
+brackets. **Note that in R, indices begin at 1.**
+
+```{r}
+var2[-7]
+var2[c(-2, -7, -9, -11, -20)]
+var2[-c(2, 7, 9, 11, 20)]
+```
+
+
+### Data frames
+
+Data frames are multivariate data structures. Data frames can be thought of as a vertical
+concatentation of vectors. In most cases, each column of a data frame contains the values for a 
+single variable and each row of a data frame contains the values of each variable for a single 
+observation. For example, consider the following data set:
+
+```{r}
+patients <- data.frame(
+  patient_id = c("123abc", "28fnr8", "02jr8d", "r82j45", "t90ro5"),
+  height = c(181, 145, 190, 210, 94),
+  mass = c(85, 72, 82, 90, 60),
+  sex = c("M", "F", "M", "F", "F")
+)
+
+patients
+```
+
+In the example above, each column contains the values for a single variable and each row contains
+the values of each variable for a single observation (patient). 
+
+Things to note:
+
+-   Data frames can be created by supplying name-value pairs to the `data.frame()` function.
+-   Name-value pairs are supplied using `=` rather than `<-`.
+-   Each name-value pair must have the same length. Missing values can be represented using `NA`.
+
+
+### File and folder paths
+
+
+### Reading in data
+
+
+### Getting help
 
 
