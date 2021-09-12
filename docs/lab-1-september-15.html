@@ -85,15 +85,17 @@ side. <em>(Open the below image in a new tab if it is too small)</em></p>
 <p>Any code that is typed into the <strong>Console</strong> is evaluated immediately upon pressing <kbd>Enter</kbd>.
 If you need to evaluate multi-line code, <kbd>Shift</kbd> + <kbd>Enter</kbd> should be used to
 create line breaks.</p>
+<p>The <strong>Console</strong> is often used to evaluate code that may not be part of your main analyses. This
+includes checking your work, testing code, modifying settings, etc.</p>
 </div>
 <div id="source-pane" class="section level3" number="1.1.3">
 <h3>
 <span class="header-section-number">1.1.3</span> Source pane<a class="anchor" aria-label="anchor" href="#source-pane"><i class="fas fa-link"></i></a>
 </h3>
 <p>When the RStudio application is opened, the <strong>Source</strong> pane is hidden by default. The <strong>Source</strong>
-pane is where you modify your R scripts. It is strongly recommended that you save all your important
-code (code that you may need to revisit at a later date) inside a R script file. A new R script can
-be created using:</p>
+pane is where you modify your R scripts and type the main code of your analyses. It is strongly
+recommended that you save all your important code (code that you may need to revisit at a later
+date) inside a R script file. A new R script can be created using:</p>
 <ul>
 <li>
 <code>File -&gt; New File -&gt; R Script</code>, or</li>
@@ -146,6 +148,10 @@ them in the <strong>Console</strong>:</p>
 <p>or by using RStudio's built-in viewer by typing in the <strong>Console</strong>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">var1</span><span class="op">)</span></code></pre></div>
+<p>When naming variables, try not to use names that already exist in R as data sets or functions. This
+can be checked by partially typing the variable name and seeing what suggestions come up. For
+example, when reading in data, do not name your variable <code>data</code> since there exists already exists
+a <code><a href="https://rdrr.io/r/utils/data.html">data()</a></code> function in R.</p>
 </div>
 <div id="vectors" class="section level3" number="1.1.7">
 <h3>
@@ -168,6 +174,10 @@ corresponding output represent the position number of the first element of the l
 <span class="va">var2</span></code></pre></div>
 <pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
 ## [26] 26 27 28 29 30</code></pre>
+<div id="extracting-elements" class="section level4" number="1.1.7.1">
+<h4>
+<span class="header-section-number">1.1.7.1</span> Extracting elements<a class="anchor" aria-label="anchor" href="#extracting-elements"><i class="fas fa-link"></i></a>
+</h4>
 <p>The elements of vectors can be extracted by supplying a vector of positive integers inside square
 brackets. <strong>Note that in R, indices begin at 1.</strong></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -176,8 +186,14 @@ brackets. <strong>Note that in R, indices begin at 1.</strong></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">var2</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">7</span>, <span class="fl">9</span>, <span class="fl">11</span>, <span class="fl">20</span><span class="op">)</span><span class="op">]</span></code></pre></div>
 <pre><code>## [1]  2  7  9 11 20</code></pre>
-<p>The elements of vectors can be deleted by supplying a vector of negative integers inside square
-brackets. <strong>Note that in R, indices begin at 1.</strong></p>
+</div>
+<div id="deleting-elements" class="section level4" number="1.1.7.2">
+<h4>
+<span class="header-section-number">1.1.7.2</span> Deleting elements<a class="anchor" aria-label="anchor" href="#deleting-elements"><i class="fas fa-link"></i></a>
+</h4>
+<p>The elements of vectors can be deleted by supplying a vector of negative integers or by placing a
+negative outside a vector of positive integers, all inside square brackets.
+<strong>Note that in R, indices begin at 1.</strong></p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">var2</span><span class="op">[</span><span class="op">-</span><span class="fl">7</span><span class="op">]</span></code></pre></div>
 <pre><code>##  [1]  1  2  3  4  5  6  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
@@ -188,6 +204,7 @@ brackets. <strong>Note that in R, indices begin at 1.</strong></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">var2</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">7</span>, <span class="fl">9</span>, <span class="fl">11</span>, <span class="fl">20</span><span class="op">)</span><span class="op">]</span></code></pre></div>
 <pre><code>##  [1]  1  3  4  5  6  8 10 12 13 14 15 16 17 18 19 21 22 23 24 25 26 27 28 29 30</code></pre>
+</div>
 </div>
 <div id="data-frames" class="section level3" number="1.1.8">
 <h3>
@@ -220,22 +237,503 @@ the values of each variable for a single observation (patient).</p>
 <li>Name-value pairs are supplied using <code><a href="https://rdrr.io/r/base/assignOps.html">=</a></code> rather than <code><a href="https://rdrr.io/r/base/assignOps.html">&lt;-</a></code>.</li>
 <li>Each name-value pair must have the same length. Missing values can be represented using <code>NA</code>.</li>
 </ul>
+<div id="extracting-columns" class="section level4" number="1.1.8.1">
+<h4>
+<span class="header-section-number">1.1.8.1</span> Extracting columns<a class="anchor" aria-label="anchor" href="#extracting-columns"><i class="fas fa-link"></i></a>
+</h4>
+<p>Columns of a data frame can be extracted as vectors using the dollar sign (<code><a href="https://rdrr.io/r/base/Extract.html">$</a></code>).</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">patients</span><span class="op">$</span><span class="va">height</span></code></pre></div>
+<pre><code>## [1] 181 145 190 210  94</code></pre>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">patients</span><span class="op">$</span><span class="va">sex</span></code></pre></div>
+<pre><code>## [1] "M" "F" "M" "F" "F"</code></pre>
 </div>
-<div id="file-and-folder-paths" class="section level3" number="1.1.9">
-<h3>
-<span class="header-section-number">1.1.9</span> File and folder paths<a class="anchor" aria-label="anchor" href="#file-and-folder-paths"><i class="fas fa-link"></i></a>
-</h3>
+<div id="extracting-rows-and-subsets" class="section level4" number="1.1.8.2">
+<h4>
+<span class="header-section-number">1.1.8.2</span> Extracting rows and subsets<a class="anchor" aria-label="anchor" href="#extracting-rows-and-subsets"><i class="fas fa-link"></i></a>
+</h4>
+<p>Thinking of data frames as matrices, which can be subsetted by supplying row and column
+positions/names separated by a comma within square brackets:</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Extract row 3 and all columns</span>
+<span class="va">patients</span><span class="op">[</span><span class="fl">3</span>, <span class="op">]</span></code></pre></div>
+<pre><code>##   patient_id height mass sex
+## 3     02jr8d    190   82   M</code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Extract rows 1, 4, and 5, and columns 1 and 3</span>
+<span class="va">patients</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<pre><code>##   patient_id mass
+## 1     123abc   85
+## 4     r82j45   90
+## 5     t90ro5   60</code></pre>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Extract rows 1, 4, and 5, and columns "patient_id" and "mass"</span>
+<span class="va">patients</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"patient_id"</span>, <span class="st">"mass"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<pre><code>##   patient_id mass
+## 1     123abc   85
+## 4     r82j45   90
+## 5     t90ro5   60</code></pre>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Extract everything *except* rows 2 and 3, and columns 2 and 3</span>
+<span class="va">patients</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<pre><code>##   patient_id sex
+## 1     123abc   M
+## 4     r82j45   F
+## 5     t90ro5   F</code></pre>
 </div>
-<div id="reading-in-data" class="section level3" number="1.1.10">
-<h3>
-<span class="header-section-number">1.1.10</span> Reading in data<a class="anchor" aria-label="anchor" href="#reading-in-data"><i class="fas fa-link"></i></a>
-</h3>
 </div>
-<div id="getting-help" class="section level3" number="1.1.11">
+<div id="the-working-directory" class="section level3" number="1.1.9">
 <h3>
-<span class="header-section-number">1.1.11</span> Getting help<a class="anchor" aria-label="anchor" href="#getting-help"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.1.9</span> The working directory<a class="anchor" aria-label="anchor" href="#the-working-directory"><i class="fas fa-link"></i></a>
 </h3>
+<p>The working directory is the folder path that you are working out of. The path of the current
+working directory can be found immediately underneath the <strong>Console</strong> tab heading.</p>
+<p>When opening your first instance of RStudio using the application directly, the working directory is
+automatically set to the
+<a href="lab-1-september-15.html#configure-rstudio-settings">"Default working directory (when not in a project)"</a>. When the first
+instance of RStudio is opened by opening a R script file (files ending in .R), the working directory
+is automatically set to the location where the R script file is located.</p>
+<p>Note that after opening your first instance of RStudio, any other scripts that are opened will not
+change the working directory.</p>
+<p>The working directory is important to keep track of when reading and writing files. For the sake of
+organization, it may be the case that you have the following folder structure:</p>
+<pre><code>.
+├── data
+│   └── my_data.txt
+├── output
+│   ├── output1.txt
+│   └── model.RDS
+├── script1.R
+└── script2.R</code></pre>
+<p><em>The dot represents where you currently are (the working directory).</em></p>
+<p>In the example above, the R scripts are contained in the working directory, while data and output
+files have their own folders in the working directory. As such, when reading files we need to specify
+that they are to be read from the "data" folder. Similarly, when writing files, we need to specify
+that they are to be written into the "output" folder.</p>
+<p>To be able to do this, we need to talk about file and folder paths and how to specify them.</p>
+</div>
+<div id="paths" class="section level3" number="1.1.10">
+<h3>
+<span class="header-section-number">1.1.10</span> Paths<a class="anchor" aria-label="anchor" href="#paths"><i class="fas fa-link"></i></a>
+</h3>
+<p>A path is a string (i.e. needs to be surrounded by quotes) and describes the location of a file or
+folder on a device. Paths become extremely important when reading and writing files with R. Paths
+can be broken down into two categories: absolute and relative.</p>
+<div id="absolute-paths" class="section level4" number="1.1.10.1">
+<h4>
+<span class="header-section-number">1.1.10.1</span> Absolute paths<a class="anchor" aria-label="anchor" href="#absolute-paths"><i class="fas fa-link"></i></a>
+</h4>
+<p>An absolute path gives the full location of a file/folder on <strong>your</strong> device, irrespective of your
+current working directory, e.g.</p>
+<pre><code>"C:/Users/Adam/Desktop/blah.R"
+"/Users/John/Documents/lab1.txt"</code></pre>
+<p>The use of absolute paths creates a few problems.</p>
+<ol style="list-style-type: decimal">
+<li><p>Suppose that I am on Windows and include a path like <code>"C:/Users/Adam/Desktop/blah.R"</code> in my
+script. If you were to execute the code that I have given you on a Windows machine, it would likely
+not work since your name is probably not Adam and your <code>blah.R</code> may not be located on your Desktop
+like mine.</p></li>
+<li><p>For users that are not on Windows, in addition to the folders possibly not existing, you likely
+do not have a "C drive".</p></li>
+</ol>
+<p>As such, the use of absolute paths is <strong>not</strong> recommended as it complicates the sharing of code
+between devices and is platform-dependent.</p>
+</div>
+<div id="relative-paths" class="section level4" number="1.1.10.2">
+<h4>
+<span class="header-section-number">1.1.10.2</span> Relative paths<a class="anchor" aria-label="anchor" href="#relative-paths"><i class="fas fa-link"></i></a>
+</h4>
+<p>A relative path gives the partial location of a file/folder relative to your working directory.
+Although the use of relative paths still assumes an identical partial folder structure, it
+<strong>does not</strong> assume an identical folder structure down to the root of the path.</p>
+<p>There are two helpers for specifying relative paths: the dot, <code>"."</code>, and the double-dot, <code>".."</code>. The
+dot, <code>"."</code>, can be thought of as shorthand for <em>"here"</em>, or the current working directory. The
+double-dot, <code>".."</code>, means to "go up one level".</p>
+<p><strong>Example 1:</strong></p>
+<p>Suppose that my working directory is <code>"C:/Users/Adam/Desktop"</code> with structure:</p>
+<pre><code>C:/Users/Adam/Desktop **you are here**
+│
+├── my_data.txt
+└── script1.R</code></pre>
+<p>Inside <code>script1.R</code>, I want to read the data found in <code>my_data.txt</code>. This can be done using:</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"my_data.txt"</span><span class="op">)</span> 
+<span class="co">## OR ##</span>
+<span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"./my_data.txt"</span><span class="op">)</span></code></pre></div>
+<p>rather than using:</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"C:/Users/Adam/Desktop/my_data.txt"</span><span class="op">)</span></code></pre></div>
+<p><strong>Example 2:</strong></p>
+<p>Suppose that my working directory is <code>"C:/Users/Adam/Desktop/model"</code> with <strong>surrounding</strong> folder
+structure:</p>
+<pre><code>C:/Users/Adam/Desktop
+│
+├── data
+│   └── my_data.txt
+├── model **you are here**
+│   ├── output1.txt
+│   └── model.R
+├── output
+│   ├── output1.txt
+│   └── output2.RDS
+└── other.R</code></pre>
+<p>Inside <code>model.R</code>, I want to read the data found in <code>my_data.txt</code>. This can be done using:</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"../data/my_data.txt"</span><span class="op">)</span></code></pre></div>
+<p>rather than using:</p>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"C:/Users/Adam/Desktop/data/my_data.txt"</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="reading-in-data" class="section level3" number="1.1.11">
+<h3>
+<span class="header-section-number">1.1.11</span> Reading in data<a class="anchor" aria-label="anchor" href="#reading-in-data"><i class="fas fa-link"></i></a>
+</h3>
+<p>In this course, most (if not all) data will be read in from a <code>.txt</code> file that has a header. The
+code you will use will be:</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"path/to/data/file.txt"</span>, header<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p>In some instances, we may need:</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"path/to/data/file.txt"</span>, header<span class="op">=</span><span class="cn">TRUE</span>, stringsAsFactors<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="accessing-the-built-in-documentation" class="section level3" number="1.1.12">
+<h3>
+<span class="header-section-number">1.1.12</span> Accessing the built-in documentation<a class="anchor" aria-label="anchor" href="#accessing-the-built-in-documentation"><i class="fas fa-link"></i></a>
+</h3>
+<p>Prepending a function or built-in data set with a question mark will bring up the associated
+documentation. For example, in the <strong>Console</strong>, try:</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">?</span><span class="va">read.table</span>
+<span class="op">?</span><span class="va">lm</span></code></pre></div>
+</div>
+</div>
+<div id="introduction-to-simple-linear-regression" class="section level2" number="1.2">
+<h2>
+<span class="header-section-number">1.2</span> Introduction to simple linear regression<a class="anchor" aria-label="anchor" href="#introduction-to-simple-linear-regression"><i class="fas fa-link"></i></a>
+</h2>
+<p>Note: the content contained in the following sections will aid you in answering Assignment 1
+Question 5.</p>
+<div id="loading-the-data" class="section level3" number="1.2.1">
+<h3>
+<span class="header-section-number">1.2.1</span> Loading the data<a class="anchor" aria-label="anchor" href="#loading-the-data"><i class="fas fa-link"></i></a>
+</h3>
+<p>The data set that we will be using can be found in the file named <code>table1.1_DS.txt</code>. Since this is
+a text file with a header, we will use <code><a href="https://rdrr.io/r/utils/read.table.html">read.table()</a></code> to read it in and specify <code>header=TRUE</code>.</p>
+<p>My data is contained in a folder called "data" in my current working directory. The path you use
+to read your data will depend on where you have saved your data.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">table1.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"./data/table1.1_DS.txt"</span>, header<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p>We can get the dimensions of this data set using the functions <code><a href="https://rdrr.io/r/base/dim.html">dim()</a></code>, <code><a href="https://rdrr.io/r/base/nrow.html">ncol()</a></code>, and <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code>.</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 25  2</code></pre>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 25</code></pre>
+<p>We can get the column names of our data set using the <code><a href="https://rdrr.io/r/base/names.html">names()</a></code> function.</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "y" "x"</code></pre>
+<p>We can preview the data we have read in using the <code><a href="https://rdrr.io/r/utils/head.html">head()</a></code> function. The <code>head</code> function is useful
+especially for larger data sets where printing the entire data set may not be desirable. By
+default, this function will return the first six rows of the data.</p>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
+<pre><code>##       y    x
+## 1 10.98 35.3
+## 2 11.13 29.7
+## 3 12.51 30.8
+## 4  8.40 58.8
+## 5  9.27 61.4
+## 6  8.73 71.3</code></pre>
+<p>We can also use RStudio's built-in object viewer to view the full data set. In the <strong>Environment</strong>
+pane:</p>
+<ul>
+<li>In <em>List</em> view, click the row corresponding to the variable containing the data.</li>
+<li>In <em>Grid</em> view, click the row corresponding to the variable containing the data under the
+"Value" heading.</li>
+</ul>
+<p>Alternatively, you can use the <code><a href="https://rdrr.io/r/utils/View.html">View()</a></code> function:</p>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="creating-the-data-manually" class="section level3" number="1.2.2">
+<h3>
+<span class="header-section-number">1.2.2</span> Creating the data manually<a class="anchor" aria-label="anchor" href="#creating-the-data-manually"><i class="fas fa-link"></i></a>
+</h3>
+<p>In Assignment 1 Question 5, you are given the data as ordered pairs that you will need to manually
+enter into R. Using the first ten observations from <code>table1.1</code> as an example, we can create the
+data frame manually:</p>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">table1.1_manual</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
+  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10.98</span>, <span class="fl">11.13</span>, <span class="fl">12.51</span>, <span class="fl">8.40</span>, <span class="fl">9.27</span>, <span class="fl">8.73</span>, <span class="fl">6.36</span>, <span class="fl">8.50</span>, <span class="fl">7.82</span>, <span class="fl">9.14</span><span class="op">)</span>,
+  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">35.3</span>, <span class="fl">29.7</span>, <span class="fl">30.8</span>, <span class="fl">58.8</span>, <span class="fl">61.4</span>, <span class="fl">71.3</span>, <span class="fl">74.4</span>, <span class="fl">76.7</span>, <span class="fl">70.7</span>, <span class="fl">57.5</span><span class="op">)</span>
+<span class="op">)</span>
 
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">table1.1_manual</span><span class="op">)</span></code></pre></div>
+<pre><code>##       y    x
+## 1 10.98 35.3
+## 2 11.13 29.7
+## 3 12.51 30.8
+## 4  8.40 58.8
+## 5  9.27 61.4
+## 6  8.73 71.3</code></pre>
+<p><em>(I will continue using the full Table 1.1 for the demonstrations below).</em></p>
+</div>
+<div id="fitting-the-slr-model" class="section level3" number="1.2.3">
+<h3>
+<span class="header-section-number">1.2.3</span> Fitting the SLR model<a class="anchor" aria-label="anchor" href="#fitting-the-slr-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>Linear regression models are fit using the <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> function. We first need to fit the model</p>
+<p><span class="math display">\[Y_{i} \,=\, \beta_{0} \,+\, \beta_{1}X_{i} \,+\, \varepsilon_{i}, \quad i=1,\ldots,n\]</span></p>
+<p>in order to determine whether</p>
+<p><span class="math display">\[Y_{i} \,=\, \beta_{0} \,+\, \varepsilon_{i}, \quad i=1,\ldots,n\]</span></p>
+<p>is an appropriate model.</p>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">slr_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data<span class="op">=</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
+<p>The above code says to build a linear regression model using <code>y</code> as the dependent (response)
+variable, <code>x</code> as the independent (predictor) variable, and that the variables <code>y</code> and <code>x</code> are
+found within the <code>table1.1</code> data variable.</p>
+</div>
+<div id="inspecting-the-model" class="section level3" number="1.2.4">
+<h3>
+<span class="header-section-number">1.2.4</span> Inspecting the model<a class="anchor" aria-label="anchor" href="#inspecting-the-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can obtain a summary of our linear regression model by using the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function.</p>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">slr_model</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ x, data = table1.1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.6789 -0.5291 -0.1221  0.7988  1.3457 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 13.62299    0.58146  23.429  &lt; 2e-16 ***
+## x           -0.07983    0.01052  -7.586 1.05e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.8901 on 23 degrees of freedom
+## Multiple R-squared:  0.7144, Adjusted R-squared:  0.702 
+## F-statistic: 57.54 on 1 and 23 DF,  p-value: 1.055e-07</code></pre>
+<p>From the information above, our fitted regression line has equation:</p>
+<p><span class="math display">\[\widehat{y}_{i} \,=\, 13.62 \,-\, 0.08x_{i} \quad i=1,\ldots,n\]</span></p>
+</div>
+<div id="is-an-intercept-only-model-appropriate" class="section level3" number="1.2.5">
+<h3>
+<span class="header-section-number">1.2.5</span> Is an intercept-only model appropriate?<a class="anchor" aria-label="anchor" href="#is-an-intercept-only-model-appropriate"><i class="fas fa-link"></i></a>
+</h3>
+<p>To determine whether an intercept-only model would be appropriate, we need to test the hypotheses:</p>
+<p><span class="math display">\[H_{0}: \beta_{1} \,=\, 0, \quad H_{A}: \beta_{1} \,\neq\, 0\]</span></p>
+<p>The value of the test statistic can be read off the summary table and has a value of <code>-7.586</code> and
+a corresponding <span class="math inline">\(p\)</span>-value of <code>1.05e-07</code>. Using a significance level of <span class="math inline">\(\alpha = 0.05\)</span>, since
+the <span class="math inline">\(p\)</span>-value is less than <span class="math inline">\(\alpha\)</span>, we reject the null hypothesis and conclude that there is
+evidence to support the claim that <span class="math inline">\(\beta_{1}\)</span> is different from zero.</p>
+<p>As such, we should not consider the intercept-only model.</p>
+<p>But what if the <span class="math inline">\(p\)</span>-value <em>was</em> greater than <span class="math inline">\(\alpha = 0.05\)</span> and we failed to reject the null
+hypothesis? How would we fit an intercept-only model?</p>
+<p><em>Aside:</em> note that on the <code>(Intercept)</code> row, the t-value and <span class="math inline">\(p\)</span>-value correspond to the testing of
+the hypotheses:</p>
+<p><span class="math display">\[H_{0}: \beta_{0} \,=\, 0, \quad H_{A}: \beta_{0} \,\neq\, 0\]</span></p>
+</div>
+<div id="the-rock-data-set" class="section level3" number="1.2.6">
+<h3>
+<span class="header-section-number">1.2.6</span> The <code>rock</code> data set<a class="anchor" aria-label="anchor" href="#the-rock-data-set"><i class="fas fa-link"></i></a>
+</h3>
+<p>To fit an intercept-only model, let us consider the <code>rock</code> data set that is built into R. This data
+set can be loaded using:</p>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">rock</span><span class="op">)</span></code></pre></div>
+<p>We can preview the data as usual:</p>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">rock</span><span class="op">)</span></code></pre></div>
+<pre><code>##   area    peri     shape perm
+## 1 4990 2791.90 0.0903296  6.3
+## 2 7002 3892.60 0.1486220  6.3
+## 3 7558 3930.66 0.1833120  6.3
+## 4 7352 3869.32 0.1170630  6.3
+## 5 7943 3948.54 0.1224170 17.1
+## 6 7979 4010.15 0.1670450 17.1</code></pre>
+</div>
+<div id="fitting-a-slr" class="section level3" number="1.2.7">
+<h3>
+<span class="header-section-number">1.2.7</span> Fitting a SLR<a class="anchor" aria-label="anchor" href="#fitting-a-slr"><i class="fas fa-link"></i></a>
+</h3>
+<p>Let's create a simple linear regression model using <code>area</code> as the dependent (response) variable and
+<code>shape</code> as the independent (predictor) variable.</p>
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rock_slr_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="va">shape</span>, data<span class="op">=</span><span class="va">rock</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rock_slr_model</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = area ~ shape, data = rock)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6101.6 -1512.3   104.6  1765.3  5152.9 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     8465       1087   7.788 6.08e-10 ***
+## shape          -5855       4660  -1.256    0.215    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2667 on 46 degrees of freedom
+## Multiple R-squared:  0.03318,    Adjusted R-squared:  0.01216 
+## F-statistic: 1.579 on 1 and 46 DF,  p-value: 0.2153</code></pre>
+<p>The equation of the fitted line is:</p>
+<p><span class="math display">\[\widehat{y}_{i} \,=\, 8465 \,-\, 5855x_{i}, \quad i=1,\ldots,n\]</span></p>
+<p>Testing the hypotheses:</p>
+<p><span class="math display">\[H_{0}: \beta_{1} \,=\, 0, \quad H_{A}: \beta_{1} \,\neq\, 0\]</span></p>
+<p>the corresponding <span class="math inline">\(p\)</span>-value is 0.215. Using a significance level of <span class="math inline">\(\alpha = 0.05\)</span>, since the
+<span class="math inline">\(p\)</span>-value is greater than 0.05, we fail to reject the null hypothesis. As such, there is insufficient
+evidence to support the claim that <span class="math inline">\(\beta_{1}\)</span> is non-zero.</p>
+<p>Now let's fit the intercept-only model!</p>
+</div>
+<div id="fitting-an-intercept-only-model" class="section level3" number="1.2.8">
+<h3>
+<span class="header-section-number">1.2.8</span> Fitting an intercept-only model<a class="anchor" aria-label="anchor" href="#fitting-an-intercept-only-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>One way of fitting the intercept-only model is to use <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> again.</p>
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rock_intercept_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="fl">1</span>, data<span class="op">=</span><span class="va">rock</span><span class="op">)</span></code></pre></div>
+<p>The dependent (response) variable remains <code>area</code>, but the right-hand side of the formula will just
+be <code>1</code> to indicate the intercept.</p>
+<p>The second way of fitting the intercept-only model is to take advantage of the fact that we already
+built a simple linear regression model (<code>rock_slr_model</code>) and to obtain the intercept-only model we
+just need to "remove" the <code>shape</code> variable from the formula specification. This can be accomplished
+by using the <code><a href="https://rdrr.io/r/stats/update.html">update()</a></code> function.</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rock_intercept_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span><span class="op">(</span><span class="va">rock_slr_model</span>, formula <span class="op">=</span> <span class="va">.</span> <span class="op">~</span> <span class="va">.</span> <span class="op">-</span> <span class="va">shape</span><span class="op">)</span></code></pre></div>
+<p>In the formula specification above, the <code>.</code> refers to "everything that was already there". As such,
+the <code>.</code> on the left of the <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code> refers to <code>area</code>, while the <code>.</code> on the right of the <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code> refers to
+<code>1 + shape</code> (the <code>1</code> is not usually written since all linear regression models are fit with an
+intercept by default, but it still exists!). Therefore, the above code says that the
+<code>rock_intercept_model</code> will be an "update" of the <code>rock_slr_model</code> with the modification that the
+formula will now be <code>area ~ 1 + shape - shape</code>, resulting in <code>area ~ 1</code>. We can check that this was
+exactly what we wanted by calling:</p>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/formula.html">formula</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span></code></pre></div>
+<pre><code>## area ~ 1</code></pre>
+<p>The <code><a href="https://rdrr.io/r/stats/update.html">update()</a></code> function will be extremely useful when we start working with multiple linear
+regression models and variable selection procedures later on in the course as it is sometimes
+easier to specify the variables that we don't want rather than all the ones that we do want.</p>
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = area ~ 1, data = rock)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6171.7 -1882.5   299.3  1681.8  5024.3 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   7187.7      387.4   18.55   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2684 on 47 degrees of freedom</code></pre>
+<p>From the output above, the equation of the fitted line is:</p>
+<p><span class="math display">\[\widehat{y}_{i} \,=\, 7187.7, \quad i=1,\ldots,n\]</span></p>
+</div>
+<div id="visualising-the-intercept-only-fit" class="section level3" number="1.2.9">
+<h3>
+<span class="header-section-number">1.2.9</span> Visualising the intercept-only fit<a class="anchor" aria-label="anchor" href="#visualising-the-intercept-only-fit"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can draw a scatterplot of the data with <code>area</code> on the y-axis and <code>shape</code> on the x-axis, and
+overlay the intercept-only fit. When drawing lines with base-R graphics, recall that we need to sort
+the x-values!</p>
+<p>The fitted values of the intercept-only model can be obtained by wrapping it in the <code><a href="https://rdrr.io/r/stats/fitted.values.html">fitted()</a></code>
+function.</p>
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span></code></pre></div>
+<pre><code>##        1        2        3        4        5        6        7        8 
+## 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 
+##        9       10       11       12       13       14       15       16 
+## 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 
+##       17       18       19       20       21       22       23       24 
+## 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 
+##       25       26       27       28       29       30       31       32 
+## 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 
+##       33       34       35       36       37       38       39       40 
+## 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 
+##       41       42       43       44       45       46       47       48 
+## 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729 7187.729</code></pre>
+<p>Now, making the plot:</p>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sorted_shape</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">rock</span><span class="op">$</span><span class="va">shape</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="va">shape</span>, data<span class="op">=</span><span class="va">rock</span>, main<span class="op">=</span><span class="st">"Intercept-only model"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">sorted_shape</span>, y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"darkred"</span>, lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;"></div>
+</div>
+<div id="visual-diagnostics" class="section level3" number="1.2.10">
+<h3>
+<span class="header-section-number">1.2.10</span> Visual diagnostics<a class="anchor" aria-label="anchor" href="#visual-diagnostics"><i class="fas fa-link"></i></a>
+</h3>
+<div id="the-residual-vs.-predictor-plot" class="section level4" number="1.2.10.1">
+<h4>
+<span class="header-section-number">1.2.10.1</span> The residual vs. predictor plot<a class="anchor" aria-label="anchor" href="#the-residual-vs.-predictor-plot"><i class="fas fa-link"></i></a>
+</h4>
+<p>To identify potential issues with the intercept-only model, we can make of plot of the residuals,
+<span class="math inline">\(e_{i} \,=\, Y_{i} \,-\, \widehat{Y}_{i}\)</span>, against the the predictor values (<code>shape</code>).</p>
+<p>The residual values of the intercept-only model can be obtained by wrapping it in the <code><a href="https://rdrr.io/r/stats/residuals.html">resid()</a></code>
+function.</p>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6          7 
+## -2197.7292  -185.7292   370.2708   164.2708   755.2708   791.2708  2145.2708 
+##          8          9         10         11         12         13         14 
+##  1021.2708  1205.2708  -762.7292  2176.2708  1436.2708  3463.2708  1680.2708 
+##         15         16         17         18         19         20         21 
+##  2229.2708  1686.2708  3774.2708  3555.2708  4690.2708  2679.2708   650.2708 
+##         22         23         24         25         26         27         28 
+##  4688.2708  5024.2708  1045.2708  -827.7292 -2994.7292   228.2708 -1941.7292 
+##         29         30         31         32         33         34         35 
+##  -678.7292 -2292.7292  -412.7292   706.2708 -1207.7292 -1869.7292   204.2708 
+##         36         37         38         39         40         41         42 
+##   706.2708 -3718.7292 -5719.7292 -3663.7292 -1920.7292 -2139.7292 -6171.7292 
+##         43         44         45         46         47         48 
+## -1582.7292  1605.2708 -3712.7292 -5536.7292 -1673.7292  2530.2708</code></pre>
+<p>Now, making the plot:</p>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span> <span class="op">~</span> <span class="va">shape</span>, data<span class="op">=</span><span class="va">rock</span>,
+  main<span class="op">=</span><span class="st">"Residuals vs Predictor"</span>, xlab<span class="op">=</span><span class="st">"shape"</span>, ylab<span class="op">=</span><span class="st">"residuals"</span>
+<span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;"></div>
+<p>From the assumptions of linear regression, there should not be any discernable patterns/trends in
+the plotted points. From the plot above, there does not appear to be any patterns/trends in the
+plotted points.</p>
+</div>
+<div id="normality-of-residuals" class="section level4" number="1.2.10.2">
+<h4>
+<span class="header-section-number">1.2.10.2</span> Normality of residuals<a class="anchor" aria-label="anchor" href="#normality-of-residuals"><i class="fas fa-link"></i></a>
+</h4>
+<p>We also have the assumption that residuals should be normally distributed. This can be checked by
+creating a QQ-plot of the residuals and overlaying a QQ-line.</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqline</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"darkred"</span>, lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;"></div>
+<p>To check if the normal distribution assumption has been satisfied, the plotted points should lie as
+close as possible to the QQ-line. As this is the case in the above plot, we have no reason to
+believe that the residuals are <em>not</em> normally distributed.</p>
+
+</div>
 </div>
 </div>
 </div>
@@ -256,9 +754,24 @@ the values of each variable for a single observation (patient).</p>
 <li><a class="nav-link" href="#variables"><span class="header-section-number">1.1.6</span> Variables</a></li>
 <li><a class="nav-link" href="#vectors"><span class="header-section-number">1.1.7</span> Vectors</a></li>
 <li><a class="nav-link" href="#data-frames"><span class="header-section-number">1.1.8</span> Data frames</a></li>
-<li><a class="nav-link" href="#file-and-folder-paths"><span class="header-section-number">1.1.9</span> File and folder paths</a></li>
-<li><a class="nav-link" href="#reading-in-data"><span class="header-section-number">1.1.10</span> Reading in data</a></li>
-<li><a class="nav-link" href="#getting-help"><span class="header-section-number">1.1.11</span> Getting help</a></li>
+<li><a class="nav-link" href="#the-working-directory"><span class="header-section-number">1.1.9</span> The working directory</a></li>
+<li><a class="nav-link" href="#paths"><span class="header-section-number">1.1.10</span> Paths</a></li>
+<li><a class="nav-link" href="#reading-in-data"><span class="header-section-number">1.1.11</span> Reading in data</a></li>
+<li><a class="nav-link" href="#accessing-the-built-in-documentation"><span class="header-section-number">1.1.12</span> Accessing the built-in documentation</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#introduction-to-simple-linear-regression"><span class="header-section-number">1.2</span> Introduction to simple linear regression</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#loading-the-data"><span class="header-section-number">1.2.1</span> Loading the data</a></li>
+<li><a class="nav-link" href="#creating-the-data-manually"><span class="header-section-number">1.2.2</span> Creating the data manually</a></li>
+<li><a class="nav-link" href="#fitting-the-slr-model"><span class="header-section-number">1.2.3</span> Fitting the SLR model</a></li>
+<li><a class="nav-link" href="#inspecting-the-model"><span class="header-section-number">1.2.4</span> Inspecting the model</a></li>
+<li><a class="nav-link" href="#is-an-intercept-only-model-appropriate"><span class="header-section-number">1.2.5</span> Is an intercept-only model appropriate?</a></li>
+<li><a class="nav-link" href="#the-rock-data-set"><span class="header-section-number">1.2.6</span> The rock data set</a></li>
+<li><a class="nav-link" href="#fitting-a-slr"><span class="header-section-number">1.2.7</span> Fitting a SLR</a></li>
+<li><a class="nav-link" href="#fitting-an-intercept-only-model"><span class="header-section-number">1.2.8</span> Fitting an intercept-only model</a></li>
+<li><a class="nav-link" href="#visualising-the-intercept-only-fit"><span class="header-section-number">1.2.9</span> Visualising the intercept-only fit</a></li>
+<li><a class="nav-link" href="#visual-diagnostics"><span class="header-section-number">1.2.10</span> Visual diagnostics</a></li>
 </ul>
 </li>
 </ul>
@@ -278,7 +791,7 @@ the values of each variable for a single observation (patient).</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on September 11, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on September 12, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
@@ -286,6 +799,34 @@ the values of each variable for a single observation (patient).</p>
   </div>
 
 </div></div>
-</footer>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
 </body>
 </html>
