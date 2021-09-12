@@ -115,7 +115,7 @@ View(var1)
 
 When naming variables, try not to use names that already exist in R as data sets or functions. This
 can be checked by partially typing the variable name and seeing what suggestions come up. For
-example, when reading in data, do not name your variable `data` since there exists already exists
+example, when reading in data, do not name your variable `data` since there already exists
 a `data()` function in R.
 
 
@@ -586,8 +586,8 @@ the `.` on the left of the `~` refers to `area`, while the `.` on the right of t
 `1 + shape` (the `1` is not usually written since all linear regression models are fit with an
 intercept by default, but it still exists!). Therefore, the above code says that the
 `rock_intercept_model` will be an "update" of the `rock_slr_model` with the modification that the
-formula will now be `area ~ 1 + shape - shape`, resulting in `area ~ 1`. We can check that this was
-exactly what we wanted by calling:
+formula will now be `area ~ 1 + shape - shape`, resulting in `area ~ 1`. We can verify that this
+was in fact what we needed by calling:
 
 ```{r}
 formula(rock_intercept_model)
@@ -610,10 +610,12 @@ From the output above, the equation of the fitted line is:
 
 We can draw a scatterplot of the data with `area` on the y-axis and `shape` on the x-axis, and
 overlay the intercept-only fit. When drawing lines with base-R graphics, recall that we need to sort
-the x-values!
+the x-values (and reorder their corresponding y-values)! In this example, since the fitted values
+are constant for all values of `shape`, there is no need to reorder the fitted values with their
+corresponding `shape` values &mdash; only the `shape` values need to be sorted.
 
-The fitted values of the intercept-only model can be obtained by wrapping it in the `fitted()`
-function.
+The fitted values of the intercept-only model can be obtained by wrapping the model with the
+`fitted()` function.
 
 ```{r}
 fitted(rock_intercept_model)
@@ -636,8 +638,8 @@ lines(x=sorted_shape, y=fitted(rock_intercept_model), col="darkred", lwd=2)
 To identify potential issues with the intercept-only model, we can make a plot of the residuals,
 $e_{i} \,=\, Y_{i} \,-\, \widehat{Y}_{i}$, against the the predictor values (`shape`).
 
-The residual values of the intercept-only model can be obtained by wrapping it in the `resid()`
-function.
+The residual values of the intercept-only model can be obtained by wrapping the model with the
+`resid()` function.
 
 ```{r}
 resid(rock_intercept_model)

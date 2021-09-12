@@ -156,7 +156,7 @@ them in the <strong>Console</strong>:</p>
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">var1</span><span class="op">)</span></code></pre></div>
 <p>When naming variables, try not to use names that already exist in R as data sets or functions. This
 can be checked by partially typing the variable name and seeing what suggestions come up. For
-example, when reading in data, do not name your variable <code>data</code> since there exists already exists
+example, when reading in data, do not name your variable <code>data</code> since there already exists
 a <code><a href="https://rdrr.io/r/utils/data.html">data()</a></code> function in R.</p>
 </div>
 <div id="vectors" class="section level3" number="1.1.7">
@@ -629,8 +629,8 @@ the <code>.</code> on the left of the <code><a href="https://rdrr.io/r/base/tild
 <code>1 + shape</code> (the <code>1</code> is not usually written since all linear regression models are fit with an
 intercept by default, but it still exists!). Therefore, the above code says that the
 <code>rock_intercept_model</code> will be an "update" of the <code>rock_slr_model</code> with the modification that the
-formula will now be <code>area ~ 1 + shape - shape</code>, resulting in <code>area ~ 1</code>. We can check that this was
-exactly what we wanted by calling:</p>
+formula will now be <code>area ~ 1 + shape - shape</code>, resulting in <code>area ~ 1</code>. We can verify that this
+was in fact what we needed by calling:</p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/formula.html">formula</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span></code></pre></div>
 <pre><code>## area ~ 1</code></pre>
@@ -663,9 +663,11 @@ easier to specify the variables that we don't want rather than all the ones that
 </h3>
 <p>We can draw a scatterplot of the data with <code>area</code> on the y-axis and <code>shape</code> on the x-axis, and
 overlay the intercept-only fit. When drawing lines with base-R graphics, recall that we need to sort
-the x-values!</p>
-<p>The fitted values of the intercept-only model can be obtained by wrapping it in the <code><a href="https://rdrr.io/r/stats/fitted.values.html">fitted()</a></code>
-function.</p>
+the x-values (and reorder their corresponding y-values)! In this example, since the fitted values
+are constant for all values of <code>shape</code>, there is no need to reorder the fitted values with their
+corresponding <code>shape</code> values — only the <code>shape</code> values need to be sorted.</p>
+<p>The fitted values of the intercept-only model can be obtained by wrapping the model with the
+<code><a href="https://rdrr.io/r/stats/fitted.values.html">fitted()</a></code> function.</p>
 <div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span></code></pre></div>
 <pre><code>##        1        2        3        4        5        6        7        8 
@@ -698,8 +700,8 @@ function.</p>
 </h4>
 <p>To identify potential issues with the intercept-only model, we can make a plot of the residuals,
 <span class="math inline">\(e_{i} \,=\, Y_{i} \,-\, \widehat{Y}_{i}\)</span>, against the the predictor values (<code>shape</code>).</p>
-<p>The residual values of the intercept-only model can be obtained by wrapping it in the <code><a href="https://rdrr.io/r/stats/residuals.html">resid()</a></code>
-function.</p>
+<p>The residual values of the intercept-only model can be obtained by wrapping the model with the
+<code><a href="https://rdrr.io/r/stats/residuals.html">resid()</a></code> function.</p>
 <div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span></code></pre></div>
 <pre><code>##          1          2          3          4          5          6          7 
