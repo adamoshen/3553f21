@@ -38,3 +38,4 @@ rsconnect/
 # Bookdown; gh-pages
 docs/*.md
 _main.rds
+_bookdown_files/
