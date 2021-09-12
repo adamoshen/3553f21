@@ -299,7 +299,7 @@ working directory can be found immediately underneath the <strong>Console</stron
 automatically set to the
 <a href="lab-1-september-15.html#configure-rstudio-settings">"Default working directory (when not in a project)"</a>. When the first
 instance of RStudio is opened by opening a R script file (files ending in .R), the working directory
-is automatically set to the location where the R script file is located.</p>
+is automatically set to the folder where the R script file is located.</p>
 <p>Note that after opening your first instance of RStudio, any other scripts that are opened will not
 change the working directory.</p>
 <p>The working directory is important to keep track of when reading and writing files. For the sake of
@@ -340,7 +340,7 @@ current working directory, e.g.</p>
 script. If you were to execute the code that I have given you on a Windows machine, it would likely
 not work since your name is probably not Adam and your <code>blah.R</code> may not be located on your Desktop
 like mine.</p></li>
-<li><p>For users that are not on Windows, in addition to the folders possibly not existing, you likely
+<li><p>For users who are not on Windows, in addition to the folders possibly not existing, you likely
 do not have a "C drive".</p></li>
 </ol>
 <p>As such, the use of absolute paths is <strong>not</strong> recommended as it complicates the sharing of code
@@ -412,7 +412,8 @@ code you will use will be:</p>
 documentation. For example, in the <strong>Console</strong>, try:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">?</span><span class="va">read.table</span>
-<span class="op">?</span><span class="va">lm</span></code></pre></div>
+<span class="op">?</span><span class="va">lm</span>
+<span class="op">?</span><span class="va">rock</span></code></pre></div>
 </div>
 </div>
 <div id="introduction-to-simple-linear-regression" class="section level2" number="1.2">
@@ -436,11 +437,11 @@ to read your data will depend on where you have saved your data.</p>
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 25  2</code></pre>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 2</code></pre>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 25</code></pre>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
 <p>We can get the column names of our data set using the <code><a href="https://rdrr.io/r/base/names.html">names()</a></code> function.</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
@@ -504,7 +505,8 @@ data frame manually:</p>
 <code class="sourceCode R"><span class="va">slr_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, data<span class="op">=</span><span class="va">table1.1</span><span class="op">)</span></code></pre></div>
 <p>The above code says to build a linear regression model using <code>y</code> as the dependent (response)
 variable, <code>x</code> as the independent (predictor) variable, and that the variables <code>y</code> and <code>x</code> are
-found within the <code>table1.1</code> data variable.</p>
+found within the <code>table1.1</code> data variable. Although we do not need to specify an intercept in the
+formula specification, linear regression models built with <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> include an intercept by default.</p>
 </div>
 <div id="inspecting-the-model" class="section level3" number="1.2.4">
 <h3>
@@ -694,7 +696,7 @@ function.</p>
 <h4>
 <span class="header-section-number">1.2.10.1</span> The residual vs. predictor plot<a class="anchor" aria-label="anchor" href="#the-residual-vs.-predictor-plot"><i class="fas fa-link"></i></a>
 </h4>
-<p>To identify potential issues with the intercept-only model, we can make of plot of the residuals,
+<p>To identify potential issues with the intercept-only model, we can make a plot of the residuals,
 <span class="math inline">\(e_{i} \,=\, Y_{i} \,-\, \widehat{Y}_{i}\)</span>, against the the predictor values (<code>shape</code>).</p>
 <p>The residual values of the intercept-only model can be obtained by wrapping it in the <code><a href="https://rdrr.io/r/stats/residuals.html">resid()</a></code>
 function.</p>
@@ -735,9 +737,9 @@ creating a QQ-plot of the residuals and overlaying a QQ-line.</p>
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqline</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"darkred"</span>, lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;"></div>
-<p>To check if the normal distribution assumption has been satisfied, the plotted points should lie as
-close as possible to the QQ-line. As this is the case in the above plot, we have no reason to
-believe that the residuals are <em>not</em> normally distributed.</p>
+<p>Strong deviation from the QQ-line would be evidence of a violation of the normality assumption. As
+this is not the case in the above plot, we have no reason to believe that the residuals are <em>not</em>
+normally distributed.</p>
 
 </div>
 </div>

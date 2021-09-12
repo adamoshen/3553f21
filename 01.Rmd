@@ -235,7 +235,7 @@ When opening your first instance of RStudio using the application directly, the 
 automatically set to the 
 ["Default working directory (when not in a project)"](#configure-rstudio-settings). When the first
 instance of RStudio is opened by opening a R script file (files ending in .R), the working directory
-is automatically set to the location where the R script file is located. 
+is automatically set to the folder where the R script file is located. 
 
 Note that after opening your first instance of RStudio, any other scripts that are opened will not
 change the working directory. 
@@ -288,7 +288,7 @@ script. If you were to execute the code that I have given you on a Windows machi
 not work since your name is probably not Adam and your `blah.R` may not be located on your Desktop
 like mine. 
 
-2. For users that are not on Windows, in addition to the folders possibly not existing, you likely
+2. For users who are not on Windows, in addition to the folders possibly not existing, you likely
 do not have a "C drive".
 
 As such, the use of absolute paths is **not** recommended as it complicates the sharing of code
@@ -386,6 +386,7 @@ documentation. For example, in the **Console**, try:
 ```{r, eval=FALSE}
 ?read.table
 ?lm
+?rock
 ```
 
 
@@ -411,8 +412,8 @@ We can get the dimensions of this data set using the functions `dim()`, `ncol()`
 
 ```{r}
 dim(table1.1)
-ncol(table1.1)
 nrow(table1.1)
+ncol(table1.1)
 ```
 
 We can get the column names of our data set using the `names()` function.
@@ -479,7 +480,8 @@ slr_model <- lm(y ~ x, data=table1.1)
 
 The above code says to build a linear regression model using `y` as the dependent (response)
 variable, `x` as the independent (predictor) variable, and that the variables `y` and `x` are
-found within the `table1.1` data variable.
+found within the `table1.1` data variable. Although we do not need to specify an intercept in the
+formula specification, linear regression models built with `lm()` include an intercept by default.
 
 
 ### Inspecting the model
@@ -631,7 +633,7 @@ lines(x=sorted_shape, y=fitted(rock_intercept_model), col="darkred", lwd=2)
 
 #### The residual vs. predictor plot
 
-To identify potential issues with the intercept-only model, we can make of plot of the residuals,
+To identify potential issues with the intercept-only model, we can make a plot of the residuals,
 $e_{i} \,=\, Y_{i} \,-\, \widehat{Y}_{i}$, against the the predictor values (`shape`).
 
 The residual values of the intercept-only model can be obtained by wrapping it in the `resid()`
@@ -665,7 +667,6 @@ qqnorm(resid(rock_intercept_model))
 qqline(resid(rock_intercept_model), col="darkred", lwd=2)
 ```
 
-To check if the normal distribution assumption has been satisfied, the plotted points should lie as
-close as possible to the QQ-line. As this is the case in the above plot, we have no reason to
-believe that the residuals are *not* normally distributed.
-
+Strong deviation from the QQ-line would be evidence of a violation of the normality assumption. As
+this is not the case in the above plot, we have no reason to believe that the residuals are *not*
+normally distributed.
