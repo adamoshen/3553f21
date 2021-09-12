@@ -11,3 +11,5 @@ bookdown::bs4_book:
     base: "https://github.com/adamoshen/3553f21"
     branch: "main"
   md_extensions: -smart
+  includes:
+    in_header: ga_script.html
