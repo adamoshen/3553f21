@@ -1,6 +1,6 @@
 bookdown::bs4_book:
   theme:
-    primary: "#ff6c00"
+    primary: "#de935f"
     base_font:
       google: "IBM Plex Sans"
     heading_font:
