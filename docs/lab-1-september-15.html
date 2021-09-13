@@ -726,19 +726,37 @@ corresponding <code>shape</code> values — only the <code>shape</code> values n
 <span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>From the assumptions of linear regression, there should not be any discernable patterns/trends in
-the plotted points. From the plot above, there does not appear to be any patterns/trends in the
-plotted points.</p>
+the plotted points. In addition, the plot should look like a random scatter about <span class="math inline">\(y=0\)</span> with constant
+variance. From the plot above, there does not appear to be any patterns/trends in the
+plotted points. The plot appears to be a random scatter about <span class="math inline">\(y=0\)</span> with constant variance.</p>
 </div>
-<div id="normality-of-residuals" class="section level4" number="1.2.10.2">
+<div id="the-residual-vs.-fitted-plot" class="section level4" number="1.2.10.2">
 <h4>
-<span class="header-section-number">1.2.10.2</span> Normality of residuals<a class="anchor" aria-label="anchor" href="#normality-of-residuals"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.2.10.2</span> The residual vs. fitted plot<a class="anchor" aria-label="anchor" href="#the-residual-vs.-fitted-plot"><i class="fas fa-link"></i></a>
+</h4>
+<p>To identify potential issues with the intercept-only model, we can also make a plot of the residuals,
+<span class="math inline">\(e_{i} \,=\, Y_{i} \,-\, \widehat{Y}_{i}\)</span>, against the the fitted values.</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span>,
+  main<span class="op">=</span><span class="st">"Residuals vs Fitted"</span>, xlab<span class="op">=</span><span class="st">"fitted values"</span>, ylab<span class="op">=</span><span class="st">"residuals"</span>
+<span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;"></div>
+<p>Once again, there should not be any discernable patterns/trends in the plotted points, and the plot
+should look like a random scatter about <span class="math inline">\(y=0\)</span> with constant variance. The plot does look a bit
+strange, but this is because our fitted line is constant! The residuals do appear to be scattered
+about <span class="math inline">\(y=0\)</span> with equal variance, so there does not seem to be any issues here.</p>
+</div>
+<div id="normality-of-residuals" class="section level4" number="1.2.10.3">
+<h4>
+<span class="header-section-number">1.2.10.3</span> Normality of residuals<a class="anchor" aria-label="anchor" href="#normality-of-residuals"><i class="fas fa-link"></i></a>
 </h4>
 <p>We also have the assumption that residuals should be normally distributed. This can be checked by
 creating a QQ-plot of the residuals and overlaying a QQ-line.</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqline</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"darkred"</span>, lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>Strong deviation from the QQ-line would be evidence of a violation of the normality assumption. As
 this is not the case in the above plot, we have no reason to believe that the residuals are <em>not</em>
 normally distributed.</p>

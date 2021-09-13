@@ -30,4 +30,5 @@ fitting-an-intercept-only-model
 visualising-the-intercept-only-fit
 visual-diagnostics
 the-residual-vs.-predictor-plot
+the-residual-vs.-fitted-plot
 normality-of-residuals
