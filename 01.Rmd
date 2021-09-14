@@ -408,7 +408,7 @@ to read your data will depend on where you have saved your data.
 table1.1 <- read.table("./data/table1.1_DS.txt", header=TRUE)
 ```
 
-We can get the dimensions of this data set using the functions `dim()`, `ncol()`, and `nrow()`.
+We can get the dimensions of this data set using the functions `dim()`, `nrow()`, and `ncol()`.
 
 ```{r}
 dim(table1.1)
