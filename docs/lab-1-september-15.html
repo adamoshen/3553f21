@@ -665,7 +665,8 @@ easier to specify the variables that we don't want rather than all the ones that
 overlay the intercept-only fit. When drawing lines with base-R graphics, recall that we need to sort
 the x-values (and reorder their corresponding y-values)! In this example, since the fitted values
 are constant for all values of <code>shape</code>, there is no need to reorder the fitted values with their
-corresponding <code>shape</code> values — only the <code>shape</code> values need to be sorted.</p>
+corresponding <code>shape</code> values — only the <code>shape</code> values need to be sorted. However, for the
+sake of consistency, we will sort the <code>shape</code> values and reorder their corresponding fitted values.</p>
 <p>The fitted values of the intercept-only model can be obtained by wrapping the model with the
 <code><a href="https://rdrr.io/r/stats/fitted.values.html">fitted()</a></code> function.</p>
 <div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
@@ -685,9 +686,10 @@ corresponding <code>shape</code> values — only the <code>shape</code> values n
 <p>Now, making the plot:</p>
 <div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sorted_shape</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">rock</span><span class="op">$</span><span class="va">shape</span><span class="op">)</span>
+<span class="va">ordered_fitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">rock</span><span class="op">$</span><span class="va">shape</span><span class="op">)</span><span class="op">]</span>
 
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="va">shape</span>, data<span class="op">=</span><span class="va">rock</span>, main<span class="op">=</span><span class="st">"Intercept-only model"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">sorted_shape</span>, y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"darkred"</span>, lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">sorted_shape</span>, y<span class="op">=</span><span class="va">ordered_fitted</span>, col<span class="op">=</span><span class="st">"darkred"</span>, lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
 <div id="visual-diagnostics" class="section level3" number="1.2.10">

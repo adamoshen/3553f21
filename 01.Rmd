@@ -612,7 +612,8 @@ We can draw a scatterplot of the data with `area` on the y-axis and `shape` on t
 overlay the intercept-only fit. When drawing lines with base-R graphics, recall that we need to sort
 the x-values (and reorder their corresponding y-values)! In this example, since the fitted values
 are constant for all values of `shape`, there is no need to reorder the fitted values with their
-corresponding `shape` values &mdash; only the `shape` values need to be sorted.
+corresponding `shape` values &mdash; only the `shape` values need to be sorted. However, for the
+sake of consistency, we will sort the `shape` values and reorder their corresponding fitted values.
 
 The fitted values of the intercept-only model can be obtained by wrapping the model with the
 `fitted()` function.
@@ -625,9 +626,10 @@ Now, making the plot:
 
 ```{r}
 sorted_shape <- sort(rock$shape)
+ordered_fitted <- fitted(rock_intercept_model)[order(rock$shape)]
 
 plot(area ~ shape, data=rock, main="Intercept-only model")
-lines(x=sorted_shape, y=fitted(rock_intercept_model), col="darkred", lwd=2)
+lines(x=sorted_shape, y=ordered_fitted, col="darkred", lwd=2)
 ```
 
 
