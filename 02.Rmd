@@ -197,10 +197,10 @@ ggplot(lm_miles_aug, aes(x=cty))+
 #### Confidence intervals
 
 Suppose we are interested in finding a point estimate and a 95% confidence interval for the mean
-highway miles per gallon when the city miles per gallon is 20. We can obtain these values by using
-the `predict()` function. More specifically, when we pass our `lm` object to predict, it actually
-calls the more specific `predict.lm()` function. To see what we need to get our point estimate
-and confidence interval, let's pull up the associated documentation.
+highway miles per gallon for vehicles with a city miles per gallon value of 20. We can obtain these
+values by using the `predict()` function. More specifically, when we pass our `lm` object to
+`predict()`, it actually calls the more specific `predict.lm()` function. To see what we need to get
+our point estimate and confidence interval, let's pull up the associated documentation.
 
 ```{r, eval=FALSE}
 ?predict.lm

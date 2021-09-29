@@ -266,10 +266,10 @@ of the aesthetics since these values do not depend on the data:</p>
 <span class="header-section-number">2.2.5.1</span> Confidence intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals"><i class="fas fa-link"></i></a>
 </h4>
 <p>Suppose we are interested in finding a point estimate and a 95% confidence interval for the mean
-highway miles per gallon when the city miles per gallon is 20. We can obtain these values by using
-the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function. More specifically, when we pass our <code>lm</code> object to predict, it actually
-calls the more specific <code><a href="https://rdrr.io/r/stats/predict.lm.html">predict.lm()</a></code> function. To see what we need to get our point estimate
-and confidence interval, let's pull up the associated documentation.</p>
+highway miles per gallon for vehicles with a city miles per gallon value of 20. We can obtain these
+values by using the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function. More specifically, when we pass our <code>lm</code> object to
+<code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code>, it actually calls the more specific <code><a href="https://rdrr.io/r/stats/predict.lm.html">predict.lm()</a></code> function. To see what we need to get
+our point estimate and confidence interval, let's pull up the associated documentation.</p>
 <div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">?</span><span class="va">predict.lm</span></code></pre></div>
 <p>We will need to supply to <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code>:</p>
