@@ -93,11 +93,10 @@ ggplot(mpg, aes(x=cty, y=hwy))+
   geom_point()
 ```
 
+- The call to `ggplot` can be thought of as the initialisation of the drawing canvas
 - The first argument of `ggplot` is the data set, `mpg`
 - The second argument of `ggplot` is the mapping, i.e. *"which variables contain the data that I am
 interested in plotting?"*
-- The call to `ggplot` can be thought of as the initialisation of the drawing canvas
-
 - The mapping is created by supplying the names of the variables found within your data set to the
 aesthetics function, `aes()`.
 - Finally, we can add (with a "plus" symbol) a layer of points with `geom_point()` that will inherit
@@ -163,8 +162,9 @@ ggplot(lm_miles_aug, aes(x=cty))+
   geom_line(aes(y=.fitted), colour="#3366FF", lwd=1.5, alpha=0.6)
 ```
 
-I have added some additional arguments to `geom_line()` outside of the aesthetics since these values
-do not depend on the data:
+Notice that in building this plot, I did not sort any of the points! By default, `geom_line()`
+connects points from left to right. I have added some additional arguments to `geom_line()` outside 
+of the aesthetics since these values do not depend on the data:
 
 - `colour` controls the colour of the line (can also use `color`)
 - `lwd` controls the width of the line (can also use `linewidth`)

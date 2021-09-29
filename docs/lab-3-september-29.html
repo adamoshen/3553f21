@@ -135,16 +135,19 @@ chosen variables.</p>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="02_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;"></div>
 <ul>
-<li><p>The first argument of <code>ggplot</code> is the data set, <code>mpg</code></p></li>
-<li><p>The second argument of <code>ggplot</code> is the mapping, i.e. <em>"which variables contain the data that I am
-interested in plotting?"</em></p></li>
-<li><p>The call to <code>ggplot</code> can be thought of as the initialisation of the drawing canvas</p></li>
-<li><p>The mapping is created by supplying the names of the variables found within your data set to the
-aesthetics function, <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code>.</p></li>
-<li><p>Finally, we can add (with a "plus" symbol) a layer of points with <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code> that will inherit
-any aesthetics supplied in the initialisation of the canvas</p></li>
-<li><p>In other words, while not specified within <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code>, the points are drawn at positions
-<code>x=cty</code> and <code>y=hwy</code></p></li>
+<li>The call to <code>ggplot</code> can be thought of as the initialisation of the drawing canvas</li>
+<li>The first argument of <code>ggplot</code> is the data set, <code>mpg</code>
+</li>
+<li>The second argument of <code>ggplot</code> is the mapping, i.e. <em>"which variables contain the data that I am
+interested in plotting?"</em>
+</li>
+<li>The mapping is created by supplying the names of the variables found within your data set to the
+aesthetics function, <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code>.</li>
+<li>Finally, we can add (with a "plus" symbol) a layer of points with <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code> that will inherit
+any aesthetics supplied in the initialisation of the canvas</li>
+<li>In other words, while not specified within <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code>, the points are drawn at positions
+<code>x=cty</code> and <code>y=hwy</code>
+</li>
 </ul>
 <p>From the plot above, there appears to be a linear relationship between the two variables. We can
 begin fitting our linear model.</p>
@@ -230,8 +233,9 @@ y-aesthetic in the individual layers.</p>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">hwy</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">.fitted</span><span class="op">)</span>, colour<span class="op">=</span><span class="st">"#3366FF"</span>, lwd<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.6</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="02_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;"></div>
-<p>I have added some additional arguments to <code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line()</a></code> outside of the aesthetics since these values
-do not depend on the data:</p>
+<p>Notice that in building this plot, I did not sort any of the points! By default, <code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line()</a></code>
+connects points from left to right. I have added some additional arguments to <code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line()</a></code> outside
+of the aesthetics since these values do not depend on the data:</p>
 <ul>
 <li>
 <code>colour</code> controls the colour of the line (can also use <code>color</code>)</li>
