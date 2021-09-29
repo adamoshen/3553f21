@@ -1,0 +1,303 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  echo=TRUE, message=FALSE, warning=FALSE, fig.align="center", fig.retina=3
+)
+
+old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
+options(crayon.enabled=TRUE)
+```
+
+# Lab 3 &mdash; September 29
+
+## Some modern data science packages
+
+The [Tidyverse](https://www.tidyverse.org/packages/) is a collection of packages for modern data
+science. [Tidymodels](https://www.tidymodels.org/packages/) is another collection of packages that
+extends the [tidyverse](https://www.tidyverse.org/packages/) to modelling. For these labs, I won't
+be using the entire tidyverse and tidymodels. For now, I recommend only installing a few of their
+component packages.
+
+They are [tibble](https://tibble.tidyverse.org/), [dplyr](https://dplyr.tidyverse.org/),
+[ggplot2](https://ggplot2.tidyverse.org/), and [broom](https://broom.tidymodels.org/). These
+packages can be installed using:
+
+```{r, eval=FALSE}
+install.packages("tibble")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("broom")
+```
+
+After successfully installing these packages, you can load them using:
+
+```{r}
+library(tibble)
+library(dplyr)
+library(ggplot2)
+library(broom)
+```
+
+Additionally, [ggplot2](https://ggplot2.tidyverse.org/) comes with various plotting themes (examples
+of which can be found [here](https://ggplot2.tidyverse.org/reference/ggtheme.html#examples)). By
+default, the plotting background is grey but I prefer a white background so I will also call:
+
+```{r}
+theme_set(theme_bw())
+```
+
+The [tibble](https://tibble.tidyverse.org/) package provides us with the usage of "tibbles" which
+are an extension of the base-R data frame. Of its many features, we will mostly be using tibbles
+for its [pretty-printing](https://tibble.tidyverse.org/articles/tibble.html#printing) features and
+the fact that it integrates well with the other packages.
+
+The [dplyr](https://dplyr.tidyverse.org/) package provides us with tools for data wrangling where
+base-R equivalents can feel a bit clunky. Examples of data wrangling include: adding/removing
+observations based on the presence/absence of one or more conditions, creating additional variables
+in a data set, and condensing existing data into summaries.
+
+The [ggplot2](https://ggplot2.tidyverse.org/) package is an alternative to base-R graphics
+and has functions that are "smarter" than some that exist in base-R. For example, in the previous
+lab, I mentioned that when plotting lines in base-R, points needed to sorted from left to right
+since the `lines()` function joins points in the order that they appear. Without sorting, the
+resulting line would appear jagged or unevenly coloured in certain areas. With
+[ggplot2](https://ggplot2.tidyverse.org/), we have separate functions for joining points as they
+appear in the data and joining points in order from left to right.
+
+The [broom](https://broom.tidymodels.org/) package contains tools for cleaning up model output and
+extracting model data with diagnostic information that is ready for visualisation with
+[ggplot2](https://ggplot2.tidyverse.org/).
+
+
+## Back to simple linear regression
+
+### The `mpg` data set
+
+Consider the fuel economy data set found in the [ggplot2](https://ggplot2.tidyverse.org/) package.
+We can load this data set by calling:
+
+```{r}
+data(mpg, package="ggplot2")
+```
+
+Suppose we are interested in fitting a simple linear regression model with highway miles per gallon
+(`hwy`) as the response variable and city miles per gallon (`cty`) as the predictor variable.
+Before fitting the model, we should check to see if there is a linear relationship between our
+chosen variables.
+
+### Check for a linear relationship
+
+To create this plot, we use the function `ggplot`.
+
+```{r}
+ggplot(mpg, aes(x=cty, y=hwy))+
+  geom_point()
+```
+
+- The first argument of `ggplot` is the data set, `mpg`
+- The second argument of `ggplot` is the mapping, i.e. *"which variables contain the data that I am
+interested in plotting?"*
+- The call to `ggplot` can be thought of as the initialisation of the drawing canvas
+
+- The mapping is created by supplying the names of the variables found within your data set to the
+aesthetics function, `aes()`.
+- Finally, we can add (with a "plus" symbol) a layer of points with `geom_point()` that will inherit
+any aesthetics supplied in the initialisation of the canvas
+- In other words, while not specified within `geom_point()`, the points are drawn at positions
+`x=cty` and `y=hwy`
+
+From the plot above, there appears to be a linear relationship between the two variables. We can
+begin fitting our linear model.
+
+
+### Fitting the linear model
+
+```{r}
+lm_miles <- lm(hwy ~ cty, data=mpg)
+
+summary(lm_miles)
+```
+
+From the regression output, we have that $\widehat{\beta}_{0} = 0.892$ and 
+$\widehat{\beta}_{1} = 1.337$. The equation of the fitted line is:
+
+\[\widehat{y}_{i} \,=\, 0.892 \,+\, 1.337x_{i}\]
+
+We can interpret $\widehat{\beta}_{0} = 0.892$ as the mean highway miles per gallon when the city
+miles per gallon has a value of zero. However, this doesn't really make sense in the context of our
+data since you can't have a car that travels zero city miles on a gallon on gas.
+
+We can interpret $\widehat{\beta}_{1} = 1.337$ as the mean change in highway miles per gallon per 
+unit increase in city miles per gallon. As such, for a 1 mpg increase in city mpg, we expect a 1.337
+mpg increase in highway mpg.
+
+
+### Visualising the fit
+
+Here is where [ggplot2](https://ggplot2.tidyverse.org/) and [broom](https://broom.tidymodels.org/)
+shine! We first use `broom::augment()` on our linear model to extract the data that was used to fit
+the model, along with additional diagnostics (such as the residuals).
+
+```{r}
+lm_miles_aug <- augment(lm_miles)
+
+lm_miles_aug
+```
+
+In the first two columns of `lm_miles_aug`, we have recovered the data that we initially passed
+into `lm()`. The `.fitted` column contains the fitted values of our model and the `.resid` column
+contains the raw residuals.
+
+The plot that we wish to build will use the newly created `lm_miles_aug` data set and will
+have the following features:
+
+- The base plot is a scatterplot with points located at `x=cty` and `y=hwy`
+- The fitted line will be drawn on top with points located at `x=cty` and `y=.fitted`
+
+Since the points and lines that we wish to draw no longer share a common y-aesthetic, we may not
+want to declare a y-aesthetic in the initialisation of the canvas, and instead, declare the
+y-aesthetic in the individual layers.
+
+```{r}
+ggplot(lm_miles_aug, aes(x=cty))+
+  geom_point(aes(y=hwy))+
+  geom_line(aes(y=.fitted), colour="#3366FF", lwd=1.5, alpha=0.6)
+```
+
+I have added some additional arguments to `geom_line()` outside of the aesthetics since these values
+do not depend on the data:
+
+- `colour` controls the colour of the line (can also use `color`)
+- `lwd` controls the width of the line (can also use `linewidth`)
+- `alpha` controls the transparency of the line
+
+To see the construction of the above plot as "an addition of layers" we can run
+
+```{r, eval=FALSE}
+ggplot(lm_miles_aug, aes(x=cty))
+```
+
+followed by
+
+```{r, eval=FALSE}
+ggplot(lm_miles_aug, aes(x=cty))+
+  geom_point(aes(y=hwy))
+```
+
+followed by
+
+```{r, eval=FALSE}
+ggplot(lm_miles_aug, aes(x=cty))+
+  geom_point(aes(y=hwy))+
+  geom_line(aes(y=.fitted), colour="#3366FF", lwd=1.5, alpha=0.6)
+```
+
+
+### Confidence and prediction intervals
+
+#### Confidence intervals
+
+Suppose we are interested in finding a point estimate and a 95% confidence interval for the mean
+highway miles per gallon when the city miles per gallon is 20. We can obtain these values by using
+the `predict()` function. More specifically, when we pass our `lm` object to predict, it actually
+calls the more specific `predict.lm()` function. To see what we need to get our point estimate
+and confidence interval, let's pull up the associated documentation.
+
+```{r, eval=FALSE}
+?predict.lm
+```
+
+We will need to supply to `predict()`:
+
+- A linear model object
+- A data frame containing variables common to the linear model, and values upon which to predict
+  - Note that if our model has predictor variable `cty`, we cannot supply
+  `newdata = data.frame(x=20)`, we must supply `newdata = data.frame(cty=20)`
+- If we want a confidence interval, we should specify `interval = "confidence"`
+- The default confidence level is 0.95
+
+```{r}
+predict(
+  lm_miles,
+  newdata = data.frame(cty=20),
+  interval = "confidence"
+)
+```
+
+From the above output, the point estimate is 27.641. The lower bound of the 95% confidence interval
+is 27.360 and the upper bound is 27.922. This says that with 95% confidence, for vehicles with a
+city miles per gallon value of 20, the mean highway miles per gallon will range between 27.360 and
+27.922.
+
+
+#### Prediction intervals
+
+Suppose we are now interested in finding a point estimate and a 95% prediction interval for the
+highway miles per gallon of a vehicle that has a city miles per gallon of 20. We can obtain these
+values in a manner similar to the previous example:
+
+```{r}
+predict(
+  lm_miles,
+  newdata = data.frame(cty=20),
+  interval = "prediction"
+)
+```
+
+From the above output, the point estimate is 27.641. The lower bound of the 95% prediction interval
+is 24.177 and the upper bound is 31.105. This says that with 95% confidence, a vehicle with a city
+miles per gallon value of 20 will have a highway miles per gallon value between 24.177 and 31.105.
+
+
+#### Spot the differences
+
+The point estimates in both cases were identical. However, the lower and upper bounds of the
+confidence and prediction intervals were different. This is unsurprising since the formulas used to
+compute the bounds of the two intervals are different.
+
+It should be noted that, in general, for a fixed confidence level, the prediction interval will be
+wider than its corresponding confidence interval.
+
+
+### Correlations
+
+Using the previously obtained augmented model data (`lm_miles_aug`), we can easily obtain the
+correlations of
+
+- $X_{i}$ and $Y_{i}$,
+- $Y_{i}$ and $\widehat{Y}_{i}$,
+- $X_{i}$ and $\widehat{Y}_{i}$,
+
+compare them among each other, and compare them to the model's coefficient of determination,
+$R^{2}$. Correlations are obtained using the `cor()` function. We will also use the `summarise()`
+function from the [dplyr](https://dplyr.tidyverse.org/) package to help us obtain the correlations
+while staying in context of our augmented data so that we can reference our variable using bare
+names (i.e. we don't need to use `$` to reference our variables).
+
+```{r}
+summarise(
+  lm_miles_aug,
+  corr_x_y = cor(cty, hwy),
+  corr_y_fitted = cor(hwy, .fitted),
+  corr_x_fitted = cor(cty, .fitted)
+)
+```
+
+Note also that:
+
+```{r}
+summarise(
+  lm_miles_aug,
+  corr_x_y_squared = cor(cty, hwy)^2,
+  corr_y_fitted_squared = cor(hwy, .fitted)^2,
+  corr_x_fitted_squared = cor(cty, .fitted)^2,
+  r.squared = summary(lm_miles)$r.squared
+)
+```
+
+Are these values mathematically related or is this coincidence? &#x1F632; *(See assignment 2
+question 3).*
+
+
+## Simple linear regression with transformations
+
+Talk about this next time

@@ -32,3 +32,16 @@ visual-diagnostics
 the-residual-vs.-predictor-plot
 the-residual-vs.-fitted-plot
 normality-of-residuals
+lab-3-september-29
+some-modern-data-science-packages
+back-to-simple-linear-regression
+the-mpg-data-set
+check-for-a-linear-relationship
+fitting-the-linear-model
+visualising-the-fit
+confidence-and-prediction-intervals
+confidence-intervals
+prediction-intervals
+spot-the-differences
+correlations
+simple-linear-regression-with-transformations

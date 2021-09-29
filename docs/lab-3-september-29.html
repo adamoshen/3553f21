@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>2 Lab 3 — September 29 | Stat 3553: Regression Modelling</title>
+<meta name="author" content="Adam Shen">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="2 Lab 3 — September 29 | Stat 3553: Regression Modelling">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2 Lab 3 — September 29 | Stat 3553: Regression Modelling">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.9/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_IBM%20Plex%20Sans-0.4.0/font.css" rel="stylesheet">
+<link href="libs/_IBM%20Plex%20Mono-0.4.0/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-148177428-3"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-148177428-3');
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content="2.1 Some modern data science packages The Tidyverse is a collection of packages for modern data science. Tidymodels is another collection of packages that extends the tidyverse to modelling. For...">
+<meta property="og:description" content="2.1 Some modern data science packages The Tidyverse is a collection of packages for modern data science. Tidymodels is another collection of packages that extends the tidyverse to modelling. For...">
+<meta name="twitter:description" content="2.1 Some modern data science packages The Tidyverse is a collection of packages for modern data science. Tidymodels is another collection of packages that extends the tidyverse to modelling. For...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="Fall 2021">Stat 3553: Regression Modelling</a>:
+        <small class="text-muted">Fall 2021</small>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Session info</a></li>
+<li><a class="" href="lab-1-september-15.html"><span class="header-section-number">1</span> Lab 1 — September 15</a></li>
+<li><a class="active" href="lab-3-september-29.html"><span class="header-section-number">2</span> Lab 3 — September 29</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/adamoshen/3553f21">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="lab-3-september-29" class="section level1" number="2">
+<h1>
+<span class="header-section-number">2</span> Lab 3 — September 29<a class="anchor" aria-label="anchor" href="#lab-3-september-29"><i class="fas fa-link"></i></a>
+</h1>
+<div id="some-modern-data-science-packages" class="section level2" number="2.1">
+<h2>
+<span class="header-section-number">2.1</span> Some modern data science packages<a class="anchor" aria-label="anchor" href="#some-modern-data-science-packages"><i class="fas fa-link"></i></a>
+</h2>
+<p>The <a href="https://www.tidyverse.org/packages/">Tidyverse</a> is a collection of packages for modern data
+science. <a href="https://www.tidymodels.org/packages/">Tidymodels</a> is another collection of packages that
+extends the <a href="https://www.tidyverse.org/packages/">tidyverse</a> to modelling. For these labs, I won't
+be using the entire tidyverse and tidymodels. For now, I recommend only installing a few of their
+component packages.</p>
+<p>They are <a href="https://tibble.tidyverse.org/">tibble</a>, <a href="https://dplyr.tidyverse.org/">dplyr</a>,
+<a href="https://ggplot2.tidyverse.org/">ggplot2</a>, and <a href="https://broom.tidymodels.org/">broom</a>. These
+packages can be installed using:</p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"tibble"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"dplyr"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"broom"</span><span class="op">)</span></code></pre></div>
+<p>After successfully installing these packages, you can load them using:</p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span></code></pre></div>
+<p>Additionally, <a href="https://ggplot2.tidyverse.org/">ggplot2</a> comes with various plotting themes (examples
+of which can be found <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html#examples">here</a>). By
+default, the plotting background is grey but I prefer a white background so I will also call:</p>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>The <a href="https://tibble.tidyverse.org/">tibble</a> package provides us with the usage of "tibbles" which
+are an extension of the base-R data frame. Of its many features, we will mostly be using tibbles
+for its <a href="https://tibble.tidyverse.org/articles/tibble.html#printing">pretty-printing</a> features and
+the fact that it integrates well with the other packages.</p>
+<p>The <a href="https://dplyr.tidyverse.org/">dplyr</a> package provides us with tools for data wrangling where
+base-R equivalents can feel a bit clunky. Examples of data wrangling include: adding/removing
+observations based on the presence/absence of one or more conditions, creating additional variables
+in a data set, and condensing existing data into summaries.</p>
+<p>The <a href="https://ggplot2.tidyverse.org/">ggplot2</a> package is an alternative to base-R graphics
+and has functions that are "smarter" than some that exist in base-R. For example, in the previous
+lab, I mentioned that when plotting lines in base-R, points needed to sorted from left to right
+since the <code><a href="https://rdrr.io/r/graphics/lines.html">lines()</a></code> function joins points in the order that they appear. Without sorting, the
+resulting line would appear jagged or unevenly coloured in certain areas. With
+<a href="https://ggplot2.tidyverse.org/">ggplot2</a>, we have separate functions for joining points as they
+appear in the data and joining points in order from left to right.</p>
+<p>The <a href="https://broom.tidymodels.org/">broom</a> package contains tools for cleaning up model output and
+extracting model data with diagnostic information that is ready for visualisation with
+<a href="https://ggplot2.tidyverse.org/">ggplot2</a>.</p>
+</div>
+<div id="back-to-simple-linear-regression" class="section level2" number="2.2">
+<h2>
+<span class="header-section-number">2.2</span> Back to simple linear regression<a class="anchor" aria-label="anchor" href="#back-to-simple-linear-regression"><i class="fas fa-link"></i></a>
+</h2>
+<div id="the-mpg-data-set" class="section level3" number="2.2.1">
+<h3>
+<span class="header-section-number">2.2.1</span> The <code>mpg</code> data set<a class="anchor" aria-label="anchor" href="#the-mpg-data-set"><i class="fas fa-link"></i></a>
+</h3>
+<p>Consider the fuel economy data set found in the <a href="https://ggplot2.tidyverse.org/">ggplot2</a> package.
+We can load this data set by calling:</p>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">mpg</span>, package<span class="op">=</span><span class="st">"ggplot2"</span><span class="op">)</span></code></pre></div>
+<p>Suppose we are interested in fitting a simple linear regression model with highway miles per gallon
+(<code>hwy</code>) as the response variable and city miles per gallon (<code>cty</code>) as the predictor variable.
+Before fitting the model, we should check to see if there is a linear relationship between our
+chosen variables.</p>
+</div>
+<div id="check-for-a-linear-relationship" class="section level3" number="2.2.2">
+<h3>
+<span class="header-section-number">2.2.2</span> Check for a linear relationship<a class="anchor" aria-label="anchor" href="#check-for-a-linear-relationship"><i class="fas fa-link"></i></a>
+</h3>
+<p>To create this plot, we use the function <code>ggplot</code>.</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">cty</span>, y<span class="op">=</span><span class="va">hwy</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="02_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;"></div>
+<ul>
+<li><p>The first argument of <code>ggplot</code> is the data set, <code>mpg</code></p></li>
+<li><p>The second argument of <code>ggplot</code> is the mapping, i.e. <em>"which variables contain the data that I am
+interested in plotting?"</em></p></li>
+<li><p>The call to <code>ggplot</code> can be thought of as the initialisation of the drawing canvas</p></li>
+<li><p>The mapping is created by supplying the names of the variables found within your data set to the
+aesthetics function, <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code>.</p></li>
+<li><p>Finally, we can add (with a "plus" symbol) a layer of points with <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code> that will inherit
+any aesthetics supplied in the initialisation of the canvas</p></li>
+<li><p>In other words, while not specified within <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code>, the points are drawn at positions
+<code>x=cty</code> and <code>y=hwy</code></p></li>
+</ul>
+<p>From the plot above, there appears to be a linear relationship between the two variables. We can
+begin fitting our linear model.</p>
+</div>
+<div id="fitting-the-linear-model" class="section level3" number="2.2.3">
+<h3>
+<span class="header-section-number">2.2.3</span> Fitting the linear model<a class="anchor" aria-label="anchor" href="#fitting-the-linear-model"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_miles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hwy</span> <span class="op">~</span> <span class="va">cty</span>, data<span class="op">=</span><span class="va">mpg</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm_miles</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = hwy ~ cty, data = mpg)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.3408 -1.2790  0.0214  1.0338  4.0461 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.89204    0.46895   1.902   0.0584 .  
+## cty          1.33746    0.02697  49.585   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.752 on 232 degrees of freedom
+## Multiple R-squared:  0.9138, Adjusted R-squared:  0.9134 
+## F-statistic:  2459 on 1 and 232 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>From the regression output, we have that <span class="math inline">\(\widehat{\beta}_{0} = 0.892\)</span> and
+<span class="math inline">\(\widehat{\beta}_{1} = 1.337\)</span>. The equation of the fitted line is:</p>
+<p><span class="math display">\[\widehat{y}_{i} \,=\, 0.892 \,+\, 1.337x_{i}\]</span></p>
+<p>We can interpret <span class="math inline">\(\widehat{\beta}_{0} = 0.892\)</span> as the mean highway miles per gallon when the city
+miles per gallon has a value of zero. However, this doesn't really make sense in the context of our
+data since you can't have a car that travels zero city miles on a gallon on gas.</p>
+<p>We can interpret <span class="math inline">\(\widehat{\beta}_{1} = 1.337\)</span> as the mean change in highway miles per gallon per
+unit increase in city miles per gallon. As such, for a 1 mpg increase in city mpg, we expect a 1.337
+mpg increase in highway mpg.</p>
+</div>
+<div id="visualising-the-fit" class="section level3" number="2.2.4">
+<h3>
+<span class="header-section-number">2.2.4</span> Visualising the fit<a class="anchor" aria-label="anchor" href="#visualising-the-fit"><i class="fas fa-link"></i></a>
+</h3>
+<p>Here is where <a href="https://ggplot2.tidyverse.org/">ggplot2</a> and <a href="https://broom.tidymodels.org/">broom</a>
+shine! We first use <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code> on our linear model to extract the data that was used to fit
+the model, along with additional diagnostics (such as the residuals).</p>
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_miles_aug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">lm_miles</span><span class="op">)</span>
+
+<span class="va">lm_miles_aug</span></code></pre></div>
+<pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 234 x 8</span><span>
+##      hwy   cty .fitted .resid    .hat .sigma     .cooksd .std.resid
+##    </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>  </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>  </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>       </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;"> 1</span><span>    29    18    25.0 4.03   0.004</span><span style="text-decoration: underline;">58</span><span>   1.74 0.012</span><span style="text-decoration: underline;">3</span><span>          2.31  
+## </span><span style="color: #555555;"> 2</span><span>    29    21    29.0 0.021</span><span style="text-decoration: underline;">4</span><span> 0.008</span><span style="text-decoration: underline;">34</span><span>   1.76 0.000</span><span style="text-decoration: underline;">000</span><span>632     0.012</span><span style="text-decoration: underline;">3</span><span>
+## </span><span style="color: #555555;"> 3</span><span>    31    20    27.6 3.36   0.006</span><span style="text-decoration: underline;">61</span><span>   1.74 0.012</span><span style="text-decoration: underline;">3</span><span>          1.92  
+## </span><span style="color: #555555;"> 4</span><span>    30    21    29.0 1.02   0.008</span><span style="text-decoration: underline;">34</span><span>   1.75 0.001</span><span style="text-decoration: underline;">44</span><span>         0.585 
+## </span><span style="color: #555555;"> 5</span><span>    26    16    22.3 3.71   0.004</span><span style="text-decoration: underline;">45</span><span>   1.74 0.010</span><span style="text-decoration: underline;">1</span><span>          2.12  
+## </span><span style="color: #555555;"> 6</span><span>    26    18    25.0 1.03   0.004</span><span style="text-decoration: underline;">58</span><span>   1.75 0.000</span><span style="text-decoration: underline;">805</span><span>        0.591 
+## </span><span style="color: #555555;"> 7</span><span>    27    18    25.0 2.03   0.004</span><span style="text-decoration: underline;">58</span><span>   1.75 0.003</span><span style="text-decoration: underline;">11</span><span>         1.16  
+## </span><span style="color: #555555;"> 8</span><span>    26    18    25.0 1.03   0.004</span><span style="text-decoration: underline;">58</span><span>   1.75 0.000</span><span style="text-decoration: underline;">805</span><span>        0.591 
+## </span><span style="color: #555555;"> 9</span><span>    25    16    22.3 2.71   0.004</span><span style="text-decoration: underline;">45</span><span>   1.75 0.005</span><span style="text-decoration: underline;">36</span><span>         1.55  
+## </span><span style="color: #555555;">10</span><span>    28    20    27.6 0.359  0.006</span><span style="text-decoration: underline;">61</span><span>   1.76 0.000</span><span style="text-decoration: underline;">140</span><span>        0.205 
+## </span><span style="color: #555555;"># ... with 224 more rows</span><span>
+</span></code></pre>
+<p>In the first two columns of <code>lm_miles_aug</code>, we have recovered the data that we initially passed
+into <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>. The <code>.fitted</code> column contains the fitted values of our model and the <code>.resid</code> column
+contains the raw residuals.</p>
+<p>The plot that we wish to build will use the newly created <code>lm_miles_aug</code> data set and will
+have the following features:</p>
+<ul>
+<li>The base plot is a scatterplot with points located at <code>x=cty</code> and <code>y=hwy</code>
+</li>
+<li>The fitted line will be drawn on top with points located at <code>x=cty</code> and <code>y=.fitted</code>
+</li>
+</ul>
+<p>Since the points and lines that we wish to draw no longer share a common y-aesthetic, we may not
+want to declare a y-aesthetic in the initialisation of the canvas, and instead, declare the
+y-aesthetic in the individual layers.</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">lm_miles_aug</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">cty</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">hwy</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">.fitted</span><span class="op">)</span>, colour<span class="op">=</span><span class="st">"#3366FF"</span>, lwd<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.6</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="02_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;"></div>
+<p>I have added some additional arguments to <code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line()</a></code> outside of the aesthetics since these values
+do not depend on the data:</p>
+<ul>
+<li>
+<code>colour</code> controls the colour of the line (can also use <code>color</code>)</li>
+<li>
+<code>lwd</code> controls the width of the line (can also use <code>linewidth</code>)</li>
+<li>
+<code>alpha</code> controls the transparency of the line</li>
+</ul>
+<p>To see the construction of the above plot as "an addition of layers" we can run</p>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">lm_miles_aug</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">cty</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>followed by</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">lm_miles_aug</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">cty</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">hwy</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>followed by</p>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">lm_miles_aug</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">cty</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">hwy</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">.fitted</span><span class="op">)</span>, colour<span class="op">=</span><span class="st">"#3366FF"</span>, lwd<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.6</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="confidence-and-prediction-intervals" class="section level3" number="2.2.5">
+<h3>
+<span class="header-section-number">2.2.5</span> Confidence and prediction intervals<a class="anchor" aria-label="anchor" href="#confidence-and-prediction-intervals"><i class="fas fa-link"></i></a>
+</h3>
+<div id="confidence-intervals" class="section level4" number="2.2.5.1">
+<h4>
+<span class="header-section-number">2.2.5.1</span> Confidence intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals"><i class="fas fa-link"></i></a>
+</h4>
+<p>Suppose we are interested in finding a point estimate and a 95% confidence interval for the mean
+highway miles per gallon when the city miles per gallon is 20. We can obtain these values by using
+the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function. More specifically, when we pass our <code>lm</code> object to predict, it actually
+calls the more specific <code><a href="https://rdrr.io/r/stats/predict.lm.html">predict.lm()</a></code> function. To see what we need to get our point estimate
+and confidence interval, let's pull up the associated documentation.</p>
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">?</span><span class="va">predict.lm</span></code></pre></div>
+<p>We will need to supply to <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code>:</p>
+<ul>
+<li>A linear model object</li>
+<li>A data frame containing variables common to the linear model, and values upon which to predict
+<ul>
+<li>Note that if our model has predictor variable <code>cty</code>, we cannot supply
+<code>newdata = data.frame(x=20)</code>, we must supply <code>newdata = data.frame(cty=20)</code>
+</li>
+</ul>
+</li>
+<li>If we want a confidence interval, we should specify <code>interval = "confidence"</code>
+</li>
+<li>The default confidence level is 0.95</li>
+</ul>
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+  <span class="va">lm_miles</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>cty<span class="op">=</span><span class="fl">20</span><span class="op">)</span>,
+  interval <span class="op">=</span> <span class="st">"confidence"</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>##        fit      lwr      upr
+## 1 27.64115 27.36044 27.92187</code></pre>
+<p>From the above output, the point estimate is 27.641. The lower bound of the 95% confidence interval
+is 27.360 and the upper bound is 27.922. This says that with 95% confidence, for vehicles with a
+city miles per gallon value of 20, the mean highway miles per gallon will range between 27.360 and
+27.922.</p>
+</div>
+<div id="prediction-intervals" class="section level4" number="2.2.5.2">
+<h4>
+<span class="header-section-number">2.2.5.2</span> Prediction intervals<a class="anchor" aria-label="anchor" href="#prediction-intervals"><i class="fas fa-link"></i></a>
+</h4>
+<p>Suppose we are now interested in finding a point estimate and a 95% prediction interval for the
+highway miles per gallon of a vehicle that has a city miles per gallon of 20. We can obtain these
+values in a manner similar to the previous example:</p>
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+  <span class="va">lm_miles</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>cty<span class="op">=</span><span class="fl">20</span><span class="op">)</span>,
+  interval <span class="op">=</span> <span class="st">"prediction"</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>##        fit      lwr      upr
+## 1 27.64115 24.17733 31.10498</code></pre>
+<p>From the above output, the point estimate is 27.641. The lower bound of the 95% prediction interval
+is 24.177 and the upper bound is 31.105. This says that with 95% confidence, a vehicle with a city
+miles per gallon value of 20 will have a highway miles per gallon value between 24.177 and 31.105.</p>
+</div>
+<div id="spot-the-differences" class="section level4" number="2.2.5.3">
+<h4>
+<span class="header-section-number">2.2.5.3</span> Spot the differences<a class="anchor" aria-label="anchor" href="#spot-the-differences"><i class="fas fa-link"></i></a>
+</h4>
+<p>The point estimates in both cases were identical. However, the lower and upper bounds of the
+confidence and prediction intervals were different. This is unsurprising since the formulas used to
+compute the bounds of the two intervals are different.</p>
+<p>It should be noted that, in general, for a fixed confidence level, the prediction interval will be
+wider than its corresponding confidence interval.</p>
+</div>
+</div>
+<div id="correlations" class="section level3" number="2.2.6">
+<h3>
+<span class="header-section-number">2.2.6</span> Correlations<a class="anchor" aria-label="anchor" href="#correlations"><i class="fas fa-link"></i></a>
+</h3>
+<p>Using the previously obtained augmented model data (<code>lm_miles_aug</code>), we can easily obtain the
+correlations of</p>
+<ul>
+<li>
+<span class="math inline">\(X_{i}\)</span> and <span class="math inline">\(Y_{i}\)</span>,</li>
+<li>
+<span class="math inline">\(Y_{i}\)</span> and <span class="math inline">\(\widehat{Y}_{i}\)</span>,</li>
+<li>
+<span class="math inline">\(X_{i}\)</span> and <span class="math inline">\(\widehat{Y}_{i}\)</span>,</li>
+</ul>
+<p>compare them among each other, and compare them to the model's coefficient of determination,
+<span class="math inline">\(R^{2}\)</span>. Correlations are obtained using the <code><a href="https://rdrr.io/r/stats/cor.html">cor()</a></code> function. We will also use the <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>
+function from the <a href="https://dplyr.tidyverse.org/">dplyr</a> package to help us obtain the correlations
+while staying in context of our augmented data so that we can reference our variable using bare
+names (i.e. we don't need to use <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> to reference our variables).</p>
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>
+  <span class="va">lm_miles_aug</span>,
+  corr_x_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">cty</span>, <span class="va">hwy</span><span class="op">)</span>,
+  corr_y_fitted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">hwy</span>, <span class="va">.fitted</span><span class="op">)</span>,
+  corr_x_fitted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">cty</span>, <span class="va">.fitted</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 1 x 3</span><span>
+##   corr_x_y corr_y_fitted corr_x_fitted
+##      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;">1</span><span>    0.956         0.956             1
+</span></code></pre>
+<p>Note also that:</p>
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>
+  <span class="va">lm_miles_aug</span>,
+  corr_x_y_squared <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">cty</span>, <span class="va">hwy</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,
+  corr_y_fitted_squared <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">hwy</span>, <span class="va">.fitted</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,
+  corr_x_fitted_squared <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">cty</span>, <span class="va">.fitted</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,
+  r.squared <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm_miles</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>
+<span class="op">)</span></code></pre></div>
+<pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 1 x 4</span><span>
+##   corr_x_y_squared corr_y_fitted_squared corr_x_fitted_squared r.squared
+##              </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>                 </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>                 </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>     </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;">1</span><span>            0.914                 0.914                     1     0.914
+</span></code></pre>
+<p>Are these values mathematically related or is this coincidence? 😲 <em>(See assignment 2
+question 3).</em></p>
+</div>
+</div>
+<div id="simple-linear-regression-with-transformations" class="section level2" number="2.3">
+<h2>
+<span class="header-section-number">2.3</span> Simple linear regression with transformations<a class="anchor" aria-label="anchor" href="#simple-linear-regression-with-transformations"><i class="fas fa-link"></i></a>
+</h2>
+<p>Talk about this next time</p>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="lab-1-september-15.html"><span class="header-section-number">1</span> Lab 1 — September 15</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#lab-3-september-29"><span class="header-section-number">2</span> Lab 3 — September 29</a></li>
+<li><a class="nav-link" href="#some-modern-data-science-packages"><span class="header-section-number">2.1</span> Some modern data science packages</a></li>
+<li>
+<a class="nav-link" href="#back-to-simple-linear-regression"><span class="header-section-number">2.2</span> Back to simple linear regression</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#the-mpg-data-set"><span class="header-section-number">2.2.1</span> The mpg data set</a></li>
+<li><a class="nav-link" href="#check-for-a-linear-relationship"><span class="header-section-number">2.2.2</span> Check for a linear relationship</a></li>
+<li><a class="nav-link" href="#fitting-the-linear-model"><span class="header-section-number">2.2.3</span> Fitting the linear model</a></li>
+<li><a class="nav-link" href="#visualising-the-fit"><span class="header-section-number">2.2.4</span> Visualising the fit</a></li>
+<li><a class="nav-link" href="#confidence-and-prediction-intervals"><span class="header-section-number">2.2.5</span> Confidence and prediction intervals</a></li>
+<li><a class="nav-link" href="#correlations"><span class="header-section-number">2.2.6</span> Correlations</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#simple-linear-regression-with-transformations"><span class="header-section-number">2.3</span> Simple linear regression with transformations</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/adamoshen/3553f21/blob/main/02.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/adamoshen/3553f21/edit/main/02.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on September 29, 2021.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>
