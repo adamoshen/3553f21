@@ -29,7 +29,10 @@ Windows 10 x64
 
 ```{r}
 sessioninfo::package_info(
-  pkgs = c("knitr", "rmarkdown", "bookdown", "bslib", "downlit"),
+  pkgs = c(
+    "knitr", "rmarkdown", "bookdown", "bslib", "downlit",
+    "tibble", "dplyr", "ggplot2", "broom"
+  ),
   dependencies = FALSE
 )
 ```
