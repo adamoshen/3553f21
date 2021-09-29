@@ -270,7 +270,7 @@ correlations of
 compare them among each other, and compare them to the model's coefficient of determination,
 $R^{2}$. Correlations are obtained using the `cor()` function. We will also use the `summarise()`
 function from the [dplyr](https://dplyr.tidyverse.org/) package to help us obtain the correlations
-while staying in context of our augmented data so that we can reference our variables using bare
+while staying in the context of our augmented data so that we can reference our variables using bare
 names (i.e. we don't need to use `$` to reference our variables).
 
 ```{r}
