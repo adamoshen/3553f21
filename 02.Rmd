@@ -133,8 +133,10 @@ mpg increase in highway mpg.
 ### Visualising the fit
 
 Here is where [ggplot2](https://ggplot2.tidyverse.org/) and [broom](https://broom.tidymodels.org/)
-shine! We first use `broom::augment()` on our linear model to extract the data that was used to fit
-the model, along with additional diagnostics (such as the residuals).
+shine! We first use `broom::augment()` on our linear model to extract the data that was used to
+fit the model, along with additional diagnostics (such as the residuals). Note that 
+`broom::augment()` is a generic function. When we pass our `lm` object to `broom::augment()`, under
+the hood, it actually calls the more specific `broom::augment.lm()` function. 
 
 ```{r}
 lm_miles_aug <- augment(lm_miles)
@@ -198,9 +200,10 @@ ggplot(lm_miles_aug, aes(x=cty))+
 
 Suppose we are interested in finding a point estimate and a 95% confidence interval for the mean
 highway miles per gallon for vehicles with a city miles per gallon value of 20. We can obtain these
-values by using the `predict()` function. More specifically, when we pass our `lm` object to
-`predict()`, it actually calls the more specific `predict.lm()` function. To see what we need to get
-our point estimate and confidence interval, let's pull up the associated documentation.
+values by using the `predict()` function. `predict()` is another example of a generic function. When
+we pass our `lm` object to `predict()`, it actually calls the more specific `predict.lm()` function.
+To see what we need to get our point estimate and confidence interval, let's pull up the associated
+documentation.
 
 ```{r, eval=FALSE}
 ?predict.lm
