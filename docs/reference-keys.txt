@@ -45,3 +45,9 @@ prediction-intervals
 spot-the-differences
 correlations
 simple-linear-regression-with-transformations
+creating-a-new-variable-in-your-data-set
+applying-the-transformation-in-the-formula-specification
+comparing-our-two-models
+warning
+another-example
+visualise-the-fit

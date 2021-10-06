@@ -303,4 +303,168 @@ question 3).*
 
 ## Simple linear regression with transformations
 
-Talk about this next time
+When applying transformations to variables in linear models, there are two options:
+
+- Create a new variable in the data set the applies the transformation, or
+- Apply the transformation in the formula specification
+
+To observe the differences, we will build two models using both methods. Using the `mpg` data set
+again, let us fit a model where the response will be the engine displacement and the predictor will
+be the (natural) log of the highway miles per gallon.
+
+
+### Creating a new variable in your data set
+
+With `dplyr` loaded, we can easily create new variables in our data set using the `mutate()`
+function. The first argument to `mutate()` is your data set. Additional arguments are name-value
+pairs for the variables you want to create.
+
+```{r}
+mpg2 <- mutate(
+  mpg,
+  log_hwy = log(hwy)
+)
+```
+
+The model is created as usual:
+
+```{r}
+lm_displ1 <- lm(displ ~ log_hwy, data=mpg2)
+```
+
+
+### Applying the transformation in the formula specification
+
+We can apply transformations in the formula specification if we do not wish to create a new
+variable ahead of time. The model is created using:
+
+```{r}
+lm_displ2 <- lm(displ ~ log(hwy), data=mpg2)
+```
+
+
+### Comparing our two models
+
+```{r}
+summary(lm_displ1)
+summary(lm_displ2)
+```
+
+The models are identical! Let's try to predict the engine displacement for a vehicle that has a
+highway miles per gallon value of 29.
+
+```{r}
+predict(
+  lm_displ1,
+  newdata = data.frame(log_hwy=29)
+)
+```
+
+```{r}
+predict(
+  lm_displ2,
+  newdata = data.frame(hwy=29)
+)
+```
+
+Our predicted values are **very** different! Why?
+
+For models that use variables created ahead of time, the value(s) that are supplied to predict upon
+must be on the same scale as the other predictor values that were used in the fitting of the model.
+In other words, by supplying a value of 29 to the first model, we are predicting engine displacement
+for a vehicle with a log highway miles per gallon value of 29! In order to properly predict the
+engine displacement, we must instead supply the value of log(29).
+
+```{r}
+predict(
+  lm_displ1,
+  newdata = data.frame(log_hwy=log(29))
+)
+```
+
+For models where transformations are applied in the formula specification, we can supply values on
+the original scale and the transformation will be applied for us in calculating the predicted value.
+
+
+### Warning &#x2757;
+
+Not all operations applied in the formula specification are treated as mathematical
+operations. For example, a `+` in the formula specification means to add a variable and as we saw
+in section 1.2.8, `-` means to remove a variable. In addition, the `^` symbol that we usually use
+for exponentiation has a different meaning when used in a formula specification. For example, if we
+wanted to fit a model using the square of highway miles per gallon as the predictor, we cannot
+write:
+
+```{r, eval=FALSE}
+lm(displ ~ hwy^2, data=mpg2)
+```
+
+Instead, we must either create this variable ahead of time or wrap our exponentiation with `I()`:
+
+```{r, eval=FALSE}
+lm(displ ~ I(hwy^2), data=mpg2)
+```
+
+When an operation is wrapped by `I()` in a formula specification, it means to treat it as a literal
+mathematical operator rather than a formula operator.
+
+
+## Another example
+
+For the sake of illustration, suppose we wish to fit a model where the response variable is the
+log of the highway miles per gallon plus the log of the city miles per gallon and the predictor
+variable is the square of the engine displacement. I will create my response variable ahead
+of time but I will apply the transformation to my predictor in the formula specification.
+
+```{r}
+mpg2 <- mutate(
+  mpg2,
+  mpg_sum = log(hwy) + log(cty)
+)
+```
+
+The model is fitted using:
+
+```{r}
+lm_log_miles <- lm(mpg_sum ~ I(displ^2), data=mpg2)
+
+summary(lm_log_miles)
+```
+
+The equation of the fitted line is:
+
+\[\widehat{y}_{i} \,=\, 6.445 \,-\, 0.039x_{i}^{2}\]
+
+where $\widehat{y}_{i}$ is the sum of the log highway miles per gallon and the log city miles per
+gallon. Due to how the model was constructed, if I wanted to predict the sum of the log highway
+miles per gallon and the log city highway miles per gallon for a particular vehicle, I would supply
+displacement values as-is and the model would square them for me.
+
+### Visualise the fit
+
+We can visualise the fit using the same procedure as before by first augmenting our linear model.
+
+```{r}
+lm_log_miles_aug <- augment(lm_log_miles)
+
+lm_log_miles_aug
+```
+
+There are two things to note here:
+
+- The name of the column of the predictor values violates the usual naming conventions by containing
+brackets and a caret so its name is wrapped in backticks
+- The values in this column are the squared displacement values
+- This can be verified by comparing the values `lm_log_miles_aug` with the values of `mpg2` &mdash;
+the rows have not been reordered in any way so, for example, the first row of `lm_log_miles_aug`
+corresponds with the first row of `mpg2`
+
+We can visualise the fit by passing our augmented model data to `ggplot()`:
+
+```{r}
+ggplot(lm_log_miles_aug, aes(x=`I(displ^2)`))+
+  geom_point(aes(y=mpg_sum))+
+  geom_line(aes(y=.fitted), colour="#3366FF", lwd=1.5, alpha=0.6)
+```
+
+Obviously, this isn't a great fit but that was not our goal with this example!

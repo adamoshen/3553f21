@@ -193,8 +193,10 @@ mpg increase in highway mpg.</p>
 <span class="header-section-number">2.2.4</span> Visualising the fit<a class="anchor" aria-label="anchor" href="#visualising-the-fit"><i class="fas fa-link"></i></a>
 </h3>
 <p>Here is where <a href="https://ggplot2.tidyverse.org/">ggplot2</a> and <a href="https://broom.tidymodels.org/">broom</a>
-shine! We first use <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code> on our linear model to extract the data that was used to fit
-the model, along with additional diagnostics (such as the residuals).</p>
+shine! We first use <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code> on our linear model to extract the data that was used to
+fit the model, along with additional diagnostics (such as the residuals). Note that
+<code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code> is a generic function. When we pass our <code>lm</code> object to <code><a href="https://generics.r-lib.org/reference/augment.html">broom::augment()</a></code>, under
+the hood, it actually calls the more specific <code><a href="https://broom.tidymodels.org/reference/augment.lm.html">broom::augment.lm()</a></code> function.</p>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lm_miles_aug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">lm_miles</span><span class="op">)</span>
 
@@ -267,9 +269,10 @@ of the aesthetics since these values do not depend on the data:</p>
 </h4>
 <p>Suppose we are interested in finding a point estimate and a 95% confidence interval for the mean
 highway miles per gallon for vehicles with a city miles per gallon value of 20. We can obtain these
-values by using the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function. More specifically, when we pass our <code>lm</code> object to
-<code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code>, it actually calls the more specific <code><a href="https://rdrr.io/r/stats/predict.lm.html">predict.lm()</a></code> function. To see what we need to get
-our point estimate and confidence interval, let's pull up the associated documentation.</p>
+values by using the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function. <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> is another example of a generic function. When
+we pass our <code>lm</code> object to <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code>, it actually calls the more specific <code><a href="https://rdrr.io/r/stats/predict.lm.html">predict.lm()</a></code> function.
+To see what we need to get our point estimate and confidence interval, let's pull up the associated
+documentation.</p>
 <div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">?</span><span class="va">predict.lm</span></code></pre></div>
 <p>We will need to supply to <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code>:</p>
@@ -382,8 +385,219 @@ question 3).</em></p>
 <h2>
 <span class="header-section-number">2.3</span> Simple linear regression with transformations<a class="anchor" aria-label="anchor" href="#simple-linear-regression-with-transformations"><i class="fas fa-link"></i></a>
 </h2>
-<p>Talk about this next time</p>
+<p>When applying transformations to variables in linear models, there are two options:</p>
+<ul>
+<li>Create a new variable in the data set the applies the transformation, or</li>
+<li>Apply the transformation in the formula specification</li>
+</ul>
+<p>To observe the differences, we will build two models using both methods. Using the <code>mpg</code> data set
+again, let us fit a model where the response will be the engine displacement and the predictor will
+be the (natural) log of the highway miles per gallon.</p>
+<div id="creating-a-new-variable-in-your-data-set" class="section level3" number="2.3.1">
+<h3>
+<span class="header-section-number">2.3.1</span> Creating a new variable in your data set<a class="anchor" aria-label="anchor" href="#creating-a-new-variable-in-your-data-set"><i class="fas fa-link"></i></a>
+</h3>
+<p>With <code>dplyr</code> loaded, we can easily create new variables in our data set using the <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>
+function. The first argument to <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> is your data set. Additional arguments are name-value
+pairs for the variables you want to create.</p>
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mpg2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
+  <span class="va">mpg</span>,
+  log_hwy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">hwy</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p>The model is created as usual:</p>
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_displ1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">displ</span> <span class="op">~</span> <span class="va">log_hwy</span>, data<span class="op">=</span><span class="va">mpg2</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="applying-the-transformation-in-the-formula-specification" class="section level3" number="2.3.2">
+<h3>
+<span class="header-section-number">2.3.2</span> Applying the transformation in the formula specification<a class="anchor" aria-label="anchor" href="#applying-the-transformation-in-the-formula-specification"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can apply transformations in the formula specification if we do not wish to create a new
+variable ahead of time. The model is created using:</p>
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_displ2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">displ</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">hwy</span><span class="op">)</span>, data<span class="op">=</span><span class="va">mpg2</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="comparing-our-two-models" class="section level3" number="2.3.3">
+<h3>
+<span class="header-section-number">2.3.3</span> Comparing our two models<a class="anchor" aria-label="anchor" href="#comparing-our-two-models"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm_displ1</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = displ ~ log_hwy, data = mpg2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.2992 -0.5548 -0.1148  0.4252  3.7446 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  15.4145     0.6496   23.73   &lt;2e-16 ***
+## log_hwy      -3.8260     0.2074  -18.45   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.8243 on 232 degrees of freedom
+## Multiple R-squared:  0.5946, Adjusted R-squared:  0.5929 
+## F-statistic: 340.3 on 1 and 232 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm_displ2</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = displ ~ log(hwy), data = mpg2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.2992 -0.5548 -0.1148  0.4252  3.7446 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  15.4145     0.6496   23.73   &lt;2e-16 ***
+## log(hwy)     -3.8260     0.2074  -18.45   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.8243 on 232 degrees of freedom
+## Multiple R-squared:  0.5946, Adjusted R-squared:  0.5929 
+## F-statistic: 340.3 on 1 and 232 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The models are identical! Let's try to predict the engine displacement for a vehicle that has a
+highway miles per gallon value of 29.</p>
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+  <span class="va">lm_displ1</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>log_hwy<span class="op">=</span><span class="fl">29</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>##         1 
+## -95.53829</code></pre>
+<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+  <span class="va">lm_displ2</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>hwy<span class="op">=</span><span class="fl">29</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>##       1 
+## 2.53138</code></pre>
+<p>Our predicted values are <strong>very</strong> different! Why?</p>
+<p>For models that use variables created ahead of time, the value(s) that are supplied to predict upon
+must be on the same scale as the other predictor values that were used in the fitting of the model.
+In other words, by supplying a value of 29 to the first model, we are predicting engine displacement
+for a vehicle with a log highway miles per gallon value of 29! In order to properly predict the
+engine displacement, we must instead supply the value of log(29).</p>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+  <span class="va">lm_displ1</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>log_hwy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fl">29</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>##       1 
+## 2.53138</code></pre>
+<p>For models where transformations are applied in the formula specification, we can supply values on
+the original scale and the transformation will be applied for us in calculating the predicted value.</p>
+</div>
+<div id="warning" class="section level3" number="2.3.4">
+<h3>
+<span class="header-section-number">2.3.4</span> Warning ❗<a class="anchor" aria-label="anchor" href="#warning"><i class="fas fa-link"></i></a>
+</h3>
+<p>Not all operations applied in the formula specification are treated as mathematical
+operations. For example, a <code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code> in the formula specification means to add a variable and as we saw
+in section 1.2.8, <code><a href="https://rdrr.io/r/base/Arithmetic.html">-</a></code> means to remove a variable. In addition, the <code><a href="https://rdrr.io/r/base/Arithmetic.html">^</a></code> symbol that we usually use
+for exponentiation has a different meaning when used in a formula specification. For example, if we
+wanted to fit a model using the square of highway miles per gallon as the predictor, we cannot
+write:</p>
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">displ</span> <span class="op">~</span> <span class="va">hwy</span><span class="op">^</span><span class="fl">2</span>, data<span class="op">=</span><span class="va">mpg2</span><span class="op">)</span></code></pre></div>
+<p>Instead, we must either create this variable ahead of time or wrap our exponentiation with <code><a href="https://rdrr.io/r/base/AsIs.html">I()</a></code>:</p>
+<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">displ</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">hwy</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, data<span class="op">=</span><span class="va">mpg2</span><span class="op">)</span></code></pre></div>
+<p>When an operation is wrapped by <code><a href="https://rdrr.io/r/base/AsIs.html">I()</a></code> in a formula specification, it means to treat it as a literal
+mathematical operator rather than a formula operator.</p>
+</div>
+</div>
+<div id="another-example" class="section level2" number="2.4">
+<h2>
+<span class="header-section-number">2.4</span> Another example<a class="anchor" aria-label="anchor" href="#another-example"><i class="fas fa-link"></i></a>
+</h2>
+<p>For the sake of illustration, suppose we wish to fit a model where the response variable is the
+log of the highway miles per gallon plus the log of the city miles per gallon and the predictor
+variable is the square of the engine displacement. I will create my response variable ahead
+of time but I will apply the transformation to my predictor in the formula specification.</p>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mpg2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
+  <span class="va">mpg2</span>,
+  mpg_sum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">hwy</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">cty</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p>The model is fitted using:</p>
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_log_miles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg_sum</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">displ</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, data<span class="op">=</span><span class="va">mpg2</span><span class="op">)</span>
 
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm_log_miles</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg_sum ~ I(displ^2), data = mpg2)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.91040 -0.18887  0.00019  0.16808  1.33149 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  6.444537   0.037335  172.61   &lt;2e-16 ***
+## I(displ^2)  -0.038570   0.002214  -17.42   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3324 on 232 degrees of freedom
+## Multiple R-squared:  0.5668, Adjusted R-squared:  0.5649 
+## F-statistic: 303.6 on 1 and 232 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The equation of the fitted line is:</p>
+<p><span class="math display">\[\widehat{y}_{i} \,=\, 6.445 \,-\, 0.039x_{i}^{2}\]</span></p>
+<p>where <span class="math inline">\(\widehat{y}_{i}\)</span> is the sum of the log highway miles per gallon and the log city miles per
+gallon. Due to how the model was constructed, if I wanted to predict the sum of the log highway
+miles per gallon and the log city highway miles per gallon for a particular vehicle, I would supply
+displacement values as-is and the model would square them for me.</p>
+<div id="visualise-the-fit" class="section level3" number="2.4.1">
+<h3>
+<span class="header-section-number">2.4.1</span> Visualise the fit<a class="anchor" aria-label="anchor" href="#visualise-the-fit"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can visualise the fit using the same procedure as before by first augmenting our linear model.</p>
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_log_miles_aug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">lm_log_miles</span><span class="op">)</span>
+
+<span class="va">lm_log_miles_aug</span></code></pre></div>
+<pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 234 x 7</span><span>
+##    mpg_sum `I(displ^2)` .fitted    .hat .sigma    .cooksd .std.resid
+##      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>     </span><span style="color: #555555;font-style: italic;">&lt;I&lt;dbl&gt;&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>  </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;"> 1</span><span>    6.26         3.24    6.32 0.009</span><span style="text-decoration: underline;">14</span><span>  0.333 0.000</span><span style="text-decoration: underline;">162</span><span>      -</span><span style="color: #BB0000;">0.187</span><span> 
+## </span><span style="color: #555555;"> 2</span><span>    6.41         3.24    6.32 0.009</span><span style="text-decoration: underline;">14</span><span>  0.333 0.000</span><span style="text-decoration: underline;">359</span><span>       0.279 
+## </span><span style="color: #555555;"> 3</span><span>    6.43         4       6.29 0.008</span><span style="text-decoration: underline;">46</span><span>  0.333 0.000</span><span style="text-decoration: underline;">758</span><span>       0.421 
+## </span><span style="color: #555555;"> 4</span><span>    6.45         4       6.29 0.008</span><span style="text-decoration: underline;">46</span><span>  0.333 0.000</span><span style="text-decoration: underline;">941</span><span>       0.470 
+## </span><span style="color: #555555;"> 5</span><span>    6.03         7.84    6.14 0.005</span><span style="text-decoration: underline;">80</span><span>  0.333 0.000</span><span style="text-decoration: underline;">330</span><span>      -</span><span style="color: #BB0000;">0.336</span><span> 
+## </span><span style="color: #555555;"> 6</span><span>    6.15         7.84    6.14 0.005</span><span style="text-decoration: underline;">80</span><span>  0.333 0.000</span><span style="text-decoration: underline;">001</span><span>06     0.019</span><span style="text-decoration: underline;">1</span><span>
+## </span><span style="color: #555555;"> 7</span><span>    6.19         9.61    6.07 0.005</span><span style="text-decoration: underline;">02</span><span>  0.333 0.000</span><span style="text-decoration: underline;">290</span><span>       0.339 
+## </span><span style="color: #555555;"> 8</span><span>    6.15         3.24    6.32 0.009</span><span style="text-decoration: underline;">14</span><span>  0.333 0.001</span><span style="text-decoration: underline;">23</span><span>       -</span><span style="color: #BB0000;">0.517</span><span> 
+## </span><span style="color: #555555;"> 9</span><span>    5.99         3.24    6.32 0.009</span><span style="text-decoration: underline;">14</span><span>  0.332 0.004</span><span style="text-decoration: underline;">54</span><span>       -</span><span style="color: #BB0000;">0.992</span><span> 
+## </span><span style="color: #555555;">10</span><span>    6.33         4       6.29 0.008</span><span style="text-decoration: underline;">46</span><span>  0.333 0.000</span><span style="text-decoration: underline;">055</span><span>3      0.114 
+## </span><span style="color: #555555;"># ... with 224 more rows</span><span>
+</span></code></pre>
+<p>There are two things to note here:</p>
+<ul>
+<li>The name of the column of the predictor values violates the usual naming conventions by containing
+brackets and a caret so its name is wrapped in backticks</li>
+<li>The values in this column are the squared displacement values</li>
+<li>This can be verified by comparing the values <code>lm_log_miles_aug</code> with the values of <code>mpg2</code> —
+the rows have not been reordered in any way so, for example, the first row of <code>lm_log_miles_aug</code>
+corresponds with the first row of <code>mpg2</code>
+</li>
+</ul>
+<p>We can visualise the fit by passing our augmented model data to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code>:</p>
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">lm_log_miles_aug</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">`I(displ^2)`</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">mpg_sum</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">.fitted</span><span class="op">)</span>, colour<span class="op">=</span><span class="st">"#3366FF"</span>, lwd<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.6</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="02_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;"></div>
+<p>Obviously, this isn't a great fit but that was not our goal with this example!</p>
+
+</div>
 </div>
 </div>
   <div class="chapter-nav">
@@ -404,7 +618,17 @@ question 3).</em></p>
 <li><a class="nav-link" href="#correlations"><span class="header-section-number">2.2.6</span> Correlations</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#simple-linear-regression-with-transformations"><span class="header-section-number">2.3</span> Simple linear regression with transformations</a></li>
+<li>
+<a class="nav-link" href="#simple-linear-regression-with-transformations"><span class="header-section-number">2.3</span> Simple linear regression with transformations</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#creating-a-new-variable-in-your-data-set"><span class="header-section-number">2.3.1</span> Creating a new variable in your data set</a></li>
+<li><a class="nav-link" href="#applying-the-transformation-in-the-formula-specification"><span class="header-section-number">2.3.2</span> Applying the transformation in the formula specification</a></li>
+<li><a class="nav-link" href="#comparing-our-two-models"><span class="header-section-number">2.3.3</span> Comparing our two models</a></li>
+<li><a class="nav-link" href="#warning"><span class="header-section-number">2.3.4</span> Warning ❗</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#another-example"><span class="header-section-number">2.4</span> Another example</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#visualise-the-fit"><span class="header-section-number">2.4.1</span> Visualise the fit</a></li></ul>
+</li>
 </ul>
 
       <div class="book-extra">
@@ -422,7 +646,7 @@ question 3).</em></p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on September 29, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on October 05, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
