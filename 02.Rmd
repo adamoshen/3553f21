@@ -305,7 +305,7 @@ question 3).*
 
 When applying transformations to variables in linear models, there are two options:
 
-- Create a new variable in the data set the applies the transformation, or
+- Create a new variable in the data set that applies the transformation, or
 - Apply the transformation in the formula specification
 
 To observe the differences, we will build two models using both methods. Using the `mpg` data set
