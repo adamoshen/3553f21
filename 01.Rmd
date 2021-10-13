@@ -1,6 +1,6 @@
 ```{r, include=FALSE}
 knitr::opts_chunk$set(
-  echo=TRUE, message=FALSE, warning=FALSE, fig.align="center", fig.retina=3
+  echo=TRUE, message=FALSE, warning=FALSE, fig.align="center", dev="svglite"
 )
 ```
 
