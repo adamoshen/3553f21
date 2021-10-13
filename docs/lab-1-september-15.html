@@ -50,6 +50,7 @@
 <li><a class="" href="index.html">Session info</a></li>
 <li><a class="active" href="lab-1-september-15.html"><span class="header-section-number">1</span> Lab 1 — September 15</a></li>
 <li><a class="" href="lab-3-september-29.html"><span class="header-section-number">2</span> Lab 3 — September 29</a></li>
+<li><a class="" href="lab-5-october-13.html"><span class="header-section-number">3</span> Lab 5 — October 13</a></li>
 </ul>
 
         <div class="book-extra">
@@ -691,7 +692,7 @@ sake of consistency, we will sort the <code>shape</code> values and reorder thei
 
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="va">shape</span>, data<span class="op">=</span><span class="va">rock</span>, main<span class="op">=</span><span class="st">"Intercept-only model"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">sorted_shape</span>, y<span class="op">=</span><span class="va">ordered_fitted</span>, col<span class="op">=</span><span class="st">"darkred"</span>, lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-39-1.svg" width="672" style="display: block; margin: auto;"></div>
 </div>
 <div id="visual-diagnostics" class="section level3" number="1.2.10">
 <h3>
@@ -727,7 +728,7 @@ sake of consistency, we will sort the <code>shape</code> values and reorder thei
   <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span> <span class="op">~</span> <span class="va">shape</span>, data<span class="op">=</span><span class="va">rock</span>,
   main<span class="op">=</span><span class="st">"Residuals vs Predictor"</span>, xlab<span class="op">=</span><span class="st">"shape"</span>, ylab<span class="op">=</span><span class="st">"residuals"</span>
 <span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-41-1.svg" width="672" style="display: block; margin: auto;"></div>
 <p>From the assumptions of linear regression, there should not be any discernable patterns/trends in
 the plotted points. In addition, the plot should look like a random scatter about <span class="math inline">\(y=0\)</span> with constant
 variance. From the plot above, there does not appear to be any patterns/trends in the
@@ -744,7 +745,7 @@ plotted points. The plot appears to be a random scatter about <span class="math 
   <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span>,
   main<span class="op">=</span><span class="st">"Residuals vs Fitted"</span>, xlab<span class="op">=</span><span class="st">"fitted values"</span>, ylab<span class="op">=</span><span class="st">"residuals"</span>
 <span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-42-1.svg" width="672" style="display: block; margin: auto;"></div>
 <p>Once again, there should not be any discernable patterns/trends in the plotted points, and the plot
 should look like a random scatter about <span class="math inline">\(y=0\)</span> with constant variance. The plot does look a bit
 strange, but this is because our fitted line is constant! The residuals do appear to be scattered
@@ -759,7 +760,7 @@ creating a QQ-plot of the residuals and overlaying a QQ-line.</p>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqline</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">rock_intercept_model</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"darkred"</span>, lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="01_files/figure-html/unnamed-chunk-43-1.svg" width="672" style="display: block; margin: auto;"></div>
 <p>Strong deviation from the QQ-line would be evidence of a violation of the normality assumption. As
 this is not the case in the above plot, we have no reason to believe that the residuals are <em>not</em>
 normally distributed.</p>
@@ -822,7 +823,7 @@ normally distributed.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on October 05, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on October 13, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

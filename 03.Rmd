@@ -1,0 +1,192 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  echo=TRUE, message=FALSE, warning=FALSE, fig.align="center", dev="svglite"
+)
+
+old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
+options(crayon.enabled=TRUE)
+```
+
+# Lab 5 &mdash; October 13
+
+## Packages
+
+```{r}
+library(tibble)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(broom)
+library(ellipse)
+library(palmerpenguins)
+theme_set(theme_bw())
+```
+
+The [tidyr](https://tidyr.tidyverse.org/) package is another component package of the
+[tidyverse](https://www.tidyverse.org/packages/) that contains functions for cleaning up and
+reshaping data.
+
+The `penguins` data set from the [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/)
+package will be used for some practice with multiple linear regression.
+
+We will be using the package [ellipse](https://CRAN.R-project.org/package=ellipse). This package
+contains functions for drawing confidence regions associated to the estimates obtained from linear
+regression. Unlike the code provided in class for drawing confidence regions which took in raw data
+as input, the `ellipse::ellipse.lm()` function will allow you to pass in your linear model object
+instead. In using the [ellipse](https://CRAN.R-project.org/package=ellipse) package, we will however
+need to draw the lines for the component confidence intervals ourselves (though this is not
+difficult to do).
+
+
+## The pipe
+
+The pipe operator, `%>%`, can be found in the package [magrittr](https://magrittr.tidyverse.org/),
+which should have been installed when you installed the [dplyr](https://dplyr.tidyverse.org/)
+package. When [dplyr](https://dplyr.tidyverse.org/) is loaded (by calling `library(dplyr)`),
+the [magrittr](https://magrittr.tidyverse.org/) pipe is also imported.
+
+The pipe works by taking the result on the left and passing it to the **first** argument of the
+function on the right. The pipe allows you to write cleaner code by converting something like this:
+
+```{r, eval=FALSE}
+mutate(select(filter(mydata, var1 > 5), var2, var3), var4 = var2 + sqrt(var3))
+```
+
+into this:
+
+```{r, eval=FALSE}
+mydata %>%
+  filter(var1 > 5) %>%
+  select(var2, var3) %>%
+  mutate(var4 = var2 + sqrt(var3))
+```
+
+revealing the underlying sequential logic of your workflow. Since the pipe works by taking the
+result on the left and passing it to the **first** argument of the function on the right, the use of
+the pipe when wrangling data with [dplyr](https://dplyr.tidyverse.org/) is especially convenient as
+all [dplyr](https://dplyr.tidyverse.org/) data wrangling functions have the data frame argument as
+its **first** argument, and in most cases, will return a data frame.
+
+In the example above, the first argument to `filter()`, `select()`, and `mutate()` is a data frame.
+After evaluation, each function also returns a data frame. Notice that as a result of piping a data
+frame into each of these functions, we don't need to actually specify where it's going (since it
+goes to the first argument by default) and we don't need to create extra variables for intermediate
+steps.
+
+
+## Multiple linear regression &mdash; example 1
+
+### The penguins data
+
+Let us load the `penguins` data set. Some of the variables that we are interested in working with
+contain missing values. Immediately after loading the data, we can pass it into the `drop_na()`
+function (from [tidyr](https://tidyr.tidyverse.org/)) which will drop all rows (observations) that
+contain missing values.
+
+```{r}
+penguins <- palmerpenguins::penguins %>%
+  drop_na()
+
+head(penguins)
+```
+
+
+### Subsetting the data
+
+This data set contains penguins from three species across three islands:
+
+```{r}
+penguins %>%
+  distinct(species, island)
+```
+
+For the following example, let us focus only on the penguins of species *Adelie* from the island
+*Biscoe*. We can obtain this subset of the `penguins` data using the following code:
+
+```{r}
+adeliebiscoe <- penguins %>%
+  filter(species == "Adelie", island == "Biscoe")
+```
+
+*(Note that in the code above, we are using two equal signs since we are making a comparison and
+not setting values).*
+
+
+### Visual check for linear relationship
+
+Suppose we are interested in fitting a model using body mass as the response and bill length, bill
+depth, and flipper length as the predictors. Before building the model, we can verify that there is
+a linear relationship between the response and the individual predictors.
+
+```{r}
+ggplot(adeliebiscoe, aes(x=bill_length_mm, y=body_mass_g))+
+  geom_point()
+```
+
+```{r}
+ggplot(adeliebiscoe, aes(x=bill_depth_mm, y=body_mass_g))+
+  geom_point()
+```
+
+```{r}
+ggplot(adeliebiscoe, aes(x=flipper_length_mm, y=body_mass_g))+
+  geom_point()
+```
+
+The plots look *okay*... Let's go ahead and fit the model.
+
+
+### Fit the model
+
+```{r}
+adeliebiscoe_lm <- lm(body_mass_g ~ bill_length_mm + bill_depth_mm + flipper_length_mm, data=adeliebiscoe)
+
+summary(adeliebiscoe_lm)
+```
+
+From the above output, the equation of our fitted line is:
+
+\[\widehat{y}_{i} \,=\, -6122 \,+\, 70.743x_{1} \,+\, 165.196x_{2} + 21.397x_{3}\]
+
+where:
+
+- $\widehat{y}_{i}$ is the predicted body mass
+- $x_{1}$ is the bill length
+- $x_{2}$ is the bill depth
+- $x_{3}$ is the flipper length
+
+
+### Fit a model without an intercept
+
+By default, linear models are fitted with an intercept. We can fit a linear model without an
+intercept by adding a `+ 0` or a `- 1` in the formula specification (see the Details section of
+`?lm`). To make the hypothesis tests that we will do in the next section a bit more interesting,
+let us remove the intercept from the model that we just fit.
+
+As shown in Lab 1, we can do this by fitting a brand new model:
+
+```{r, eval=FALSE}
+adeliebiscoe_lm0 <- lm(body_mass_g ~ bill_length_mm + bill_depth_mm + flipper_length_mm - 1, data=adeliebiscoe)
+```
+
+or by using `update()`:
+
+```{r}
+adeliebiscoe_lm0 <- update(adeliebiscoe_lm, formula = . ~ . - 1)
+```
+
+Recall that the above line of code means that `adeliebiscoe_lm0` is constructed by taking the
+existing `adeliebiscoe_lm` and updating its formula. The response variable remains the same
+(represented by the dot on the left of the tilde), the predictors remain the same (represented by
+the dot on the right of the tilde) and a `- 1` denotes that we do not want an intercept.
+
+Let's take a look at our new model.
+
+```{r}
+summary(adeliebiscoe_lm0)
+```
+
+Interestingly, by removing the intercept from the model, our adjusted R-squared value went from
+0.6246 to 0.9905 &#x1F440;.
+
+

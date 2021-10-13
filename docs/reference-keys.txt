@@ -51,3 +51,12 @@ comparing-our-two-models
 warning
 another-example
 visualise-the-fit
+lab-5-october-13
+packages
+the-pipe
+multiple-linear-regression-example-1
+the-penguins-data
+subsetting-the-data
+visual-check-for-linear-relationship
+fit-the-model
+fit-a-model-without-an-intercept
