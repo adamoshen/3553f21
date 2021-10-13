@@ -31,7 +31,8 @@ Windows 10 x64
 sessioninfo::package_info(
   pkgs = c(
     "knitr", "rmarkdown", "bookdown", "bslib", "downlit",
-    "svglite", "tibble", "dplyr", "ggplot2", "broom"
+    "svglite", "tibble", "dplyr", "ggplot2", "tidyr",
+    "broom", "ellipse", "palmerpenguins"
   ),
   dependencies = FALSE
 )
