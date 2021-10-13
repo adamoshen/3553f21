@@ -54,9 +54,15 @@ visualise-the-fit
 lab-5-october-13
 packages
 the-pipe
-multiple-linear-regression-example-1
+multiple-linear-regression-hypothesis-testing
 the-penguins-data
 subsetting-the-data
 visual-check-for-linear-relationship
 fit-the-model
-fit-a-model-without-an-intercept
+fitting-a-model-without-an-intercept
+anova-with-multiple-linear-regression-models
+at-least-one-parameter-non-zero
+two-parameters-non-zero
+one-parameter-non-zero
+multiple-linear-regression-working-with-matrices-in-r
+simple-linear-regression-simultaneous-confidence-regions

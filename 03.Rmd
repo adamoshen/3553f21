@@ -74,18 +74,28 @@ goes to the first argument by default) and we don't need to create extra variabl
 steps.
 
 
-## Multiple linear regression &mdash; example 1
+## Multiple linear regression &mdash; hypothesis testing
 
 ### The penguins data
 
 Let us load the `penguins` data set. Some of the variables that we are interested in working with
 contain missing values. Immediately after loading the data, we can pass it into the `drop_na()`
 function (from [tidyr](https://tidyr.tidyverse.org/)) which will drop all rows (observations) that
-contain missing values.
+contain missing values. 
+
+In addition, let's also rename some of our variables to shorten some of the code that we need to
+type. This can be done by piping our data into the `rename()` function and supplying name pairs
+in the format `new_name = old_name`.
 
 ```{r}
 penguins <- palmerpenguins::penguins %>%
-  drop_na()
+  drop_na() %>%
+  rename(
+    bill_length = bill_length_mm,
+    bill_depth = bill_depth_mm,
+    flipper_length = flipper_length_mm,
+    body_mass = body_mass_g
+  )
 
 head(penguins)
 ```
@@ -119,44 +129,44 @@ depth, and flipper length as the predictors. Before building the model, we can v
 a linear relationship between the response and the individual predictors.
 
 ```{r}
-ggplot(adeliebiscoe, aes(x=bill_length_mm, y=body_mass_g))+
+ggplot(adeliebiscoe, aes(x=bill_length, y=body_mass))+
   geom_point()
 ```
 
 ```{r}
-ggplot(adeliebiscoe, aes(x=bill_depth_mm, y=body_mass_g))+
+ggplot(adeliebiscoe, aes(x=bill_depth, y=body_mass))+
   geom_point()
 ```
 
 ```{r}
-ggplot(adeliebiscoe, aes(x=flipper_length_mm, y=body_mass_g))+
+ggplot(adeliebiscoe, aes(x=flipper_length, y=body_mass))+
   geom_point()
 ```
 
-The plots look *okay*... Let's go ahead and fit the model.
+The plots look *okay*. Let's go ahead and fit the model.
 
 
 ### Fit the model
 
 ```{r}
-adeliebiscoe_lm <- lm(body_mass_g ~ bill_length_mm + bill_depth_mm + flipper_length_mm, data=adeliebiscoe)
+adeliebiscoe_lm <- lm(body_mass ~ bill_length + bill_depth + flipper_length, data=adeliebiscoe)
 
 summary(adeliebiscoe_lm)
 ```
 
 From the above output, the equation of our fitted line is:
 
-\[\widehat{y}_{i} \,=\, -6122 \,+\, 70.743x_{1} \,+\, 165.196x_{2} + 21.397x_{3}\]
+\[\widehat{y}_{i} \,=\, -6122 \,+\, 70.743x_{1,\,i} \,+\, 165.196x_{2,\,i} + 21.397x_{3,\,i}\]
 
 where:
 
 - $\widehat{y}_{i}$ is the predicted body mass
-- $x_{1}$ is the bill length
-- $x_{2}$ is the bill depth
-- $x_{3}$ is the flipper length
+- $x_{1,\,i}$ is the bill length
+- $x_{2,\,i}$ is the bill depth
+- $x_{3,\,i}$ is the flipper length
 
 
-### Fit a model without an intercept
+### Fitting a model without an intercept
 
 By default, linear models are fitted with an intercept. We can fit a linear model without an
 intercept by adding a `+ 0` or a `- 1` in the formula specification (see the Details section of
@@ -166,7 +176,7 @@ let us remove the intercept from the model that we just fit.
 As shown in Lab 1, we can do this by fitting a brand new model:
 
 ```{r, eval=FALSE}
-adeliebiscoe_lm0 <- lm(body_mass_g ~ bill_length_mm + bill_depth_mm + flipper_length_mm - 1, data=adeliebiscoe)
+adeliebiscoe_lm0 <- lm(body_mass ~ bill_length + bill_depth + flipper_length - 1, data=adeliebiscoe)
 ```
 
 or by using `update()`:
@@ -190,3 +200,110 @@ Interestingly, by removing the intercept from the model, our adjusted R-squared 
 0.6246 to 0.9905 &#x1F440;.
 
 
+### ANOVA with multiple linear regression models
+
+```{r}
+anova(adeliebiscoe_lm0)
+```
+
+For multiple linear regression, the output is slightly different from what we saw with simple linear
+regression. In simple linear regression, wrapping our linear model with `anova()` produced the
+"classic" $F$-table: the sum of squares for the first row was the SSR, the sum of squares for the
+second row was the SSE, and there was a single $F$-value and corresponding $p$-value.
+
+In the above output, we now have three $F$-values and three corresponding $p$-values! However, the
+interpretation here is slightly different. The sum of squares column represents the **sequential**
+increase in SSR (or decrease in SSE) by adding the variable to the model that came before it. As
+such:
+
+- The sum of squares on the `bill_length` row is the increase in SSR (or decrease in SSE) by
+including only `bill_length` in the model (because our base model has no intercept)
+- The sum of squares on the `bill_depth` row is the increase in SSR (or decrease in SSE) by
+including `bill_depth` in the model that **already** includes `bill_length`
+- The sum of squares on the `flipper_length` row is the increase in SSR (or decrease in SSE) by
+including `flipper_length` to the model that **already** includes `bill_length` and `bill_depth`
+- The sum of squares on the `Residual` row is the SSE of the model that includes **all** of
+`bill_length`, `bill_depth`, and `flipper_length`
+
+Using only the output above, if we wish to perform a hypothesis test to check whether a subset of
+the parameters are different from zero, we need to do some extra math. But since we are using R,
+let's not do math! We can perform the usual partial $F$-tests by building reduced models and full
+models in R (and this is where the `update()` function becomes extremely handy).
+
+
+#### At least one parameter non-zero
+
+\[H_{0}: \beta_{1} \,=\, \beta_{2} \,=\, \beta_{3} \,=\, 0, \quad
+H_{A}: \text{At least one non-zero}\]
+
+The reduced model is the intercept-only model that passes through the origin.
+
+```{r}
+adeliebiscoe_lm_origin <- update(adeliebiscoe_lm0, formula = . ~ 0)
+```
+
+The full model is the model that has all the predictors (`adeliebiscoe_lm0`).
+
+To test the above hypotheses, we our reduced and full models to `anova()`:
+
+```{r}
+anova(adeliebiscoe_lm_origin, adeliebiscoe_lm0)
+```
+
+The produces a $F$-value of 1535.8 with numerator degrees of freedom, 3, and denominator degrees of
+freedom, 41. But we don't need to use these values since a $p$-value is also given. Using a
+significance level of $\alpha = 0.05$, since the $p$-value is less than 0.05, we reject the null
+hypothesis and conclude that at least one of the parameters is non-zero and as such, we should not
+consider an intercept only model that passes through the origin. It is important to note that this
+hypothesis test tells us that at least one parameter is non-zero, but it doesn't tell us
+**which** one is.
+
+
+#### Two parameters non-zero
+
+
+#### One parameter non-zero
+
+
+
+## Multiple linear regression &mdash; working with matrices in R
+
+
+
+
+
+
+## Simple linear regression &mdash; simultaneous confidence regions
+
+```{r, eval=FALSE}
+data(rock)
+m <- lm(area ~ peri, data=rock)
+
+ellipse_path <- m %>%
+  ellipse(level=0.90) %>%
+  as_tibble()
+
+coef_table <- m %>%
+  tidy(conf.int=TRUE)
+
+coef_point <- coef_table %>%
+  pivot_wider(id_cols=c(term, estimate), names_from=term, values_from=estimate)
+
+beta0 <- coef_table %>%
+  filter(term == "(Intercept)") %>%
+  pivot_longer(cols=contains("conf"))
+
+beta1 <- coef_table %>%
+  filter(term == "peri") %>%
+  pivot_longer(cols=contains("conf"))
+
+ggplot()+
+  geom_vline(data=beta0, aes(xintercept=value), colour="#3366FF", lty=2)+
+  geom_hline(data=beta1, aes(yintercept=value), colour="#3366FF", lty=2)+
+  geom_point(data=coef_point, aes(x=`(Intercept)`, y=peri))+
+  geom_path(data=ellipse_path, aes(x=`(Intercept)`, y=peri))+
+  labs(
+    x="Intercept", y="Slope",
+    caption="Solid line represents 90% confidence region. Dotted lines represent 95% confidence intervals."
+  )
+```

@@ -117,9 +117,9 @@ frame into each of these functions, we don't need to actually specify where it's
 goes to the first argument by default) and we don't need to create extra variables for intermediate
 steps.</p>
 </div>
-<div id="multiple-linear-regression-example-1" class="section level2" number="3.3">
+<div id="multiple-linear-regression-hypothesis-testing" class="section level2" number="3.3">
 <h2>
-<span class="header-section-number">3.3</span> Multiple linear regression — example 1<a class="anchor" aria-label="anchor" href="#multiple-linear-regression-example-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3</span> Multiple linear regression — hypothesis testing<a class="anchor" aria-label="anchor" href="#multiple-linear-regression-hypothesis-testing"><i class="fas fa-link"></i></a>
 </h2>
 <div id="the-penguins-data" class="section level3" number="3.3.1">
 <h3>
@@ -129,21 +129,29 @@ steps.</p>
 contain missing values. Immediately after loading the data, we can pass it into the <code><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na()</a></code>
 function (from <a href="https://tidyr.tidyverse.org/">tidyr</a>) which will drop all rows (observations) that
 contain missing values.</p>
+<p>In addition, let's also rename some of our variables to shorten some of the code that we need to
+type. This can be done by piping our data into the <code><a href="https://dplyr.tidyverse.org/reference/rename.html">rename()</a></code> function and supplying name pairs
+in the format <code>new_name = old_name</code>.</p>
 <div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="fu">palmerpenguins</span><span class="fu">::</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/reference/penguins.html">penguins</a></span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>
+    bill_length <span class="op">=</span> <span class="va">bill_length_mm</span>,
+    bill_depth <span class="op">=</span> <span class="va">bill_depth_mm</span>,
+    flipper_length <span class="op">=</span> <span class="va">flipper_length_mm</span>,
+    body_mass <span class="op">=</span> <span class="va">body_mass_g</span>
+  <span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></code></pre></div>
 <pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 6 x 8</span><span>
-##   species island bill_length_mm bill_depth_mm flipper_length_~ body_mass_g sex  
-##   </span><span style="color: #555555;font-style: italic;">&lt;fct&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;fct&gt;</span><span>           </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>            </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>       </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;fct&gt;</span><span>
-## </span><span style="color: #555555;">1</span><span> Adelie  Torge~           39.1          18.7              181        </span><span style="text-decoration: underline;">3</span><span>750 male 
-## </span><span style="color: #555555;">2</span><span> Adelie  Torge~           39.5          17.4              186        </span><span style="text-decoration: underline;">3</span><span>800 fema~
-## </span><span style="color: #555555;">3</span><span> Adelie  Torge~           40.3          18                195        </span><span style="text-decoration: underline;">3</span><span>250 fema~
-## </span><span style="color: #555555;">4</span><span> Adelie  Torge~           36.7          19.3              193        </span><span style="text-decoration: underline;">3</span><span>450 fema~
-## </span><span style="color: #555555;">5</span><span> Adelie  Torge~           39.3          20.6              190        </span><span style="text-decoration: underline;">3</span><span>650 male 
-## </span><span style="color: #555555;">6</span><span> Adelie  Torge~           38.9          17.8              181        </span><span style="text-decoration: underline;">3</span><span>625 fema~
-## </span><span style="color: #555555;"># ... with 1 more variable: year &lt;int&gt;</span><span>
+##   species island    bill_length bill_depth flipper_length body_mass sex     year
+##   </span><span style="color: #555555;font-style: italic;">&lt;fct&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;fct&gt;</span><span>           </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>          </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>     </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;fct&gt;</span><span>  </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>
+## </span><span style="color: #555555;">1</span><span> Adelie  Torgersen        39.1       18.7            181      </span><span style="text-decoration: underline;">3</span><span>750 male    </span><span style="text-decoration: underline;">2</span><span>007
+## </span><span style="color: #555555;">2</span><span> Adelie  Torgersen        39.5       17.4            186      </span><span style="text-decoration: underline;">3</span><span>800 female  </span><span style="text-decoration: underline;">2</span><span>007
+## </span><span style="color: #555555;">3</span><span> Adelie  Torgersen        40.3       18              195      </span><span style="text-decoration: underline;">3</span><span>250 female  </span><span style="text-decoration: underline;">2</span><span>007
+## </span><span style="color: #555555;">4</span><span> Adelie  Torgersen        36.7       19.3            193      </span><span style="text-decoration: underline;">3</span><span>450 female  </span><span style="text-decoration: underline;">2</span><span>007
+## </span><span style="color: #555555;">5</span><span> Adelie  Torgersen        39.3       20.6            190      </span><span style="text-decoration: underline;">3</span><span>650 male    </span><span style="text-decoration: underline;">2</span><span>007
+## </span><span style="color: #555555;">6</span><span> Adelie  Torgersen        38.9       17.8            181      </span><span style="text-decoration: underline;">3</span><span>625 female  </span><span style="text-decoration: underline;">2</span><span>007
 </span></code></pre>
 </div>
 <div id="subsetting-the-data" class="section level3" number="3.3.2">
@@ -179,30 +187,30 @@ not setting values).</em></p>
 depth, and flipper length as the predictors. Before building the model, we can verify that there is
 a linear relationship between the response and the individual predictors.</p>
 <div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">adeliebiscoe</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">bill_length_mm</span>, y<span class="op">=</span><span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">adeliebiscoe</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">bill_length</span>, y<span class="op">=</span><span class="va">body_mass</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="03_files/figure-html/unnamed-chunk-8-1.svg" width="672" style="display: block; margin: auto;"></div>
 <div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">adeliebiscoe</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">bill_depth_mm</span>, y<span class="op">=</span><span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">adeliebiscoe</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">bill_depth</span>, y<span class="op">=</span><span class="va">body_mass</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="03_files/figure-html/unnamed-chunk-9-1.svg" width="672" style="display: block; margin: auto;"></div>
 <div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">adeliebiscoe</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">flipper_length_mm</span>, y<span class="op">=</span><span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">adeliebiscoe</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">flipper_length</span>, y<span class="op">=</span><span class="va">body_mass</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="03_files/figure-html/unnamed-chunk-10-1.svg" width="672" style="display: block; margin: auto;"></div>
-<p>The plots look <em>okay</em>... Let's go ahead and fit the model.</p>
+<p>The plots look <em>okay</em>. Let's go ahead and fit the model.</p>
 </div>
 <div id="fit-the-model" class="section level3" number="3.3.4">
 <h3>
 <span class="header-section-number">3.3.4</span> Fit the model<a class="anchor" aria-label="anchor" href="#fit-the-model"><i class="fas fa-link"></i></a>
 </h3>
 <div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">adeliebiscoe_lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">body_mass_g</span> <span class="op">~</span> <span class="va">bill_length_mm</span> <span class="op">+</span> <span class="va">bill_depth_mm</span> <span class="op">+</span> <span class="va">flipper_length_mm</span>, data<span class="op">=</span><span class="va">adeliebiscoe</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">adeliebiscoe_lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">body_mass</span> <span class="op">~</span> <span class="va">bill_length</span> <span class="op">+</span> <span class="va">bill_depth</span> <span class="op">+</span> <span class="va">flipper_length</span>, data<span class="op">=</span><span class="va">adeliebiscoe</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">adeliebiscoe_lm</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## lm(formula = body_mass_g ~ bill_length_mm + bill_depth_mm + flipper_length_mm, 
+## lm(formula = body_mass ~ bill_length + bill_depth + flipper_length, 
 ##     data = adeliebiscoe)
 ## 
 ## Residuals:
@@ -210,11 +218,11 @@ a linear relationship between the response and the individual predictors.</p>
 ## -836.50 -186.29   19.01  183.14  486.90 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       -6122.000   1341.697  -4.563 4.71e-05 ***
-## bill_length_mm       70.743     21.445   3.299 0.002046 ** 
-## bill_depth_mm       165.196     43.802   3.771 0.000526 ***
-## flipper_length_mm    21.397      7.262   2.947 0.005336 ** 
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    -6122.000   1341.697  -4.563 4.71e-05 ***
+## bill_length       70.743     21.445   3.299 0.002046 ** 
+## bill_depth       165.196     43.802   3.771 0.000526 ***
+## flipper_length    21.397      7.262   2.947 0.005336 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -222,22 +230,22 @@ a linear relationship between the response and the individual predictors.</p>
 ## Multiple R-squared:  0.6508, Adjusted R-squared:  0.6246 
 ## F-statistic: 24.85 on 3 and 40 DF,  p-value: 3.048e-09</code></pre>
 <p>From the above output, the equation of our fitted line is:</p>
-<p><span class="math display">\[\widehat{y}_{i} \,=\, -6122 \,+\, 70.743x_{1} \,+\, 165.196x_{2} + 21.397x_{3}\]</span></p>
+<p><span class="math display">\[\widehat{y}_{i} \,=\, -6122 \,+\, 70.743x_{1,\,i} \,+\, 165.196x_{2,\,i} + 21.397x_{3,\,i}\]</span></p>
 <p>where:</p>
 <ul>
 <li>
 <span class="math inline">\(\widehat{y}_{i}\)</span> is the predicted body mass</li>
 <li>
-<span class="math inline">\(x_{1}\)</span> is the bill length</li>
+<span class="math inline">\(x_{1,\,i}\)</span> is the bill length</li>
 <li>
-<span class="math inline">\(x_{2}\)</span> is the bill depth</li>
+<span class="math inline">\(x_{2,\,i}\)</span> is the bill depth</li>
 <li>
-<span class="math inline">\(x_{3}\)</span> is the flipper length</li>
+<span class="math inline">\(x_{3,\,i}\)</span> is the flipper length</li>
 </ul>
 </div>
-<div id="fit-a-model-without-an-intercept" class="section level3" number="3.3.5">
+<div id="fitting-a-model-without-an-intercept" class="section level3" number="3.3.5">
 <h3>
-<span class="header-section-number">3.3.5</span> Fit a model without an intercept<a class="anchor" aria-label="anchor" href="#fit-a-model-without-an-intercept"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.5</span> Fitting a model without an intercept<a class="anchor" aria-label="anchor" href="#fitting-a-model-without-an-intercept"><i class="fas fa-link"></i></a>
 </h3>
 <p>By default, linear models are fitted with an intercept. We can fit a linear model without an
 intercept by adding a <code>+ 0</code> or a <code>- 1</code> in the formula specification (see the Details section of
@@ -245,7 +253,7 @@ intercept by adding a <code>+ 0</code> or a <code>- 1</code> in the formula spec
 let us remove the intercept from the model that we just fit.</p>
 <p>As shown in Lab 1, we can do this by fitting a brand new model:</p>
 <div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">adeliebiscoe_lm0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">body_mass_g</span> <span class="op">~</span> <span class="va">bill_length_mm</span> <span class="op">+</span> <span class="va">bill_depth_mm</span> <span class="op">+</span> <span class="va">flipper_length_mm</span> <span class="op">-</span> <span class="fl">1</span>, data<span class="op">=</span><span class="va">adeliebiscoe</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">adeliebiscoe_lm0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">body_mass</span> <span class="op">~</span> <span class="va">bill_length</span> <span class="op">+</span> <span class="va">bill_depth</span> <span class="op">+</span> <span class="va">flipper_length</span> <span class="op">-</span> <span class="fl">1</span>, data<span class="op">=</span><span class="va">adeliebiscoe</span><span class="op">)</span></code></pre></div>
 <p>or by using <code><a href="https://rdrr.io/r/stats/update.html">update()</a></code>:</p>
 <div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">adeliebiscoe_lm0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span><span class="op">(</span><span class="va">adeliebiscoe_lm</span>, formula <span class="op">=</span> <span class="va">.</span> <span class="op">~</span> <span class="va">.</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
@@ -258,7 +266,7 @@ the dot on the right of the tilde) and a <code>- 1</code> denotes that we do not
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">adeliebiscoe_lm0</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## lm(formula = body_mass_g ~ bill_length_mm + bill_depth_mm + flipper_length_mm - 
+## lm(formula = body_mass ~ bill_length + bill_depth + flipper_length - 
 ##     1, data = adeliebiscoe)
 ## 
 ## Residuals:
@@ -266,10 +274,10 @@ the dot on the right of the tilde) and a <code>- 1</code> denotes that we do not
 ## -737.69 -296.78   41.82  236.37  769.39 
 ## 
 ## Coefficients:
-##                   Estimate Std. Error t value Pr(&gt;|t|)  
-## bill_length_mm      58.741     25.922   2.266   0.0288 *
-## bill_depth_mm      125.323     52.276   2.397   0.0212 *
-## flipper_length_mm   -4.635      5.471  -0.847   0.4018  
+##                Estimate Std. Error t value Pr(&gt;|t|)  
+## bill_length      58.741     25.922   2.266   0.0288 *
+## bill_depth      125.323     52.276   2.397   0.0212 *
+## flipper_length   -4.635      5.471  -0.847   0.4018  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -278,8 +286,131 @@ the dot on the right of the tilde) and a <code>- 1</code> denotes that we do not
 ## F-statistic:  1536 on 3 and 41 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Interestingly, by removing the intercept from the model, our adjusted R-squared value went from
 0.6246 to 0.9905 👀.</p>
-
 </div>
+<div id="anova-with-multiple-linear-regression-models" class="section level3" number="3.3.6">
+<h3>
+<span class="header-section-number">3.3.6</span> ANOVA with multiple linear regression models<a class="anchor" aria-label="anchor" href="#anova-with-multiple-linear-regression-models"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">adeliebiscoe_lm0</span><span class="op">)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: body_mass
+##                Df    Sum Sq   Mean Sq   F value  Pr(&gt;F)    
+## bill_length     1 609528281 609528281 4601.6610 &lt; 2e-16 ***
+## bill_depth      1    683988    683988    5.1638 0.02837 *  
+## flipper_length  1     95065     95065    0.7177 0.40182    
+## Residuals      41   5430791    132458                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>For multiple linear regression, the output is slightly different from what we saw with simple linear
+regression. In simple linear regression, wrapping our linear model with <code><a href="https://rdrr.io/r/stats/anova.html">anova()</a></code> produced the
+"classic" <span class="math inline">\(F\)</span>-table: the sum of squares for the first row was the SSR, the sum of squares for the
+second row was the SSE, and there was a single <span class="math inline">\(F\)</span>-value and corresponding <span class="math inline">\(p\)</span>-value.</p>
+<p>In the above output, we now have three <span class="math inline">\(F\)</span>-values and three corresponding <span class="math inline">\(p\)</span>-values! However, the
+interpretation here is slightly different. The sum of squares column represents the <strong>sequential</strong>
+increase in SSR (or decrease in SSE) by adding the variable to the model that came before it. As
+such:</p>
+<ul>
+<li>The sum of squares on the <code>bill_length</code> row is the increase in SSR (or decrease in SSE) by
+including only <code>bill_length</code> in the model (because our base model has no intercept)</li>
+<li>The sum of squares on the <code>bill_depth</code> row is the increase in SSR (or decrease in SSE) by
+including <code>bill_depth</code> in the model that <strong>already</strong> includes <code>bill_length</code>
+</li>
+<li>The sum of squares on the <code>flipper_length</code> row is the increase in SSR (or decrease in SSE) by
+including <code>flipper_length</code> to the model that <strong>already</strong> includes <code>bill_length</code> and <code>bill_depth</code>
+</li>
+<li>The sum of squares on the <code>Residual</code> row is the SSE of the model that includes <strong>all</strong> of
+<code>bill_length</code>, <code>bill_depth</code>, and <code>flipper_length</code>
+</li>
+</ul>
+<p>Using only the output above, if we wish to perform a hypothesis test to check whether a subset of
+the parameters are different from zero, we need to do some extra math. But since we are using R,
+let's not do math! We can perform the usual partial <span class="math inline">\(F\)</span>-tests by building reduced models and full
+models in R (and this is where the <code><a href="https://rdrr.io/r/stats/update.html">update()</a></code> function becomes extremely handy).</p>
+<div id="at-least-one-parameter-non-zero" class="section level4" number="3.3.6.1">
+<h4>
+<span class="header-section-number">3.3.6.1</span> At least one parameter non-zero<a class="anchor" aria-label="anchor" href="#at-least-one-parameter-non-zero"><i class="fas fa-link"></i></a>
+</h4>
+<p><span class="math display">\[H_{0}: \beta_{1} \,=\, \beta_{2} \,=\, \beta_{3} \,=\, 0, \quad
+H_{A}: \text{At least one non-zero}\]</span></p>
+<p>The reduced model is the intercept-only model that passes through the origin.</p>
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">adeliebiscoe_lm_origin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span><span class="op">(</span><span class="va">adeliebiscoe_lm0</span>, formula <span class="op">=</span> <span class="va">.</span> <span class="op">~</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<p>The full model is the model that has all the predictors (<code>adeliebiscoe_lm0</code>).</p>
+<p>To test the above hypotheses, we our reduced and full models to <code><a href="https://rdrr.io/r/stats/anova.html">anova()</a></code>:</p>
+<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">adeliebiscoe_lm_origin</span>, <span class="va">adeliebiscoe_lm0</span><span class="op">)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: body_mass ~ 1 - 1
+## Model 2: body_mass ~ bill_length + bill_depth + flipper_length - 1
+##   Res.Df       RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1     44 615738125                                  
+## 2     41   5430791  3 610307334 1535.8 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>The produces a <span class="math inline">\(F\)</span>-value of 1535.8 with numerator degrees of freedom, 3, and denominator degrees of
+freedom, 41. But we don't need to use these values since a <span class="math inline">\(p\)</span>-value is also given. Using a
+significance level of <span class="math inline">\(\alpha = 0.05\)</span>, since the <span class="math inline">\(p\)</span>-value is less than 0.05, we reject the null
+hypothesis and conclude that at least one of the parameters is non-zero and as such, we should not
+consider an intercept only model that passes through the origin. It is important to note that this
+hypothesis test tells us that at least one parameter is non-zero, but it doesn't tell us
+<strong>which</strong> one is.</p>
+</div>
+<div id="two-parameters-non-zero" class="section level4" number="3.3.6.2">
+<h4>
+<span class="header-section-number">3.3.6.2</span> Two parameters non-zero<a class="anchor" aria-label="anchor" href="#two-parameters-non-zero"><i class="fas fa-link"></i></a>
+</h4>
+</div>
+<div id="one-parameter-non-zero" class="section level4" number="3.3.6.3">
+<h4>
+<span class="header-section-number">3.3.6.3</span> One parameter non-zero<a class="anchor" aria-label="anchor" href="#one-parameter-non-zero"><i class="fas fa-link"></i></a>
+</h4>
+</div>
+</div>
+</div>
+<div id="multiple-linear-regression-working-with-matrices-in-r" class="section level2" number="3.4">
+<h2>
+<span class="header-section-number">3.4</span> Multiple linear regression — working with matrices in R<a class="anchor" aria-label="anchor" href="#multiple-linear-regression-working-with-matrices-in-r"><i class="fas fa-link"></i></a>
+</h2>
+</div>
+<div id="simple-linear-regression-simultaneous-confidence-regions" class="section level2" number="3.5">
+<h2>
+<span class="header-section-number">3.5</span> Simple linear regression — simultaneous confidence regions<a class="anchor" aria-label="anchor" href="#simple-linear-regression-simultaneous-confidence-regions"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">rock</span><span class="op">)</span>
+<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="va">peri</span>, data<span class="op">=</span><span class="va">rock</span><span class="op">)</span>
+
+<span class="va">ellipse_path</span> <span class="op">&lt;-</span> <span class="va">m</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ellipse/man/ellipse.html">ellipse</a></span><span class="op">(</span>level<span class="op">=</span><span class="fl">0.90</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">coef_table</span> <span class="op">&lt;-</span> <span class="va">m</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span>conf.int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="va">coef_point</span> <span class="op">&lt;-</span> <span class="va">coef_table</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>id_cols<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">estimate</span><span class="op">)</span>, names_from<span class="op">=</span><span class="va">term</span>, values_from<span class="op">=</span><span class="va">estimate</span><span class="op">)</span>
+
+<span class="va">beta0</span> <span class="op">&lt;-</span> <span class="va">coef_table</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">term</span> <span class="op">==</span> <span class="st">"(Intercept)"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols<span class="op">=</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"conf"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">beta1</span> <span class="op">&lt;-</span> <span class="va">coef_table</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">term</span> <span class="op">==</span> <span class="st">"peri"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols<span class="op">=</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"conf"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">beta0</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>xintercept<span class="op">=</span><span class="va">value</span><span class="op">)</span>, colour<span class="op">=</span><span class="st">"#3366FF"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">beta1</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>yintercept<span class="op">=</span><span class="va">value</span><span class="op">)</span>, colour<span class="op">=</span><span class="st">"#3366FF"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">coef_point</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">`(Intercept)`</span>, y<span class="op">=</span><span class="va">peri</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">ellipse_path</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">`(Intercept)`</span>, y<span class="op">=</span><span class="va">peri</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>
+    x<span class="op">=</span><span class="st">"Intercept"</span>, y<span class="op">=</span><span class="st">"Slope"</span>,
+    caption<span class="op">=</span><span class="st">"Solid line represents 90% confidence region. Dotted lines represent 95% confidence intervals."</span>
+  <span class="op">)</span></code></pre></div>
+
 </div>
 </div>
   <div class="chapter-nav">
@@ -292,14 +423,17 @@ the dot on the right of the tilde) and a <code>- 1</code> denotes that we do not
 <li><a class="nav-link" href="#packages"><span class="header-section-number">3.1</span> Packages</a></li>
 <li><a class="nav-link" href="#the-pipe"><span class="header-section-number">3.2</span> The pipe</a></li>
 <li>
-<a class="nav-link" href="#multiple-linear-regression-example-1"><span class="header-section-number">3.3</span> Multiple linear regression — example 1</a><ul class="nav navbar-nav">
+<a class="nav-link" href="#multiple-linear-regression-hypothesis-testing"><span class="header-section-number">3.3</span> Multiple linear regression — hypothesis testing</a><ul class="nav navbar-nav">
 <li><a class="nav-link" href="#the-penguins-data"><span class="header-section-number">3.3.1</span> The penguins data</a></li>
 <li><a class="nav-link" href="#subsetting-the-data"><span class="header-section-number">3.3.2</span> Subsetting the data</a></li>
 <li><a class="nav-link" href="#visual-check-for-linear-relationship"><span class="header-section-number">3.3.3</span> Visual check for linear relationship</a></li>
 <li><a class="nav-link" href="#fit-the-model"><span class="header-section-number">3.3.4</span> Fit the model</a></li>
-<li><a class="nav-link" href="#fit-a-model-without-an-intercept"><span class="header-section-number">3.3.5</span> Fit a model without an intercept</a></li>
+<li><a class="nav-link" href="#fitting-a-model-without-an-intercept"><span class="header-section-number">3.3.5</span> Fitting a model without an intercept</a></li>
+<li><a class="nav-link" href="#anova-with-multiple-linear-regression-models"><span class="header-section-number">3.3.6</span> ANOVA with multiple linear regression models</a></li>
 </ul>
 </li>
+<li><a class="nav-link" href="#multiple-linear-regression-working-with-matrices-in-r"><span class="header-section-number">3.4</span> Multiple linear regression — working with matrices in R</a></li>
+<li><a class="nav-link" href="#simple-linear-regression-simultaneous-confidence-regions"><span class="header-section-number">3.5</span> Simple linear regression — simultaneous confidence regions</a></li>
 </ul>
 
       <div class="book-extra">
