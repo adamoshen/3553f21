@@ -26,15 +26,16 @@ The [tidyr](https://tidyr.tidyverse.org/) package is another component package o
 [tidyverse](https://www.tidyverse.org/packages/) that contains functions for cleaning up and
 reshaping data.
 
-The `penguins` data set from the [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/)
-package will be used for some practice with multiple linear regression.
+The [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/) package will be used for its
+`penguins` data set for the multiple linear regression example today.
 
-We will be using the package [ellipse](https://CRAN.R-project.org/package=ellipse). This package
-contains functions for drawing confidence regions associated to the estimates obtained from linear
-regression. Unlike the code provided in class for drawing confidence regions which took in raw data
-as input, the `ellipse::ellipse.lm()` function will allow you to pass in your linear model object
-instead. In using the [ellipse](https://CRAN.R-project.org/package=ellipse) package, we will however
-need to draw the lines for the component confidence intervals ourselves (though this is not
+We will be using the package [ellipse](https://CRAN.R-project.org/package=ellipse) for drawing
+ellipses (confidence regions). This package contains functions for drawing confidence regions
+associated to the estimates obtained from linear regression. Unlike the code provided in class for
+drawing confidence regions with the component confidence intervals, which took in raw data as input,
+the `ellipse::ellipse.lm()` function will allow you to pass in your linear model object instead. In
+using the [ellipse](https://CRAN.R-project.org/package=ellipse) package, we will however need to
+draw the lines corresponding to the component confidence intervals ourselves (though this is not
 difficult to do).
 
 
@@ -173,7 +174,7 @@ intercept by adding a `+ 0` or a `- 1` in the formula specification (see the Det
 `?lm`). To make the hypothesis tests that we will do in the next section a bit more interesting,
 let us remove the intercept from the model that we just fit and overwrite it.
 
-As shown in Lab 1, we can do this by fitting a brand new model:
+As shown in Lab 1, we can do this by fitting a brand new model using `lm()`:
 
 ```{r, eval=FALSE}
 ad_lm <- lm(body_mass ~ bill_length + bill_depth + flipper_length - 1, data=adeliebiscoe)
@@ -257,8 +258,8 @@ The produces a $F$-value of 1535.8 with numerator degrees of freedom, 3, and den
 freedom, 41. But we don't need to use these values since a $p$-value is also given. Using a
 significance level of $\alpha = 0.05$, since the $p$-value is less than 0.05, we reject the null
 hypothesis and conclude that at least one of the parameters is non-zero and as such, we should not
-consider a constant $(Y \,=\, 0)$ model. It is important to note that this hypothesis test tells us
-that at least one parameter is non-zero, but it doesn't tell us **which**.
+consider a constant $(Y \,=\, 0)$ model. It is important to note that the result of this hypothesis
+test tells us that at least one parameter is non-zero, but it doesn't tell us **which**.
 
 A hypothesis test that has a null hypothesis where all parameters are equal to zero is often known
 as a test for model usefulness. If we fail to reject this null hypothesis, it suggests that the
@@ -324,7 +325,7 @@ greater than 0.05, we fail to reject the null hypothesis and conclude that there
 evidence to support the claim that $\beta_{3}$ is different from zero.
 
 In testing a single parameter non-zero, we could have done a $t$-test, whose corresponding $p$-value
-could be read off the coefficient summary table.
+could have been read off the coefficient summary table.
 
 ```{r}
 tidy(ad_lm)
@@ -350,17 +351,17 @@ tibble(
 
 It is **not** correct to say:
 
-> The $p$-value for the test of `var2` different from zero is larger than 0.05 so we fail to reject
-the null hypothesis. The $p$-value for the test of `var3` different from zero is larger than 0.05 so
-we fail to reject the null hypothesis. Therefore we can simultaneously remove `var2` and `var3` from
-our model.
+> The $p$-values for the tests of `var2` different from zero and `var3` different from zero are
+0.4971 and 0.8846, respectively. Since both $p$-values are larger than 0.05, we fail to reject the
+null hypothesis in both tests. Therefore we can simultaneously remove `var2` and `var3` from our
+model.
 
 The $p$-value of 0.497 corresponds to testing `var2` different from zero, assuming `var1` and `var3`
 are included in model. Similarly, the $p$-value of 0.885 corresponds to testing `var3` different
 from zero, assuming that `var1` and `var2` are included in the model. Therefore the proper procedure
-using $t$-tests would be to test for a single parameter non-zero, remove the variable from the model
-(assuming we failed to reject the null hypothesis), refit a new model without this variable, and
-then perform our second $t$-test.
+using $t$-tests would be to test for a single parameter being non-zero, remove the variable from the
+model (assuming we failed to reject the null hypothesis), refit a new model without this variable,
+and then perform a second $t$-test.
 
 
 ## Multiple linear regression &mdash; working with matrices in R
@@ -464,7 +465,8 @@ ggplot()+
   geom_path(data=ellipse_path, aes(x=`(Intercept)`, y=peri))+
   labs(
     x="Intercept", y="Slope",
-    caption="Solid line represents 90% confidence region. Dashed lines represent 95% confidence intervals."
+    caption="Solid line represents the boundary of the 90% confidence region. Dashed lines represent
+    the boundaries of the 95% confidence intervals."
   )
 ```
 

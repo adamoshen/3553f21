@@ -11,7 +11,7 @@ options(crayon.enabled=TRUE)
 
 ## Some modern data science packages
 
-The [Tidyverse](https://www.tidyverse.org/packages/) is a collection of packages for modern data
+The [tidyverse](https://www.tidyverse.org/packages/) is a collection of packages for modern data
 science. [Tidymodels](https://www.tidymodels.org/packages/) is another collection of packages that
 extends the [tidyverse](https://www.tidyverse.org/packages/) to modelling. For these labs, I won't
 be using the entire tidyverse and tidymodels. For now, I recommend only installing a few of their
@@ -47,11 +47,11 @@ theme_set(theme_bw())
 
 The [tibble](https://tibble.tidyverse.org/) package provides us with the usage of "tibbles" which
 are an extension of the base-R data frame. Of its many features, we will mostly be using tibbles
-for its [pretty-printing](https://tibble.tidyverse.org/articles/tibble.html#printing) features and
-the fact that it integrates well with the other packages.
+for their [pretty-printing](https://tibble.tidyverse.org/articles/tibble.html#printing) features and
+the fact that they integrate well with the other packages.
 
 The [dplyr](https://dplyr.tidyverse.org/) package provides us with tools for data wrangling where
-base-R equivalents can feel a bit clunky. Examples of data wrangling include: adding/removing
+base-R equivalents can feel a bit clunky. Examples of data wrangling include: keeping/removing
 observations based on the presence/absence of one or more conditions, creating additional variables
 in a data set, and condensing existing data into summaries.
 

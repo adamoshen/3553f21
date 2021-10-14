@@ -78,14 +78,15 @@
 <p>The <a href="https://tidyr.tidyverse.org/">tidyr</a> package is another component package of the
 <a href="https://www.tidyverse.org/packages/">tidyverse</a> that contains functions for cleaning up and
 reshaping data.</p>
-<p>The <code>penguins</code> data set from the <a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a>
-package will be used for some practice with multiple linear regression.</p>
-<p>We will be using the package <a href="https://CRAN.R-project.org/package=ellipse">ellipse</a>. This package
-contains functions for drawing confidence regions associated to the estimates obtained from linear
-regression. Unlike the code provided in class for drawing confidence regions which took in raw data
-as input, the <code><a href="https://rdrr.io/pkg/ellipse/man/ellipse.lm.html">ellipse::ellipse.lm()</a></code> function will allow you to pass in your linear model object
-instead. In using the <a href="https://CRAN.R-project.org/package=ellipse">ellipse</a> package, we will however
-need to draw the lines for the component confidence intervals ourselves (though this is not
+<p>The <a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a> package will be used for its
+<code>penguins</code> data set for the multiple linear regression example today.</p>
+<p>We will be using the package <a href="https://CRAN.R-project.org/package=ellipse">ellipse</a> for drawing
+ellipses (confidence regions). This package contains functions for drawing confidence regions
+associated to the estimates obtained from linear regression. Unlike the code provided in class for
+drawing confidence regions with the component confidence intervals, which took in raw data as input,
+the <code><a href="https://rdrr.io/pkg/ellipse/man/ellipse.lm.html">ellipse::ellipse.lm()</a></code> function will allow you to pass in your linear model object instead. In
+using the <a href="https://CRAN.R-project.org/package=ellipse">ellipse</a> package, we will however need to
+draw the lines corresponding to the component confidence intervals ourselves (though this is not
 difficult to do).</p>
 </div>
 <div id="the-pipe" class="section level2" number="3.2">
@@ -256,7 +257,7 @@ is a linear relationship between the response and the individual predictors.</p>
 intercept by adding a <code>+ 0</code> or a <code>- 1</code> in the formula specification (see the Details section of
 <code><a href="https://rdrr.io/r/stats/lm.html">?lm</a></code>). To make the hypothesis tests that we will do in the next section a bit more interesting,
 let us remove the intercept from the model that we just fit and overwrite it.</p>
-<p>As shown in Lab 1, we can do this by fitting a brand new model:</p>
+<p>As shown in Lab 1, we can do this by fitting a brand new model using <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>:</p>
 <div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ad_lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">body_mass</span> <span class="op">~</span> <span class="va">bill_length</span> <span class="op">+</span> <span class="va">bill_depth</span> <span class="op">+</span> <span class="va">flipper_length</span> <span class="op">-</span> <span class="fl">1</span>, data<span class="op">=</span><span class="va">adeliebiscoe</span><span class="op">)</span></code></pre></div>
 <p>or by using <code><a href="https://rdrr.io/r/stats/update.html">update()</a></code>:</p>
@@ -362,8 +363,8 @@ H_{A}: \text{At least one non-zero}\]</span></p>
 freedom, 41. But we don't need to use these values since a <span class="math inline">\(p\)</span>-value is also given. Using a
 significance level of <span class="math inline">\(\alpha = 0.05\)</span>, since the <span class="math inline">\(p\)</span>-value is less than 0.05, we reject the null
 hypothesis and conclude that at least one of the parameters is non-zero and as such, we should not
-consider a constant <span class="math inline">\((Y \,=\, 0)\)</span> model. It is important to note that this hypothesis test tells us
-that at least one parameter is non-zero, but it doesn't tell us <strong>which</strong>.</p>
+consider a constant <span class="math inline">\((Y \,=\, 0)\)</span> model. It is important to note that the result of this hypothesis
+test tells us that at least one parameter is non-zero, but it doesn't tell us <strong>which</strong>.</p>
 <p>A hypothesis test that has a null hypothesis where all parameters are equal to zero is often known
 as a test for model usefulness. If we fail to reject this null hypothesis, it suggests that the
 current model is not a substantial improvement over a constant <span class="math inline">\((Y \,=\, c)\)</span> model.</p>
@@ -426,7 +427,7 @@ of freedom, 41. Using the usual significance level of <span class="math inline">
 greater than 0.05, we fail to reject the null hypothesis and conclude that there is insufficient
 evidence to support the claim that <span class="math inline">\(\beta_{3}\)</span> is different from zero.</p>
 <p>In testing a single parameter non-zero, we could have done a <span class="math inline">\(t\)</span>-test, whose corresponding <span class="math inline">\(p\)</span>-value
-could be read off the coefficient summary table.</p>
+could have been read off the coefficient summary table.</p>
 <div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="va">ad_lm</span><span class="op">)</span></code></pre></div>
 <pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 3 x 5</span><span>
@@ -453,17 +454,17 @@ we fail to reject the null hypothesis once again.</p>
 </span></code></pre>
 <p>It is <strong>not</strong> correct to say:</p>
 <blockquote>
-<p>The <span class="math inline">\(p\)</span>-value for the test of <code>var2</code> different from zero is larger than 0.05 so we fail to reject
-the null hypothesis. The <span class="math inline">\(p\)</span>-value for the test of <code>var3</code> different from zero is larger than 0.05 so
-we fail to reject the null hypothesis. Therefore we can simultaneously remove <code>var2</code> and <code>var3</code> from
-our model.</p>
+<p>The <span class="math inline">\(p\)</span>-values for the tests of <code>var2</code> different from zero and <code>var3</code> different from zero are
+0.4971 and 0.8846, respectively. Since both <span class="math inline">\(p\)</span>-values are larger than 0.05, we fail to reject the
+null hypothesis in both tests. Therefore we can simultaneously remove <code>var2</code> and <code>var3</code> from our
+model.</p>
 </blockquote>
 <p>The <span class="math inline">\(p\)</span>-value of 0.497 corresponds to testing <code>var2</code> different from zero, assuming <code>var1</code> and <code>var3</code>
 are included in model. Similarly, the <span class="math inline">\(p\)</span>-value of 0.885 corresponds to testing <code>var3</code> different
 from zero, assuming that <code>var1</code> and <code>var2</code> are included in the model. Therefore the proper procedure
-using <span class="math inline">\(t\)</span>-tests would be to test for a single parameter non-zero, remove the variable from the model
-(assuming we failed to reject the null hypothesis), refit a new model without this variable, and
-then perform our second <span class="math inline">\(t\)</span>-test.</p>
+using <span class="math inline">\(t\)</span>-tests would be to test for a single parameter being non-zero, remove the variable from the
+model (assuming we failed to reject the null hypothesis), refit a new model without this variable,
+and then perform a second <span class="math inline">\(t\)</span>-test.</p>
 </div>
 </div>
 <div id="multiple-linear-regression-working-with-matrices-in-r" class="section level2" number="3.4">
@@ -583,7 +584,8 @@ to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()<
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">ellipse_path</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">`(Intercept)`</span>, y<span class="op">=</span><span class="va">peri</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>
     x<span class="op">=</span><span class="st">"Intercept"</span>, y<span class="op">=</span><span class="st">"Slope"</span>,
-    caption<span class="op">=</span><span class="st">"Solid line represents 90% confidence region. Dashed lines represent 95% confidence intervals."</span>
+    caption<span class="op">=</span><span class="st">"Solid line represents the boundary of the 90% confidence region. Dashed lines represent
+    the boundaries of the 95% confidence intervals."</span>
   <span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="03_files/figure-html/unnamed-chunk-31-1.svg" width="672" style="display: block; margin: auto;"></div>
 
