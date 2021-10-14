@@ -97,7 +97,7 @@ penguins <- palmerpenguins::penguins %>%
     body_mass = body_mass_g
   )
 
-head(penguins)
+penguins
 ```
 
 
@@ -125,8 +125,8 @@ not setting values).*
 ### Visual check for linear relationship
 
 Suppose we are interested in fitting a model using body mass as the response and bill length, bill
-depth, and flipper length as the predictors. Before building the model, we can verify that there is
-a linear relationship between the response and the individual predictors.
+depth, and flipper length as the predictors. Before building the model, we should verify that there
+is a linear relationship between the response and the individual predictors.
 
 ```{r}
 ggplot(adeliebiscoe, aes(x=bill_length, y=body_mass))+
@@ -143,15 +143,15 @@ ggplot(adeliebiscoe, aes(x=flipper_length, y=body_mass))+
   geom_point()
 ```
 
-The plots look *okay*. Let's go ahead and fit the model.
+The plots look okay. Let's go ahead and fit the model.
 
 
 ### Fit the model
 
 ```{r}
-adeliebiscoe_lm <- lm(body_mass ~ bill_length + bill_depth + flipper_length, data=adeliebiscoe)
+ad_lm <- lm(body_mass ~ bill_length + bill_depth + flipper_length, data=adeliebiscoe)
 
-summary(adeliebiscoe_lm)
+summary(ad_lm)
 ```
 
 From the above output, the equation of our fitted line is:
@@ -171,29 +171,29 @@ where:
 By default, linear models are fitted with an intercept. We can fit a linear model without an
 intercept by adding a `+ 0` or a `- 1` in the formula specification (see the Details section of
 `?lm`). To make the hypothesis tests that we will do in the next section a bit more interesting,
-let us remove the intercept from the model that we just fit.
+let us remove the intercept from the model that we just fit and overwrite it.
 
 As shown in Lab 1, we can do this by fitting a brand new model:
 
 ```{r, eval=FALSE}
-adeliebiscoe_lm0 <- lm(body_mass ~ bill_length + bill_depth + flipper_length - 1, data=adeliebiscoe)
+ad_lm <- lm(body_mass ~ bill_length + bill_depth + flipper_length - 1, data=adeliebiscoe)
 ```
 
 or by using `update()`:
 
 ```{r}
-adeliebiscoe_lm0 <- update(adeliebiscoe_lm, formula = . ~ . - 1)
+ad_lm <- update(ad_lm, formula = . ~ . - 1)
 ```
 
-Recall that the above line of code means that `adeliebiscoe_lm0` is constructed by taking the
-existing `adeliebiscoe_lm` and updating its formula. The response variable remains the same
-(represented by the dot on the left of the tilde), the predictors remain the same (represented by
-the dot on the right of the tilde) and a `- 1` denotes that we do not want an intercept.
+Recall that the above line of code means that (the new) `ad_lm` is constructed by taking the
+existing `ad_lm` and updating its formula. The response variable remains the same (represented by
+the dot on the left of the tilde), the predictors remain the same (represented by the dot on the
+right of the tilde) and a `- 1` denotes that we do not want an intercept.
 
 Let's take a look at our new model.
 
 ```{r}
-summary(adeliebiscoe_lm0)
+summary(ad_lm)
 ```
 
 Interestingly, by removing the intercept from the model, our adjusted R-squared value went from
@@ -203,13 +203,14 @@ Interestingly, by removing the intercept from the model, our adjusted R-squared 
 ### ANOVA with multiple linear regression models
 
 ```{r}
-anova(adeliebiscoe_lm0)
+anova(ad_lm)
 ```
 
-For multiple linear regression, the output is slightly different from what we saw with simple linear
-regression. In simple linear regression, wrapping our linear model with `anova()` produced the
-"classic" $F$-table: the sum of squares for the first row was the SSR, the sum of squares for the
-second row was the SSE, and there was a single $F$-value and corresponding $p$-value.
+For multiple linear regression, the output resulting from passing our linear model to `anova()` is
+slightly different from what we saw with simple linear regression. In simple linear regression,
+wrapping our linear model with `anova()` produced the "classic" $F$-table: the sum of squares for
+the first row was the SSR, the sum of squares for the second row was the SSE, and there was a single
+$F$-value and corresponding $p$-value.
 
 In the above output, we now have three $F$-values and three corresponding $p$-values! However, the
 interpretation here is slightly different. The sum of squares column represents the **sequential**
@@ -227,11 +228,13 @@ including `flipper_length` to the model that **already** includes `bill_length` 
 
 Using only the output above, if we wish to perform a hypothesis test to check whether a subset of
 the parameters are different from zero, we need to do some extra math. But since we are using R,
-let's not do math! We can perform the usual partial $F$-tests by building reduced models and full
-models in R (and this is where the `update()` function becomes extremely handy).
+let's not do math! We can perform the partial $F$-tests that we are interested in by constructing
+reduced models (and this is where the `update()` function becomes extremely handy).
 
 
-#### At least one parameter non-zero
+### At least one parameter non-zero
+
+Suppose we are interested in testing the hypotheses:
 
 \[H_{0}: \beta_{1} \,=\, \beta_{2} \,=\, \beta_{3} \,=\, 0, \quad
 H_{A}: \text{At least one non-zero}\]
@@ -239,31 +242,125 @@ H_{A}: \text{At least one non-zero}\]
 The reduced model is the intercept-only model that passes through the origin.
 
 ```{r}
-adeliebiscoe_lm_origin <- update(adeliebiscoe_lm0, formula = . ~ 0)
+ad_lm_origin_only <- update(ad_lm, formula = . ~ 0)
 ```
 
-The full model is the model that has all the predictors (`adeliebiscoe_lm0`).
+The full model is the model that has all the predictors (`ad_lm`).
 
-To test the above hypotheses, we our reduced and full models to `anova()`:
+To test the above hypotheses, we pass our reduced and full models to `anova()`:
 
 ```{r}
-anova(adeliebiscoe_lm_origin, adeliebiscoe_lm0)
+anova(ad_lm_origin_only, ad_lm)
 ```
 
 The produces a $F$-value of 1535.8 with numerator degrees of freedom, 3, and denominator degrees of
 freedom, 41. But we don't need to use these values since a $p$-value is also given. Using a
 significance level of $\alpha = 0.05$, since the $p$-value is less than 0.05, we reject the null
 hypothesis and conclude that at least one of the parameters is non-zero and as such, we should not
-consider an intercept only model that passes through the origin. It is important to note that this
-hypothesis test tells us that at least one parameter is non-zero, but it doesn't tell us
-**which** one is.
+consider a constant $(Y \,=\, 0)$ model. It is important to note that this hypothesis test tells us
+that at least one parameter is non-zero, but it doesn't tell us **which**.
+
+A hypothesis test that has a null hypothesis where all parameters are equal to zero is often known
+as a test for model usefulness. If we fail to reject this null hypothesis, it suggests that the
+current model is not a substantial improvement over a constant $(Y \,=\, c)$ model.
 
 
-#### Two parameters non-zero
+### Two parameters non-zero
+
+Suppose we are interested in testing the hypotheses:
+
+\[H_{0}: \beta_{2} \,=\, \beta_{3} \,=\, 0, \quad H_{A}: \text{At least one non-zero}\]
+
+The reduced model is the model that contains only `bill_length`. We can construct this model using
+`update()` either by specifying the variables we want:
+
+```{r}
+# Don't forget the no-intercept term!!
+ad_lm1 <- update(ad_lm, formula = . ~ bill_length - 1)
+```
+
+or the variables we do not want
+
+```{r, eval=FALSE}
+ad_lm1 <- update(ad_lm, formula = . ~ . - bill_depth - flipper_length)
+```
+
+To test the above hypotheses, we pass our reduced and full models to `anova()`:
+
+```{r}
+anova(ad_lm1, ad_lm)
+```
+
+This produces a $F$-value of 2.9407 with numerator degrees of freedom, 2, and denominator degrees
+of freedom, 41. Using the usual significance level of $\alpha = 0.05$, since the $p$-value is
+greater than 0.05, we fail to reject the null hypothesis and conclude that there is insufficient
+evidence to support the claim that at least one of $\beta_{2}$ or $\beta_{3}$ are non-zero.
 
 
-#### One parameter non-zero
+### One parameter non-zero
 
+Suppose we are interested in testing the hypotheses:
+
+\[H_{0}: \beta_{3} \,=\, 0, \quad H_{A}: \beta_{3} \,\neq\, 0\]
+
+This hypothesis can be carried out by performing a $F$-test or a $t$-test (the $t$-test is much
+simpler). If we want to perform a $F$-test, we take the usual steps of first constructing the
+reduced model. The reduced model is the model that contains `bill_length` and `bill_depth`. We can
+construct this model by using `update()` and removing `flipper_length`.
+
+```{r}
+ad_lm12 <- update(ad_lm, formula = . ~ . - flipper_length)
+```
+
+To test the above hypotheses, we pass our reduced and full models to `anova()`:
+
+```{r}
+anova(ad_lm12, ad_lm)
+```
+
+This produces a $F$-value of 0.7177 with numerator degrees of freedom, 1, and denominator degrees
+of freedom, 41. Using the usual significance level of $\alpha = 0.05$, since the $p$-value is
+greater than 0.05, we fail to reject the null hypothesis and conclude that there is insufficient
+evidence to support the claim that $\beta_{3}$ is different from zero.
+
+In testing a single parameter non-zero, we could have done a $t$-test, whose corresponding $p$-value
+could be read off the coefficient summary table.
+
+```{r}
+tidy(ad_lm)
+```
+
+The corresponding $p$-value for this $t$-test is 0.402. Since this $p$-value is greater than 0.05,
+we fail to reject the null hypothesis once again.
+
+
+### Caution &#x2757;
+
+Suppose we had output that looked like:
+
+```{r, echo=FALSE}
+tibble(
+  term = c("var1", "var2", "var3"),
+  estimate = "...",
+  std.error = "...",
+  statistic = "...",
+  p.value = c(0.0001, 0.4971, 0.8846)
+)
+```
+
+It is **not** correct to say:
+
+> The $p$-value for the test of `var2` different from zero is larger than 0.05 so we fail to reject
+the null hypothesis. The $p$-value for the test of `var3` different from zero is larger than 0.05 so
+we fail to reject the null hypothesis. Therefore we can simultaneously remove `var2` and `var3` from
+our model.
+
+The $p$-value of 0.497 corresponds to testing `var2` different from zero, assuming `var1` and `var3`
+are included in model. Similarly, the $p$-value of 0.885 corresponds to testing `var3` different
+from zero, assuming that `var1` and `var2` are included in the model. Therefore the proper procedure
+using $t$-tests would be to test for a single parameter non-zero, remove the variable from the model
+(assuming we failed to reject the null hypothesis), refit a new model without this variable, and
+then perform our second $t$-test.
 
 
 ## Multiple linear regression &mdash; working with matrices in R
@@ -273,37 +370,101 @@ hypothesis test tells us that at least one parameter is non-zero, but it doesn't
 
 
 
+
 ## Simple linear regression &mdash; simultaneous confidence regions
 
-```{r, eval=FALSE}
-data(rock)
-m <- lm(area ~ peri, data=rock)
+Let us return to the `rock` data set and consider the simple linear regression model of `area` as
+the response variable and `peri` as the predictor.
 
-ellipse_path <- m %>%
+```{r}
+data(rock)
+
+slr_rock <- lm(area ~ peri, data=rock)
+```
+
+Suppose we are interested in constructing a 90% confidence region for $(\beta_{0}, \beta_{1})$ with
+individual 95% confidence intervals. We can start by obtaining the path of this ellipse by passing
+our linear model to `ellipse()`. The default confidence level for the ellipse is 95% so we need to
+make a slight adjustment to the value of the `level` parameter. In addition, `ellipse()` returns a
+matrix of coordinates for the path of the ellipse. Since we'll be passing the coordinates of the
+path of the ellipse to `ggplot` later, we should also convert it to a data frame.
+
+```{r}
+ellipse_path <- slr_rock %>%
   ellipse(level=0.90) %>%
   as_tibble()
 
-coef_table <- m %>%
+ellipse_path
+```
+
+The values under the `(Intercept)` and `peri` columns represent the x- and y-values, respectively,
+of the path of the ellipse. Note that `ellipse()` is another example of a generic function. When
+passing a linear model object (an object of class `lm`) to `ellipse()`, it calls the more specific
+`ellipse.lm()`.
+
+Now that we have the path of the ellipse, we also need to obtain the point 
+$(\widehat{\beta}_{0},\, \widehat{\beta}_{1})$, and the individual 95% confidence intervals for
+$\beta_{0}$ and $\beta_{1}$. We can obtain these by passing our linear model to `tidy.lm()` and
+specifying `conf.int=TRUE` to obtain both the coefficient table and corresponding 95% confidence
+intervals.
+
+```{r}
+coef_table <- slr_rock %>%
   tidy(conf.int=TRUE)
 
+coef_table
+```
+
+Before we can begin plotting, we have to do some data reshaping. Recall that when plotting with
+`ggplot()`, we need all of our x-values in one column and all our y-values in another column.
+
+We need a data frame where the estimate of $\beta_{0}$ is in one column and the estimate of
+$\beta_{1}$ is in another column.
+
+```{r}
 coef_point <- coef_table %>%
   pivot_wider(id_cols=c(term, estimate), names_from=term, values_from=estimate)
 
+coef_point
+```
+
+We need a data frame where the lower and upper bounds of the confidence interval for $\beta_{0}$
+are in a single column.
+
+```{r}
 beta0 <- coef_table %>%
-  filter(term == "(Intercept)") %>%
+  slice(1) %>%
   pivot_longer(cols=contains("conf"))
 
+beta0
+```
+
+We need a data frame where the lower and upper bounds of the confidence interval for $\beta_{1}$
+are in a single column.
+
+```{r}
 beta1 <- coef_table %>%
-  filter(term == "peri") %>%
+  slice(2) %>%
   pivot_longer(cols=contains("conf"))
 
+beta1
+```
+
+Now that our data is "in shape", we can start building the plot. This plot will be constructed by
+taking advantage of the fact that every `geom_*()` layer has its own `data` argument. This means
+that we can use a different data set for each layer of our plot. Since we don't have a common data
+set or common aesthetics that will be shared by all layers, we will not supply anything to the call
+to `ggplot()`. Try running the code below, layer by layer, to see how the plot is being constructed!
+
+```{r}
 ggplot()+
   geom_vline(data=beta0, aes(xintercept=value), colour="#3366FF", lty=2)+
   geom_hline(data=beta1, aes(yintercept=value), colour="#3366FF", lty=2)+
-  geom_point(data=coef_point, aes(x=`(Intercept)`, y=peri))+
+  geom_point(data=coef_point, aes(x=`(Intercept)`, y=peri), colour="red")+
   geom_path(data=ellipse_path, aes(x=`(Intercept)`, y=peri))+
   labs(
     x="Intercept", y="Slope",
-    caption="Solid line represents 90% confidence region. Dotted lines represent 95% confidence intervals."
+    caption="Solid line represents 90% confidence region. Dashed lines represent 95% confidence intervals."
   )
 ```
+
