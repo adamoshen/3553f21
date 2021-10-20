@@ -526,7 +526,7 @@ t(betahat_reduced) %*% t(X_reduced) %*% Y
 Therefore the quantity
 
 \[SS(\widehat{\beta}_{2} \,|\, \widehat{\beta}_{1},\, \widehat{\beta}_{0}) \,=\, SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\,\widehat{\beta}_{2})
-\,-\, SS(\widehat{\beta}_{0},\,\widehat{\beta}_{1})$\]
+\,-\, SS(\widehat{\beta}_{0},\,\widehat{\beta}_{1})\]
 
 can be computed as:
 

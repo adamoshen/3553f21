@@ -689,7 +689,7 @@ variable and computing</p>
 ## [1,] 530.5205</code></pre>
 <p>Therefore the quantity</p>
 <p><span class="math display">\[SS(\widehat{\beta}_{2} \,|\, \widehat{\beta}_{1},\, \widehat{\beta}_{0}) \,=\, SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\,\widehat{\beta}_{2})
-\,-\, SS(\widehat{\beta}_{0},\,\widehat{\beta}_{1})$\]</span></p>
+\,-\, SS(\widehat{\beta}_{0},\,\widehat{\beta}_{1})\]</span></p>
 <p>can be computed as:</p>
 <div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span></code></pre></div>
