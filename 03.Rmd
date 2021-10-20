@@ -751,4 +751,4 @@ ggplot()+
 
 Note that points contained within the ellipse are values $(\beta_{0},\,\beta_{1})$ that the data
 suggest are **jointly** reasonable for the parameters. Meanwhile, within the rectangular region
-but outside of the ellipse are plausible values for the parameters when considered individually.
+are plausible values for the parameters when considered individually.
