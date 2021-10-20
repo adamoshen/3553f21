@@ -366,10 +366,289 @@ and then perform a second $t$-test.
 
 ## Multiple linear regression &mdash; working with matrices in R
 
+### Creating a matrix in R
+
+To begin, I recommend checking out the related documentation by calling `?matrix`. The main
+arguments of interest are:
+
+- `data`: the data for your matrix
+- `nrow`: the number of rows your matrix should have
+- `ncol`: the number of columns your matrix should have
+- `byrow`: when set to `TRUE`, the supplied data are filled in horizontally (by row), otherwise the
+data are filled in vertically (by column). By default data is filled in vertically.
+
+To illustrate how the data gets filled in depending on the value of `byrow`:
+
+```{r}
+nums <- 1:9
+
+mat1 <- matrix(nums, nrow=3, ncol=3)
+mat1
+```
+
+```{r}
+nums2 <- c(1:4, 9, 2, 7, 3, 6)
+mat2 <- matrix(nums2, nrow=3, ncol=3, byrow=TRUE)
+mat2
+```
+
+### Matrix operations
+
+#### Matrix transpose
+
+To obtain the transpose of a matrix, use `t()`:
+
+```{r}
+mat1
+t(mat1)
+```
 
 
+#### Matrix inverse
+
+To obtain the inverse of a matrix, use `solve()`:
+
+```{r}
+mat2
+solve(mat2)
+```
+
+`solve()` will return an error if your matrix is not invertible.
 
 
+#### Matrix multiplication
+
+To multiply two matrices together, use `%*%`:
+
+```{r}
+mat1 %*% mat2
+```
+
+You **cannot** use the usual multiplication operator because that will perform element-wise
+multiplication, rather than matrix multiplication:
+
+```{r}
+mat1
+mat2
+mat1 * mat2
+```
+
+
+### Example: Question K, page 174 (selected parts)
+
+From the given data, we can start by constructing our matrices.
+
+```{r}
+Y <- matrix(c(7.2, 8.1, 9.8, 12.3, 12.9), nrow=5, ncol=1)
+Y
+```
+
+Don't forget the column of ones in the design matrix that corresponds to the intercept! Let's also
+supply some column names to the design matrix to keep track of the columns and so that our
+resulting coefficient estimates will have names. 
+
+```{r}
+X <- matrix(
+  c(rep(1, 5), -1, -1, 0, 1, 1, -1, 0, 0, 0, 1),
+  nrow=5, ncol=3,
+  dimnames = list(NULL, c("Intercept", "X1", "X2"))
+)
+X
+```
+
+In supplying names to a matrix during its construction, a list of length 2 must be supplied
+specifying the row and column names respectively. Since I don't need any rownames I supply `NULL` to
+the first element of the list. Note that this list has length 2: `NULL` is one element, and 
+`c("Intercept", "X1", "X2")` is another element. An alternative is to build a matrix with no names
+and set the names afterward using:
+
+```{r, eval=FALSE}
+rownames(X) <- c("row1", "row2", "etc.")
+colnames(X) <- c("col1", "col2", "etc.")
+```
+
+
+#### Obtain the coefficient estimates
+
+We can obtain the coefficient estimates using the equation:
+
+\[\widehat{\beta} \,=\, (X^{T}X)^{-1}\,X^{T}\,Y\]
+
+```{r}
+betahat <- solve(t(X) %*% X) %*% t(X) %*% Y
+betahat
+```
+
+The equation of the fitted line is:
+
+\[\widehat{y}_{i} \,=\, 10.06 \,+\, 2.10x_{1,\,i} \,+\, 0.75x_{2,\,i}\]
+
+
+#### Compute the following regression sum of squares
+
+##### (i)
+
+\[SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\, \widehat{\beta}_{2}) \,=\, \widehat{\beta}^{T}\,X^{T}\,Y\]
+
+```{r}
+t(betahat) %*% t(X) %*% Y
+```
+
+
+##### (ii)
+\[SS(\widehat{\beta}_{1},\, \widehat{\beta}_{2} \,|\, \widehat{\beta}_{0}) \,=\, \widehat{\beta}^{T}\,X^{T}\,Y \,-\, \frac{1}{n}Y^{T}\,Y\]
+
+```{r}
+(t(betahat) %*% t(X) %*% Y) - (1/5)*(t(Y) %*% Y)
+```
+
+
+##### (iii)
+
+\[SS(\widehat{\beta}_{2} \,|\, \widehat{\beta}_{1},\, \widehat{\beta}_{0}) \,=\, SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\, \widehat{\beta}_{2})
+\,-\, SS(\widehat{\beta}_{0},\,\widehat{\beta}_{1})\]
+
+We already have the first term. The second term is obtained by fitting a model without the $X_{2}$
+variable and computing
+
+\[SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1}) \,=\, \widehat{\beta}^{T}\,X^{T}\,Y\]
+
+```{r}
+X_reduced <- X[, -3]
+X_reduced
+
+betahat_reduced <- solve(t(X_reduced) %*% X_reduced) %*% t(X_reduced) %*% Y
+betahat_reduced
+
+t(betahat_reduced) %*% t(X_reduced) %*% Y
+```
+
+Therefore the quantity
+
+\[SS(\widehat{\beta}_{2} \,|\, \widehat{\beta}_{1},\, \widehat{\beta}_{0}) \,=\, SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\,\widehat{\beta}_{2})
+\,-\, SS(\widehat{\beta}_{0},\,\widehat{\beta}_{1})$\]
+
+can be computed as:
+
+```{r}
+(t(betahat) %*% t(X) %*% Y) - (t(betahat_reduced) %*% t(X_reduced) %*% Y)
+```
+
+
+#### Obtain the residual sum of squares
+
+\[SSE \,=\, Y^{T}\,Y \,-\, \widehat{\beta}^{T}\,X^{T}\,Y\]
+
+```{r}
+SSE <- (t(Y) %*% Y) - (t(betahat) %*% t(X) %*% Y)
+SSE
+```
+
+
+#### Obtain an estimate for error term variance
+
+\[\widehat{\sigma}^{2} \,=\, S^{2} \,=\, MSE \,=\, \frac{SSE}{\text{df}_{SSE}}\]
+
+The degrees of freedom of the SSE is $n - p - 1$ where $n$ is the number of observations, and $p$
+is the number of non-intercept parameters estimated. Here, $n = 5$ and $p = 2$. So
+
+\[\text{df}_{SSE} \,=\, n - p - 1 \,=\, 5 - 2 - 1 \,=\, 2\]
+
+```{r}
+MSE <- SSE / 2
+MSE <- as.numeric(MSE)
+MSE
+```
+
+Note: We need to wrap `MSE` in `as.numeric()` to coerce it to a scalar for future calculations.
+Otherwise, in R, this value is still treated as a 1x1 matrix and matrix operations may fail due
+to incompatible matrix dimensions.
+
+
+#### Obtain the variance-covariance matrix of the coefficient estimates
+
+\[\textbf{Var}(\widehat{\beta}) \,=\, \widehat{\sigma}^{2}(X^{T}\,X)^{-1}\]
+
+```{r}
+vcov_betahat <- MSE * solve(t(X) %*% X)
+vcov_betahat
+```
+
+The variances are along the diagonal of the matrix. The covariances are the off-diagonal terms. If
+we wanted the standard errors for all coefficient estimates we would need to take the square root
+of all the diagonal terms. We can do this by first extracting the diagonal elements by wrapping
+`vcov_betahat` with `diag()`, and then wrapping it in `sqrt()`.
+
+```{r}
+se_betahat <- sqrt(diag(vcov_betahat))
+se_betahat
+```
+
+
+#### Predict the mean response value at a given point
+
+Find $\widehat{Y}_{0}$ at point $(X_{1,\,0},\, X_{2,\,0}) \,=\, (0.5, 0)$.
+
+\[\widehat{y}_{0} \,=\, x_{0}^{T}\widehat{\beta} \,=\, \begin{bmatrix}1 &0.5 &0\end{bmatrix}
+\begin{bmatrix}10.06\\ 2.10\\ 0.75\end{bmatrix}\]
+
+```{r}
+x0 <- matrix(c(1, 0.5, 0), nrow=3, ncol=1)
+x0
+
+t(x0) %*% betahat
+```
+
+
+#### Obtain the standard error of the mean response at the given point
+
+\[\textbf{se}(\widehat{Y}_{0}) \,=\, \sqrt{\widehat{\sigma}^{2}x_{0}^{T}(X^{T}\,X)^{-1}x_{0}}\]
+
+```{r}
+sqrt(MSE * t(x0) %*% solve(t(X) %*% X) %*% x0)
+```
+
+
+#### Weighted least squares
+
+From the information given in the question, the variance of the error term is now
+
+\[\textbf{Var}(\varepsilon) \,=\, \sigma^{2}V\]
+
+where
+
+\[V \,=\, 
+\begin{bmatrix}
+1 &0 &0 &0 &0\\
+0 &1 &0 &0 &0\\
+0 &0 &1/4 &0 &0\\
+0 &0 &0 &1 &0\\
+0 &0 &0 &0 &1
+\end{bmatrix}\]
+
+and $V^{-1}$ is the "weight matrix".
+
+The new estimates are computed using:
+
+\[\widehat{\beta} \,=\, (X^{T}\,V^{-1}\,X)^{-1}\,X^{T}\,V^{-1}\,Y\]
+
+```{r}
+V <- diag(c(1, 1, 1/4, 1, 1))
+V
+```
+
+Recall that the inverse of a diagonal matrix is still a diagonal matrix where all the diagonal terms
+have been reciprocated.
+
+```{r}
+V_inv <- solve(V)
+V_inv
+```
+
+```{r}
+betahat_weighted <- solve(t(X) %*% V_inv %*% X) %*% t(X) %*% V_inv %*% Y
+betahat_weighted
+```
 
 
 ## Simple linear regression &mdash; simultaneous confidence regions
@@ -470,3 +749,6 @@ ggplot()+
   )
 ```
 
+Note that points contained within the ellipse are values $(\beta_{0},\,\beta_{1})$ that the data
+suggest are **jointly** reasonable for the parameters. Meanwhile, within the rectangular region
+but outside of the ellipse are plausible values for the parameters when considered individually.

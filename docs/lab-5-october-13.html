@@ -471,6 +471,358 @@ and then perform a second <span class="math inline">\(t\)</span>-test.</p>
 <h2>
 <span class="header-section-number">3.4</span> Multiple linear regression — working with matrices in R<a class="anchor" aria-label="anchor" href="#multiple-linear-regression-working-with-matrices-in-r"><i class="fas fa-link"></i></a>
 </h2>
+<div id="creating-a-matrix-in-r" class="section level3" number="3.4.1">
+<h3>
+<span class="header-section-number">3.4.1</span> Creating a matrix in R<a class="anchor" aria-label="anchor" href="#creating-a-matrix-in-r"><i class="fas fa-link"></i></a>
+</h3>
+<p>To begin, I recommend checking out the related documentation by calling <code><a href="https://rdrr.io/r/base/matrix.html">?matrix</a></code>. The main
+arguments of interest are:</p>
+<ul>
+<li>
+<code>data</code>: the data for your matrix</li>
+<li>
+<code>nrow</code>: the number of rows your matrix should have</li>
+<li>
+<code>ncol</code>: the number of columns your matrix should have</li>
+<li>
+<code>byrow</code>: when set to <code>TRUE</code>, the supplied data are filled in horizontally (by row), otherwise the
+data are filled in vertically (by column). By default data is filled in vertically.</li>
+</ul>
+<p>To illustrate how the data gets filled in depending on the value of <code>byrow</code>:</p>
+<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nums</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">9</span>
+
+<span class="va">mat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">nums</span>, nrow<span class="op">=</span><span class="fl">3</span>, ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span>
+<span class="va">mat1</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9</code></pre>
+<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nums2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">9</span>, <span class="fl">2</span>, <span class="fl">7</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span>
+<span class="va">mat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">nums2</span>, nrow<span class="op">=</span><span class="fl">3</span>, ncol<span class="op">=</span><span class="fl">3</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">mat2</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    9    2
+## [3,]    7    3    6</code></pre>
+</div>
+<div id="matrix-operations" class="section level3" number="3.4.2">
+<h3>
+<span class="header-section-number">3.4.2</span> Matrix operations<a class="anchor" aria-label="anchor" href="#matrix-operations"><i class="fas fa-link"></i></a>
+</h3>
+<div id="matrix-transpose" class="section level4" number="3.4.2.1">
+<h4>
+<span class="header-section-number">3.4.2.1</span> Matrix transpose<a class="anchor" aria-label="anchor" href="#matrix-transpose"><i class="fas fa-link"></i></a>
+</h4>
+<p>To obtain the transpose of a matrix, use <code><a href="https://rdrr.io/r/base/t.html">t()</a></code>:</p>
+<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mat1</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9</code></pre>
+<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">mat1</span><span class="op">)</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    5    6
+## [3,]    7    8    9</code></pre>
+</div>
+<div id="matrix-inverse" class="section level4" number="3.4.2.2">
+<h4>
+<span class="header-section-number">3.4.2.2</span> Matrix inverse<a class="anchor" aria-label="anchor" href="#matrix-inverse"><i class="fas fa-link"></i></a>
+</h4>
+<p>To obtain the inverse of a matrix, use <code><a href="https://rdrr.io/r/base/solve.html">solve()</a></code>:</p>
+<div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mat2</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    9    2
+## [3,]    7    3    6</code></pre>
+<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="va">mat2</span><span class="op">)</span></code></pre></div>
+<pre><code>##        [,1]   [,2]   [,3]
+## [1,] -0.384  0.024  0.184
+## [2,]  0.080  0.120 -0.080
+## [3,]  0.408 -0.088 -0.008</code></pre>
+<p><code><a href="https://rdrr.io/r/base/solve.html">solve()</a></code> will return an error if your matrix is not invertible.</p>
+</div>
+<div id="matrix-multiplication" class="section level4" number="3.4.2.3">
+<h4>
+<span class="header-section-number">3.4.2.3</span> Matrix multiplication<a class="anchor" aria-label="anchor" href="#matrix-multiplication"><i class="fas fa-link"></i></a>
+</h4>
+<p>To multiply two matrices together, use <code><a href="https://rdrr.io/r/base/matmult.html">%*%</a></code>:</p>
+<div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mat1</span> <span class="op">%*%</span> <span class="va">mat2</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]   66   59   53
+## [2,]   78   73   64
+## [3,]   90   87   75</code></pre>
+<p>You <strong>cannot</strong> use the usual multiplication operator because that will perform element-wise
+multiplication, rather than matrix multiplication:</p>
+<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mat1</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9</code></pre>
+<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mat2</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    9    2
+## [3,]    7    3    6</code></pre>
+<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mat1</span> <span class="op">*</span> <span class="va">mat2</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    8   21
+## [2,]    8   45   16
+## [3,]   21   18   54</code></pre>
+</div>
+</div>
+<div id="example-question-k-page-174-selected-parts" class="section level3" number="3.4.3">
+<h3>
+<span class="header-section-number">3.4.3</span> Example: Question K, page 174 (selected parts)<a class="anchor" aria-label="anchor" href="#example-question-k-page-174-selected-parts"><i class="fas fa-link"></i></a>
+</h3>
+<p>From the given data, we can start by constructing our matrices.</p>
+<div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7.2</span>, <span class="fl">8.1</span>, <span class="fl">9.8</span>, <span class="fl">12.3</span>, <span class="fl">12.9</span><span class="op">)</span>, nrow<span class="op">=</span><span class="fl">5</span>, ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+<span class="va">Y</span></code></pre></div>
+<pre><code>##      [,1]
+## [1,]  7.2
+## [2,]  8.1
+## [3,]  9.8
+## [4,] 12.3
+## [5,] 12.9</code></pre>
+<p>Don't forget the column of ones in the design matrix that corresponds to the intercept! Let's also
+supply some column names to the design matrix to keep track of the columns and so that our
+resulting coefficient estimates will have names.</p>
+<div class="sourceCode" id="cb171"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
+  nrow<span class="op">=</span><span class="fl">5</span>, ncol<span class="op">=</span><span class="fl">3</span>,
+  dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Intercept"</span>, <span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">X</span></code></pre></div>
+<pre><code>##      Intercept X1 X2
+## [1,]         1 -1 -1
+## [2,]         1 -1  0
+## [3,]         1  0  0
+## [4,]         1  1  0
+## [5,]         1  1  1</code></pre>
+<p>In supplying names to a matrix during its construction, a list of length 2 must be supplied
+specifying the row and column names respectively. Since I don't need any rownames I supply <code>NULL</code> to
+the first element of the list. Note that this list has length 2: <code>NULL</code> is one element, and
+<code><a href="https://rdrr.io/r/base/c.html">c("Intercept", "X1", "X2")</a></code> is another element. An alternative is to build a matrix with no names
+and set the names afterward using:</p>
+<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"row1"</span>, <span class="st">"row2"</span>, <span class="st">"etc."</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"col1"</span>, <span class="st">"col2"</span>, <span class="st">"etc."</span><span class="op">)</span></code></pre></div>
+<div id="obtain-the-coefficient-estimates" class="section level4" number="3.4.3.1">
+<h4>
+<span class="header-section-number">3.4.3.1</span> Obtain the coefficient estimates<a class="anchor" aria-label="anchor" href="#obtain-the-coefficient-estimates"><i class="fas fa-link"></i></a>
+</h4>
+<p>We can obtain the coefficient estimates using the equation:</p>
+<p><span class="math display">\[\widehat{\beta} \,=\, (X^{T}X)^{-1}\,X^{T}\,Y\]</span></p>
+<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">betahat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span>
+<span class="va">betahat</span></code></pre></div>
+<pre><code>##            [,1]
+## Intercept 10.06
+## X1         2.10
+## X2         0.75</code></pre>
+<p>The equation of the fitted line is:</p>
+<p><span class="math display">\[\widehat{y}_{i} \,=\, 10.06 \,+\, 2.10x_{1,\,i} \,+\, 0.75x_{2,\,i}\]</span></p>
+</div>
+<div id="compute-the-following-regression-sum-of-squares" class="section level4" number="3.4.3.2">
+<h4>
+<span class="header-section-number">3.4.3.2</span> Compute the following regression sum of squares<a class="anchor" aria-label="anchor" href="#compute-the-following-regression-sum-of-squares"><i class="fas fa-link"></i></a>
+</h4>
+<div id="i" class="section level5" number="3.4.3.2.1">
+<h5>
+<span class="header-section-number">3.4.3.2.1</span> (i)<a class="anchor" aria-label="anchor" href="#i"><i class="fas fa-link"></i></a>
+</h5>
+<p><span class="math display">\[SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\, \widehat{\beta}_{2}) \,=\, \widehat{\beta}^{T}\,X^{T}\,Y\]</span></p>
+<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span></code></pre></div>
+<pre><code>##         [,1]
+## [1,] 531.083</code></pre>
+</div>
+<div id="ii" class="section level5" number="3.4.3.2.2">
+<h5>
+<span class="header-section-number">3.4.3.2.2</span> (ii)<a class="anchor" aria-label="anchor" href="#ii"><i class="fas fa-link"></i></a>
+</h5>
+<p><span class="math display">\[SS(\widehat{\beta}_{1},\, \widehat{\beta}_{2} \,|\, \widehat{\beta}_{0}) \,=\, \widehat{\beta}^{T}\,X^{T}\,Y \,-\, \frac{1}{n}Y^{T}\,Y\]</span></p>
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span></code></pre></div>
+<pre><code>##         [,1]
+## [1,] 424.845</code></pre>
+</div>
+<div id="iii" class="section level5" number="3.4.3.2.3">
+<h5>
+<span class="header-section-number">3.4.3.2.3</span> (iii)<a class="anchor" aria-label="anchor" href="#iii"><i class="fas fa-link"></i></a>
+</h5>
+<p><span class="math display">\[SS(\widehat{\beta}_{2} \,|\, \widehat{\beta}_{1},\, \widehat{\beta}_{0}) \,=\, SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\, \widehat{\beta}_{2})
+\,-\, SS(\widehat{\beta}_{0},\,\widehat{\beta}_{1})\]</span></p>
+<p>We already have the first term. The second term is obtained by fitting a model without the <span class="math inline">\(X_{2}\)</span>
+variable and computing</p>
+<p><span class="math display">\[SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1}) \,=\, \widehat{\beta}^{T}\,X^{T}\,Y\]</span></p>
+<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X_reduced</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[</span>, <span class="op">-</span><span class="fl">3</span><span class="op">]</span>
+<span class="va">X_reduced</span></code></pre></div>
+<pre><code>##      Intercept X1
+## [1,]         1 -1
+## [2,]         1 -1
+## [3,]         1  0
+## [4,]         1  1
+## [5,]         1  1</code></pre>
+<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">betahat_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">X_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span>
+<span class="va">betahat_reduced</span></code></pre></div>
+<pre><code>##             [,1]
+## Intercept 10.060
+## X1         2.475</code></pre>
+<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span></code></pre></div>
+<pre><code>##          [,1]
+## [1,] 530.5205</code></pre>
+<p>Therefore the quantity</p>
+<p><span class="math display">\[SS(\widehat{\beta}_{2} \,|\, \widehat{\beta}_{1},\, \widehat{\beta}_{0}) \,=\, SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\,\widehat{\beta}_{2})
+\,-\, SS(\widehat{\beta}_{0},\,\widehat{\beta}_{1})$\]</span></p>
+<p>can be computed as:</p>
+<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X_reduced</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span></code></pre></div>
+<pre><code>##        [,1]
+## [1,] 0.5625</code></pre>
+</div>
+</div>
+<div id="obtain-the-residual-sum-of-squares" class="section level4" number="3.4.3.3">
+<h4>
+<span class="header-section-number">3.4.3.3</span> Obtain the residual sum of squares<a class="anchor" aria-label="anchor" href="#obtain-the-residual-sum-of-squares"><i class="fas fa-link"></i></a>
+</h4>
+<p><span class="math display">\[SSE \,=\, Y^{T}\,Y \,-\, \widehat{\beta}^{T}\,X^{T}\,Y\]</span></p>
+<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SSE</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span>
+<span class="va">SSE</span></code></pre></div>
+<pre><code>##       [,1]
+## [1,] 0.107</code></pre>
+</div>
+<div id="obtain-an-estimate-for-error-term-variance" class="section level4" number="3.4.3.4">
+<h4>
+<span class="header-section-number">3.4.3.4</span> Obtain an estimate for error term variance<a class="anchor" aria-label="anchor" href="#obtain-an-estimate-for-error-term-variance"><i class="fas fa-link"></i></a>
+</h4>
+<p><span class="math display">\[\widehat{\sigma}^{2} \,=\, S^{2} \,=\, MSE \,=\, \frac{SSE}{\text{df}_{SSE}}\]</span></p>
+<p>The degrees of freedom of the SSE is <span class="math inline">\(n - p - 1\)</span> where <span class="math inline">\(n\)</span> is the number of observations, and <span class="math inline">\(p\)</span>
+is the number of non-intercept parameters estimated. Here, <span class="math inline">\(n = 5\)</span> and <span class="math inline">\(p = 2\)</span>. So</p>
+<p><span class="math display">\[\text{df}_{SSE} \,=\, n - p - 1 \,=\, 5 - 2 - 1 \,=\, 2\]</span></p>
+<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">MSE</span> <span class="op">&lt;-</span> <span class="va">SSE</span> <span class="op">/</span> <span class="fl">2</span>
+<span class="va">MSE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">MSE</span><span class="op">)</span>
+<span class="va">MSE</span></code></pre></div>
+<pre><code>## [1] 0.0535</code></pre>
+<p>Note: We need to wrap <code>MSE</code> in <code><a href="https://rdrr.io/r/base/numeric.html">as.numeric()</a></code> to coerce it to a scalar for future calculations.
+Otherwise, in R, this value is still treated as a 1x1 matrix and matrix operations may fail due
+to incompatible matrix dimensions.</p>
+</div>
+<div id="obtain-the-variance-covariance-matrix-of-the-coefficient-estimates" class="section level4" number="3.4.3.5">
+<h4>
+<span class="header-section-number">3.4.3.5</span> Obtain the variance-covariance matrix of the coefficient estimates<a class="anchor" aria-label="anchor" href="#obtain-the-variance-covariance-matrix-of-the-coefficient-estimates"><i class="fas fa-link"></i></a>
+</h4>
+<p><span class="math display">\[\textbf{Var}(\widehat{\beta}) \,=\, \widehat{\sigma}^{2}(X^{T}\,X)^{-1}\]</span></p>
+<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">vcov_betahat</span> <span class="op">&lt;-</span> <span class="va">MSE</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">X</span><span class="op">)</span>
+<span class="va">vcov_betahat</span></code></pre></div>
+<pre><code>##           Intercept       X1       X2
+## Intercept    0.0107  0.00000  0.00000
+## X1           0.0000  0.02675 -0.02675
+## X2           0.0000 -0.02675  0.05350</code></pre>
+<p>The variances are along the diagonal of the matrix. The covariances are the off-diagonal terms. If
+we wanted the standard errors for all coefficient estimates we would need to take the square root
+of all the diagonal terms. We can do this by first extracting the diagonal elements by wrapping
+<code>vcov_betahat</code> with <code><a href="https://rdrr.io/r/base/diag.html">diag()</a></code>, and then wrapping it in <code><a href="https://rdrr.io/r/base/MathFun.html">sqrt()</a></code>.</p>
+<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">se_betahat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">vcov_betahat</span><span class="op">)</span><span class="op">)</span>
+<span class="va">se_betahat</span></code></pre></div>
+<pre><code>## Intercept        X1        X2 
+## 0.1034408 0.1635543 0.2313007</code></pre>
+</div>
+<div id="predict-the-mean-response-value-at-a-given-point" class="section level4" number="3.4.3.6">
+<h4>
+<span class="header-section-number">3.4.3.6</span> Predict the mean response value at a given point<a class="anchor" aria-label="anchor" href="#predict-the-mean-response-value-at-a-given-point"><i class="fas fa-link"></i></a>
+</h4>
+<p>Find <span class="math inline">\(\widehat{Y}_{0}\)</span> at point <span class="math inline">\((X_{1,\,0},\, X_{2,\,0}) \,=\, (0.5, 0)\)</span>.</p>
+<p><span class="math display">\[\widehat{y}_{0} \,=\, x_{0}^{T}\widehat{\beta} \,=\, \begin{bmatrix}1 &amp;0.5 &amp;0\end{bmatrix}
+\begin{bmatrix}10.06\\ 2.10\\ 0.75\end{bmatrix}\]</span></p>
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>, nrow<span class="op">=</span><span class="fl">3</span>, ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+<span class="va">x0</span></code></pre></div>
+<pre><code>##      [,1]
+## [1,]  1.0
+## [2,]  0.5
+## [3,]  0.0</code></pre>
+<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">x0</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">betahat</span></code></pre></div>
+<pre><code>##       [,1]
+## [1,] 11.11</code></pre>
+</div>
+<div id="obtain-the-standard-error-of-the-mean-response-at-the-given-point" class="section level4" number="3.4.3.7">
+<h4>
+<span class="header-section-number">3.4.3.7</span> Obtain the standard error of the mean response at the given point<a class="anchor" aria-label="anchor" href="#obtain-the-standard-error-of-the-mean-response-at-the-given-point"><i class="fas fa-link"></i></a>
+</h4>
+<p><span class="math display">\[\textbf{se}(\widehat{Y}_{0}) \,=\, \sqrt{\widehat{\sigma}^{2}x_{0}^{T}(X^{T}\,X)^{-1}x_{0}}\]</span></p>
+<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">MSE</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">x0</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">x0</span><span class="op">)</span></code></pre></div>
+<pre><code>##           [,1]
+## [1,] 0.1318617</code></pre>
+</div>
+<div id="weighted-least-squares" class="section level4" number="3.4.3.8">
+<h4>
+<span class="header-section-number">3.4.3.8</span> Weighted least squares<a class="anchor" aria-label="anchor" href="#weighted-least-squares"><i class="fas fa-link"></i></a>
+</h4>
+<p>From the information given in the question, the variance of the error term is now</p>
+<p><span class="math display">\[\textbf{Var}(\varepsilon) \,=\, \sigma^{2}V\]</span></p>
+<p>where</p>
+<p><span class="math display">\[V \,=\, 
+\begin{bmatrix}
+1 &amp;0 &amp;0 &amp;0 &amp;0\\
+0 &amp;1 &amp;0 &amp;0 &amp;0\\
+0 &amp;0 &amp;1/4 &amp;0 &amp;0\\
+0 &amp;0 &amp;0 &amp;1 &amp;0\\
+0 &amp;0 &amp;0 &amp;0 &amp;1
+\end{bmatrix}\]</span></p>
+<p>and <span class="math inline">\(V^{-1}\)</span> is the "weight matrix".</p>
+<p>The new estimates are computed using:</p>
+<p><span class="math display">\[\widehat{\beta} \,=\, (X^{T}\,V^{-1}\,X)^{-1}\,X^{T}\,V^{-1}\,Y\]</span></p>
+<div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">V</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="va">V</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    0 0.00    0    0
+## [2,]    0    1 0.00    0    0
+## [3,]    0    0 0.25    0    0
+## [4,]    0    0 0.00    1    0
+## [5,]    0    0 0.00    0    1</code></pre>
+<p>Recall that the inverse of a diagonal matrix is still a diagonal matrix where all the diagonal terms
+have been reciprocated.</p>
+<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">V_inv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="va">V</span><span class="op">)</span>
+<span class="va">V_inv</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    0    0    0    0
+## [2,]    0    1    0    0    0
+## [3,]    0    0    4    0    0
+## [4,]    0    0    0    1    0
+## [5,]    0    0    0    0    1</code></pre>
+<div class="sourceCode" id="cb206"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">betahat_weighted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">V_inv</span> <span class="op">%*%</span> <span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">V_inv</span> <span class="op">%*%</span> <span class="va">Y</span>
+<span class="va">betahat_weighted</span></code></pre></div>
+<pre><code>##             [,1]
+## Intercept 9.9625
+## X1        2.1000
+## X2        0.7500</code></pre>
+</div>
+</div>
 </div>
 <div id="simple-linear-regression-simultaneous-confidence-regions" class="section level2" number="3.5">
 <h2>
@@ -478,7 +830,7 @@ and then perform a second <span class="math inline">\(t\)</span>-test.</p>
 </h2>
 <p>Let us return to the <code>rock</code> data set and consider the simple linear regression model of <code>area</code> as
 the response variable and <code>peri</code> as the predictor.</p>
-<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb208"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">rock</span><span class="op">)</span>
 
 <span class="va">slr_rock</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="va">peri</span>, data<span class="op">=</span><span class="va">rock</span><span class="op">)</span></code></pre></div>
@@ -488,7 +840,7 @@ our linear model to <code><a href="https://rdrr.io/pkg/ellipse/man/ellipse.html"
 make a slight adjustment to the value of the <code>level</code> parameter. In addition, <code><a href="https://rdrr.io/pkg/ellipse/man/ellipse.html">ellipse()</a></code> returns a
 matrix of coordinates for the path of the ellipse. Since we'll be passing the coordinates of the
 path of the ellipse to <code>ggplot</code> later, we should also convert it to a data frame.</p>
-<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ellipse_path</span> <span class="op">&lt;-</span> <span class="va">slr_rock</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ellipse/man/ellipse.html">ellipse</a></span><span class="op">(</span>level<span class="op">=</span><span class="fl">0.90</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span>
@@ -518,7 +870,7 @@ passing a linear model object (an object of class <code>lm</code>) to <code><a h
 <span class="math inline">\(\beta_{0}\)</span> and <span class="math inline">\(\beta_{1}\)</span>. We can obtain these by passing our linear model to <code><a href="https://broom.tidymodels.org/reference/tidy.lm.html">tidy.lm()</a></code> and
 specifying <code>conf.int=TRUE</code> to obtain both the coefficient table and corresponding 95% confidence
 intervals.</p>
-<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coef_table</span> <span class="op">&lt;-</span> <span class="va">slr_rock</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span>conf.int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 
@@ -533,7 +885,7 @@ intervals.</p>
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code>, we need all of our x-values in one column and all our y-values in another column.</p>
 <p>We need a data frame where the estimate of <span class="math inline">\(\beta_{0}\)</span> is in one column and the estimate of
 <span class="math inline">\(\beta_{1}\)</span> is in another column.</p>
-<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb211"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coef_point</span> <span class="op">&lt;-</span> <span class="va">coef_table</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>id_cols<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">estimate</span><span class="op">)</span>, names_from<span class="op">=</span><span class="va">term</span>, values_from<span class="op">=</span><span class="va">estimate</span><span class="op">)</span>
 
@@ -545,7 +897,7 @@ intervals.</p>
 </span></code></pre>
 <p>We need a data frame where the lower and upper bounds of the confidence interval for <span class="math inline">\(\beta_{0}\)</span>
 are in a single column.</p>
-<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">beta0</span> <span class="op">&lt;-</span> <span class="va">coef_table</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols<span class="op">=</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"conf"</span><span class="op">)</span><span class="op">)</span>
@@ -559,7 +911,7 @@ are in a single column.</p>
 </span></code></pre>
 <p>We need a data frame where the lower and upper bounds of the confidence interval for <span class="math inline">\(\beta_{1}\)</span>
 are in a single column.</p>
-<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">beta1</span> <span class="op">&lt;-</span> <span class="va">coef_table</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols<span class="op">=</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"conf"</span><span class="op">)</span><span class="op">)</span>
@@ -576,7 +928,7 @@ taking advantage of the fact that every <code>geom_*()</code> layer has its own 
 that we can use a different data set for each layer of our plot. Since we don't have a common data
 set or common aesthetics that will be shared by all layers, we will not supply anything to the call
 to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code>. Try running the code below, layer by layer, to see how the plot is being constructed!</p>
-<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">beta0</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>xintercept<span class="op">=</span><span class="va">value</span><span class="op">)</span>, colour<span class="op">=</span><span class="st">"#3366FF"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">beta1</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>yintercept<span class="op">=</span><span class="va">value</span><span class="op">)</span>, colour<span class="op">=</span><span class="st">"#3366FF"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">+</span>
@@ -587,7 +939,10 @@ to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()<
     caption<span class="op">=</span><span class="st">"Solid line represents the boundary of the 90% confidence region. Dashed lines represent
     the boundaries of the 95% confidence intervals."</span>
   <span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="03_files/figure-html/unnamed-chunk-31-1.svg" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="03_files/figure-html/unnamed-chunk-54-1.svg" width="672" style="display: block; margin: auto;"></div>
+<p>Note that points contained within the ellipse are values <span class="math inline">\((\beta_{0},\,\beta_{1})\)</span> that the data
+suggest are <strong>jointly</strong> reasonable for the parameters. Meanwhile, within the rectangular region
+but outside of the ellipse are plausible values for the parameters when considered individually.</p>
 
 </div>
 </div>
@@ -614,7 +969,13 @@ to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()<
 <li><a class="nav-link" href="#caution"><span class="header-section-number">3.3.10</span> Caution ❗</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#multiple-linear-regression-working-with-matrices-in-r"><span class="header-section-number">3.4</span> Multiple linear regression — working with matrices in R</a></li>
+<li>
+<a class="nav-link" href="#multiple-linear-regression-working-with-matrices-in-r"><span class="header-section-number">3.4</span> Multiple linear regression — working with matrices in R</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#creating-a-matrix-in-r"><span class="header-section-number">3.4.1</span> Creating a matrix in R</a></li>
+<li><a class="nav-link" href="#matrix-operations"><span class="header-section-number">3.4.2</span> Matrix operations</a></li>
+<li><a class="nav-link" href="#example-question-k-page-174-selected-parts"><span class="header-section-number">3.4.3</span> Example: Question K, page 174 (selected parts)</a></li>
+</ul>
+</li>
 <li><a class="nav-link" href="#simple-linear-regression-simultaneous-confidence-regions"><span class="header-section-number">3.5</span> Simple linear regression — simultaneous confidence regions</a></li>
 </ul>
 
@@ -633,7 +994,7 @@ to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()<
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on October 14, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on October 20, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
