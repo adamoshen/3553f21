@@ -233,7 +233,7 @@ let's not do math! We can perform the partial $F$-tests that we are interested i
 reduced models (and this is where the `update()` function becomes extremely handy).
 
 
-### At least one parameter non-zero
+### Hypothesis test: three parameters
 
 Suppose we are interested in testing the hypotheses:
 
@@ -266,7 +266,7 @@ as a test for model usefulness. If we fail to reject this null hypothesis, it su
 current model is not a substantial improvement over a constant $(Y \,=\, c)$ model.
 
 
-### Two parameters non-zero
+### Hypothesis test: two parameters
 
 Suppose we are interested in testing the hypotheses:
 
@@ -298,7 +298,7 @@ greater than 0.05, we fail to reject the null hypothesis and conclude that there
 evidence to support the claim that at least one of $\beta_{2}$ or $\beta_{3}$ are non-zero.
 
 
-### One parameter non-zero
+### Hypothesis test: one parameter
 
 Suppose we are interested in testing the hypotheses:
 

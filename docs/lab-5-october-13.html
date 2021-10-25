@@ -336,9 +336,9 @@ the parameters are different from zero, we need to do some extra math. But since
 let's not do math! We can perform the partial <span class="math inline">\(F\)</span>-tests that we are interested in by constructing
 reduced models (and this is where the <code><a href="https://rdrr.io/r/stats/update.html">update()</a></code> function becomes extremely handy).</p>
 </div>
-<div id="at-least-one-parameter-non-zero" class="section level3" number="3.3.7">
+<div id="hypothesis-test-three-parameters" class="section level3" number="3.3.7">
 <h3>
-<span class="header-section-number">3.3.7</span> At least one parameter non-zero<a class="anchor" aria-label="anchor" href="#at-least-one-parameter-non-zero"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.7</span> Hypothesis test: three parameters<a class="anchor" aria-label="anchor" href="#hypothesis-test-three-parameters"><i class="fas fa-link"></i></a>
 </h3>
 <p>Suppose we are interested in testing the hypotheses:</p>
 <p><span class="math display">\[H_{0}: \beta_{1} \,=\, \beta_{2} \,=\, \beta_{3} \,=\, 0, \quad
@@ -369,9 +369,9 @@ test tells us that at least one parameter is non-zero, but it doesn't tell us <s
 as a test for model usefulness. If we fail to reject this null hypothesis, it suggests that the
 current model is not a substantial improvement over a constant <span class="math inline">\((Y \,=\, c)\)</span> model.</p>
 </div>
-<div id="two-parameters-non-zero" class="section level3" number="3.3.8">
+<div id="hypothesis-test-two-parameters" class="section level3" number="3.3.8">
 <h3>
-<span class="header-section-number">3.3.8</span> Two parameters non-zero<a class="anchor" aria-label="anchor" href="#two-parameters-non-zero"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.8</span> Hypothesis test: two parameters<a class="anchor" aria-label="anchor" href="#hypothesis-test-two-parameters"><i class="fas fa-link"></i></a>
 </h3>
 <p>Suppose we are interested in testing the hypotheses:</p>
 <p><span class="math display">\[H_{0}: \beta_{2} \,=\, \beta_{3} \,=\, 0, \quad H_{A}: \text{At least one non-zero}\]</span></p>
@@ -400,9 +400,9 @@ of freedom, 41. Using the usual significance level of <span class="math inline">
 greater than 0.05, we fail to reject the null hypothesis and conclude that there is insufficient
 evidence to support the claim that at least one of <span class="math inline">\(\beta_{2}\)</span> or <span class="math inline">\(\beta_{3}\)</span> are non-zero.</p>
 </div>
-<div id="one-parameter-non-zero" class="section level3" number="3.3.9">
+<div id="hypothesis-test-one-parameter" class="section level3" number="3.3.9">
 <h3>
-<span class="header-section-number">3.3.9</span> One parameter non-zero<a class="anchor" aria-label="anchor" href="#one-parameter-non-zero"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.9</span> Hypothesis test: one parameter<a class="anchor" aria-label="anchor" href="#hypothesis-test-one-parameter"><i class="fas fa-link"></i></a>
 </h3>
 <p>Suppose we are interested in testing the hypotheses:</p>
 <p><span class="math display">\[H_{0}: \beta_{3} \,=\, 0, \quad H_{A}: \beta_{3} \,\neq\, 0\]</span></p>
@@ -963,9 +963,9 @@ are plausible values for the parameters when considered individually.</p>
 <li><a class="nav-link" href="#fit-the-model"><span class="header-section-number">3.3.4</span> Fit the model</a></li>
 <li><a class="nav-link" href="#fitting-a-model-without-an-intercept"><span class="header-section-number">3.3.5</span> Fitting a model without an intercept</a></li>
 <li><a class="nav-link" href="#anova-with-multiple-linear-regression-models"><span class="header-section-number">3.3.6</span> ANOVA with multiple linear regression models</a></li>
-<li><a class="nav-link" href="#at-least-one-parameter-non-zero"><span class="header-section-number">3.3.7</span> At least one parameter non-zero</a></li>
-<li><a class="nav-link" href="#two-parameters-non-zero"><span class="header-section-number">3.3.8</span> Two parameters non-zero</a></li>
-<li><a class="nav-link" href="#one-parameter-non-zero"><span class="header-section-number">3.3.9</span> One parameter non-zero</a></li>
+<li><a class="nav-link" href="#hypothesis-test-three-parameters"><span class="header-section-number">3.3.7</span> Hypothesis test: three parameters</a></li>
+<li><a class="nav-link" href="#hypothesis-test-two-parameters"><span class="header-section-number">3.3.8</span> Hypothesis test: two parameters</a></li>
+<li><a class="nav-link" href="#hypothesis-test-one-parameter"><span class="header-section-number">3.3.9</span> Hypothesis test: one parameter</a></li>
 <li><a class="nav-link" href="#caution"><span class="header-section-number">3.3.10</span> Caution ❗</a></li>
 </ul>
 </li>
@@ -994,7 +994,7 @@ are plausible values for the parameters when considered individually.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on October 20, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on October 25, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

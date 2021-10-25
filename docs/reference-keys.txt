@@ -61,9 +61,9 @@ visual-check-for-linear-relationship
 fit-the-model
 fitting-a-model-without-an-intercept
 anova-with-multiple-linear-regression-models
-at-least-one-parameter-non-zero
-two-parameters-non-zero
-one-parameter-non-zero
+hypothesis-test-three-parameters
+hypothesis-test-two-parameters
+hypothesis-test-one-parameter
 caution
 multiple-linear-regression-working-with-matrices-in-r
 creating-a-matrix-in-r
