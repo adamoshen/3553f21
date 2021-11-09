@@ -51,6 +51,7 @@
 <li><a class="" href="lab-1-september-15.html"><span class="header-section-number">1</span> Lab 1 — September 15</a></li>
 <li><a class="" href="lab-3-september-29.html"><span class="header-section-number">2</span> Lab 3 — September 29</a></li>
 <li><a class="active" href="lab-5-october-13.html"><span class="header-section-number">3</span> Lab 5 — October 13</a></li>
+<li><a class="" href="lab-7-november-10.html"><span class="header-section-number">4</span> Lab 7 — November 10</a></li>
 </ul>
 
         <div class="book-extra">
@@ -653,11 +654,17 @@ and set the names afterward using:</p>
 <h5>
 <span class="header-section-number">3.4.3.2.2</span> (ii)<a class="anchor" aria-label="anchor" href="#ii"><i class="fas fa-link"></i></a>
 </h5>
-<p><span class="math display">\[SS(\widehat{\beta}_{1},\, \widehat{\beta}_{2} \,|\, \widehat{\beta}_{0}) \,=\, \widehat{\beta}^{T}\,X^{T}\,Y \,-\, \frac{1}{n}Y^{T}\,Y\]</span></p>
+<p><span class="math display">\[\begin{align*}
+SS(\widehat{\beta}_{1},\, \widehat{\beta}_{2} \,|\, \widehat{\beta}_{0})
+&amp;= SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\, \widehat{\beta}_{2}) \,-\, SS(\widehat{\beta}_{0})\\
+&amp;= \widehat{\beta}^{T}\,X^{T}\,Y \,-\, \frac{1}{n}\left(\sum_{i}Y_{i}\right)^{2}\\
+&amp;= \widehat{\beta}^{T}\,X^{T}\,Y \,-\, \frac{1}{n}Y^{T}\,\mathbf{1}\,\mathbf{1}^{T}\,Y
+\end{align*}\]</span></p>
 <div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span></code></pre></div>
-<pre><code>##         [,1]
-## [1,] 424.845</code></pre>
+<code class="sourceCode R"><span class="va">ones</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span>, nrow<span class="op">=</span><span class="fl">5</span><span class="op">)</span>
+<span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">betahat</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">ones</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">ones</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">Y</span><span class="op">)</span></code></pre></div>
+<pre><code>##        [,1]
+## [1,] 25.065</code></pre>
 </div>
 <div id="iii" class="section level5" number="3.4.3.2.3">
 <h5>
@@ -948,7 +955,7 @@ are plausible values for the parameters when considered individually.</p>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="lab-3-september-29.html"><span class="header-section-number">2</span> Lab 3 — September 29</a></div>
-<div class="empty"></div>
+<div class="next"><a href="lab-7-november-10.html"><span class="header-section-number">4</span> Lab 7 — November 10</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
@@ -994,7 +1001,7 @@ are plausible values for the parameters when considered individually.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on October 25, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on November 09, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

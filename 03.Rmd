@@ -496,10 +496,21 @@ t(betahat) %*% t(X) %*% Y
 
 
 ##### (ii)
-\[SS(\widehat{\beta}_{1},\, \widehat{\beta}_{2} \,|\, \widehat{\beta}_{0}) \,=\, \widehat{\beta}^{T}\,X^{T}\,Y \,-\, \frac{1}{n}Y^{T}\,Y\]
+
+\begin{align*}
+SS(\widehat{\beta}_{1},\, \widehat{\beta}_{2} \,|\, \widehat{\beta}_{0})
+&= SS(\widehat{\beta}_{0},\, \widehat{\beta}_{1},\, \widehat{\beta}_{2}) \,-\, SS(\widehat{\beta}_{0})\\
+&= \widehat{\beta}^{T}\,X^{T}\,Y \,-\, \frac{1}{n}\left(\sum_{i}Y_{i}\right)^{2}\\
+&= \widehat{\beta}^{T}\,X^{T}\,Y \,-\, \frac{1}{n}Y^{T}\,\mathbf{1}\,\mathbf{1}^{T}\,Y
+\end{align*}
 
 ```{r}
-(t(betahat) %*% t(X) %*% Y) - (1/5)*(t(Y) %*% Y)
+ones <- matrix(1, nrow=5)
+ones
+```
+
+```{r}
+(t(betahat) %*% t(X) %*% Y) - (1/5)*(t(Y) %*% ones %*% t(ones) %*% Y)
 ```
 
 
