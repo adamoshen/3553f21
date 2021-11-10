@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>4 Lab 7 — November 10 | Stat 3553: Regression Modelling</title>
+<meta name="author" content="Adam Shen">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="4 Lab 7 — November 10 | Stat 3553: Regression Modelling">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="4 Lab 7 — November 10 | Stat 3553: Regression Modelling">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.9/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_IBM%20Plex%20Sans-0.4.0/font.css" rel="stylesheet">
+<link href="libs/_IBM%20Plex%20Mono-0.4.0/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-148177428-3"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-148177428-3');
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content="4.1 Packages library(tibble) library(dplyr) library(ggplot2) library(tidyr) library(broom) library(leaps) theme_set(theme_bw()) We will be using the leaps package to aid us in computing all...">
+<meta property="og:description" content="4.1 Packages library(tibble) library(dplyr) library(ggplot2) library(tidyr) library(broom) library(leaps) theme_set(theme_bw()) We will be using the leaps package to aid us in computing all...">
+<meta name="twitter:description" content="4.1 Packages library(tibble) library(dplyr) library(ggplot2) library(tidyr) library(broom) library(leaps) theme_set(theme_bw()) We will be using the leaps package to aid us in computing all...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="Fall 2021">Stat 3553: Regression Modelling</a>:
+        <small class="text-muted">Fall 2021</small>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Session info</a></li>
+<li><a class="" href="lab-1-september-15.html"><span class="header-section-number">1</span> Lab 1 — September 15</a></li>
+<li><a class="" href="lab-3-september-29.html"><span class="header-section-number">2</span> Lab 3 — September 29</a></li>
+<li><a class="" href="lab-5-october-13.html"><span class="header-section-number">3</span> Lab 5 — October 13</a></li>
+<li><a class="active" href="lab-7-november-10.html"><span class="header-section-number">4</span> Lab 7 — November 10</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/adamoshen/3553f21">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="lab-7-november-10" class="section level1" number="4">
+<h1>
+<span class="header-section-number">4</span> Lab 7 — November 10<a class="anchor" aria-label="anchor" href="#lab-7-november-10"><i class="fas fa-link"></i></a>
+</h1>
+<div id="packages-1" class="section level2" number="4.1">
+<h2>
+<span class="header-section-number">4.1</span> Packages<a class="anchor" aria-label="anchor" href="#packages-1"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">leaps</span><span class="op">)</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>We will be using the <a href="https://cran.r-project.org/package=leaps">leaps</a> package to aid us in
+computing all possible models from a set of variables and obtaining the corresponding Mallows'
+<span class="math inline">\(C_{p}\)</span> values for all of these models. The <a href="https://cran.r-project.org/package=leaps">leaps</a>
+package can also be used for best subset selection, forward selection, and backward selection. In
+this lab, while we will be covering an example on backward selection, we will be doing it manually
+to throroughly illustrate the process.</p>
+</div>
+<div id="weighted-linear-regression-via-lm" class="section level2" number="4.2">
+<h2>
+<span class="header-section-number">4.2</span> Weighted linear regression (via <code>lm</code>)<a class="anchor" aria-label="anchor" href="#weighted-linear-regression-via-lm"><i class="fas fa-link"></i></a>
+</h2>
+<p>Last time, we saw how to compute the weighted least squares estimates for <span class="math inline">\(\beta\)</span> using matrices.
+Now, let's take a look at how to do it via the <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> function. The data we will use for this
+example is the data from Table 2.1 (page 51).</p>
+<p>I entered the data manually myself, so let's double-check that my values are correct. The resulting
+regression equation should be <span class="math inline">\(\widehat{Y}_{i} = 1.426 + 0.316X_{i}\)</span> (page 51).</p>
+<div class="sourceCode" id="cb218"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">table2.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"./data/table2.1_DS.txt"</span>, header<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">X</span>, data<span class="op">=</span><span class="va">table2.1</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## (Intercept)           X 
+##   1.4256449   0.3157857</code></pre>
+<p>Looks good!</p>
+<div id="problem-i" class="section level3" number="4.2.1">
+<h3>
+<span class="header-section-number">4.2.1</span> Problem (i)<a class="anchor" aria-label="anchor" href="#problem-i"><i class="fas fa-link"></i></a>
+</h3>
+<p>Suppose we are told that the 16th observation has variance <span class="math inline">\(16\sigma^{2}\)</span> rather than <span class="math inline">\(\sigma^{2}\)</span>.
+Obtain the parameter estimates using weighted least squares.</p>
+</div>
+<div id="solution" class="section level3" number="4.2.2">
+<h3>
+<span class="header-section-number">4.2.2</span> Solution<a class="anchor" aria-label="anchor" href="#solution"><i class="fas fa-link"></i></a>
+</h3>
+<p>If the 16th observation has variance <span class="math inline">\(16\sigma^{2}\)</span>, then</p>
+<p><span class="math display">\[\textbf{Var}(\varepsilon) \,=\, \sigma^{2}V \,=\,
+\begin{bmatrix}1\\
+&amp;1\\
+&amp; &amp;\ddots\\
+&amp; &amp; &amp;16\\
+&amp; &amp; &amp; &amp;\ddots\\
+&amp; &amp; &amp; &amp; &amp;1\\
+&amp; &amp; &amp; &amp; &amp; &amp;1
+\end{bmatrix}\]</span></p>
+<p>The weight matrix, <span class="math inline">\(V^{-1}\)</span>, is calculated as the inverse of <span class="math inline">\(V\)</span>. We know that the inverse of
+a diagonal matrix is the same matrix but with the diagonal elements reciprocated. Thus we have</p>
+<p><span class="math display">\[V^{-1} \,=\,
+\begin{bmatrix}1\\
+&amp;1\\
+&amp; &amp;\ddots\\
+&amp; &amp; &amp;1/16\\
+&amp; &amp; &amp; &amp;\ddots\\
+&amp; &amp; &amp; &amp; &amp;1\\
+&amp; &amp; &amp; &amp; &amp; &amp;1
+\end{bmatrix}\]</span></p>
+<p>The weights we will supply to <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> will be a vector of 15 ones, followed by the value <span class="math inline">\(1/16\)</span>,
+followed by 7 ones. Instead of typing the number <code>1</code> 15 times, we can use the <code><a href="https://rdrr.io/r/base/rep.html">rep()</a></code> function
+which repeats a value <span class="math inline">\(n\)</span> times.</p>
+<div class="sourceCode" id="cb220"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">w1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">15</span><span class="op">)</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">16</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">7</span><span class="op">)</span><span class="op">)</span>
+<span class="va">w1</span></code></pre></div>
+<pre><code>##  [1] 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000
+## [11] 1.0000 1.0000 1.0000 1.0000 1.0000 0.0625 1.0000 1.0000 1.0000 1.0000
+## [21] 1.0000 1.0000 1.0000</code></pre>
+<div class="sourceCode" id="cb222"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Check that it has the same length as the data (n=23)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">w1</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 23</code></pre>
+<div class="sourceCode" id="cb224"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Check that the value at position 16 is correct</span>
+<span class="va">w1</span><span class="op">[</span><span class="fl">16</span><span class="op">]</span></code></pre></div>
+<pre><code>## [1] 0.0625</code></pre>
+<p>Now we can proceed with building the model.</p>
+<div class="sourceCode" id="cb226"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">wm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">X</span>, data<span class="op">=</span><span class="va">table2.1</span>, weights<span class="op">=</span><span class="va">w1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">wm1</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Y ~ X, data = table2.1, weights = w1)
+## 
+## Weighted Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.18059 -0.51519 -0.07287  0.25786  2.39631 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)   1.4421     0.5112   2.821   0.0102 *
+## X             0.3077     0.1155   2.663   0.0145 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.8485 on 21 degrees of freedom
+## Multiple R-squared:  0.2525, Adjusted R-squared:  0.2169 
+## F-statistic: 7.094 on 1 and 21 DF,  p-value: 0.01454</code></pre>
+<p>The equation of the fitted line is:</p>
+<p><span class="math display">\[\widehat{Y}_{i} \,=\, 1.4421 \,+\, 0.3077X_{i}\]</span></p>
+</div>
+<div id="problem-ii" class="section level3" number="4.2.3">
+<h3>
+<span class="header-section-number">4.2.3</span> Problem (ii)<a class="anchor" aria-label="anchor" href="#problem-ii"><i class="fas fa-link"></i></a>
+</h3>
+<p>Suppose we are now told that the 16th observation has variance <span class="math inline">\(25\sigma^{2}\)</span> rather than
+<span class="math inline">\(\sigma^{2}\)</span>. Obtain the parameter estimates using weighted least squares.</p>
+</div>
+<div id="solution-1" class="section level3" number="4.2.4">
+<h3>
+<span class="header-section-number">4.2.4</span> Solution<a class="anchor" aria-label="anchor" href="#solution-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>We repeat the process from before. Since the variance for the 16th observation has been scaled by
+a factor of 25, the weight will be <span class="math inline">\(1/25\)</span>.</p>
+<div class="sourceCode" id="cb228"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">w2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">15</span><span class="op">)</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">25</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">7</span><span class="op">)</span><span class="op">)</span>
+<span class="va">w2</span></code></pre></div>
+<pre><code>##  [1] 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00
+## [16] 0.04 1.00 1.00 1.00 1.00 1.00 1.00 1.00</code></pre>
+<div class="sourceCode" id="cb230"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Check that it has the same length as the data (n=23)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">w2</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 23</code></pre>
+<div class="sourceCode" id="cb232"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Check that the value at position 16 is correct</span>
+<span class="va">w2</span><span class="op">[</span><span class="fl">16</span><span class="op">]</span></code></pre></div>
+<pre><code>## [1] 0.04</code></pre>
+<p>Building a second model,</p>
+<div class="sourceCode" id="cb234"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">wm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">X</span>, data<span class="op">=</span><span class="va">table2.1</span>, weights<span class="op">=</span><span class="va">w2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">wm2</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Y ~ X, data = table2.1, weights = w2)
+## 
+## Weighted Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.17998 -0.51499 -0.07274  0.25852  2.39727 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)   1.4425     0.5112   2.822   0.0102 *
+## X             0.3075     0.1155   2.661   0.0146 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.8483 on 21 degrees of freedom
+## Multiple R-squared:  0.2522, Adjusted R-squared:  0.2166 
+## F-statistic: 7.082 on 1 and 21 DF,  p-value: 0.01461</code></pre>
+<p>We can see that in changing our weight for the 16th observation from <span class="math inline">\(1/16\)</span> to <span class="math inline">\(1/25\)</span>:</p>
+<ul>
+<li>The value of <span class="math inline">\(\widehat{\beta}_{0}\)</span> has increased (not by much)</li>
+<li>The value of <span class="math inline">\(\widehat{\beta}_{1}\)</span> has decreased (not by much)</li>
+</ul>
+<p>The differences are more apparent when adjusting weights to the 23rd observation of this data set.
+Hint: make a scatterplot!</p>
+<p>First, let's add a column of indices to the data.</p>
+<div class="sourceCode" id="cb236"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">table2.1</span> <span class="op">&lt;-</span> <span class="va">table2.1</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>, .before <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">table2.1</span></code></pre></div>
+<pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 23 x 3</span><span>
+##      obs     Y     X
+##    </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;"> 1</span><span>     1   2.3   1.3
+## </span><span style="color: #555555;"> 2</span><span>     2   1.8   1.3
+## </span><span style="color: #555555;"> 3</span><span>     3   2.8   2  
+## </span><span style="color: #555555;"> 4</span><span>     4   1.5   2  
+## </span><span style="color: #555555;"> 5</span><span>     5   2.2   2.7
+## </span><span style="color: #555555;"> 6</span><span>     6   3.8   3.3
+## </span><span style="color: #555555;"> 7</span><span>     7   1.8   3.3
+## </span><span style="color: #555555;"> 8</span><span>     8   3.7   3.7
+## </span><span style="color: #555555;"> 9</span><span>     9   1.7   3.7
+## </span><span style="color: #555555;">10</span><span>    10   2.8   4  
+## </span><span style="color: #555555;"># ... with 13 more rows</span><span>
+</span></code></pre>
+<p>Then we can make a scatterplot and label each point with its observation number.</p>
+<div class="sourceCode" id="cb237"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">table2.1</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">X</span>, y<span class="op">=</span><span class="va">Y</span>, label<span class="op">=</span><span class="va">obs</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>alpha<span class="op">=</span><span class="fl">0.4</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="st">"outward"</span>, vjust<span class="op">=</span><span class="st">"outward"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="04_files/figure-html/unnamed-chunk-9-1.svg" width="672" style="display: block; margin: auto;"></div>
+<p>Observation 23 definitely stands out from the rest of the data!</p>
+</div>
+</div>
+<div id="all-possible-models" class="section level2" number="4.3">
+<h2>
+<span class="header-section-number">4.3</span> All possible models<a class="anchor" aria-label="anchor" href="#all-possible-models"><i class="fas fa-link"></i></a>
+</h2>
+<p>To be consistent with the textbook, let us define <span class="math inline">\(p\)</span> as the total number of parameters in a model,
+including the intercept). Suppose we are interested in plotting Mallows' <span class="math inline">\(C_{p}\)</span> against <span class="math inline">\(p\)</span> for
+all possible models.</p>
+<p><em>(Alternatively, we could consider plotting <span class="math inline">\(C_{p}\)</span> against <span class="math inline">\(p+1\)</span> where <span class="math inline">\(p\)</span> is the number of
+non-intercept parameters).</em></p>
+<p>Returning to the <code>rock</code> data set, an outline of our plan will be as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>To compute all the possible models in a single line, we employ <code><a href="https://rdrr.io/pkg/leaps/man/regsubsets.html">leaps::regsubsets()</a></code>. In the
+formula argument (<code>x</code>), we specify the formula <code>area ~ .</code>. This means fix <code>area</code> as the response
+variable, and allow <em>any</em> other variables appearing in the data set to be added to the candidate
+model (this is so that we don't need to manually type the names of the variables in our data set).
+We also set <code>nbest=3</code> to force computation of <strong>all</strong> models when <span class="math inline">\(p &lt; 4\)</span>.</p></li>
+<li><p>We then pass the result through a custom function that is derived from <code><a href="https://broom.tidymodels.org/reference/tidy.regsubsets.html">broom::tidy.regsubsets()</a></code>
+to obtain the required diagnostic information (including Mallows' <span class="math inline">\(C_{p}\)</span>) as a tidy tibble. We need
+a custom function since we also want the <span class="math inline">\(SSE_{p}\)</span> of each model in order to calculate the <span class="math inline">\(MSE_{p}\)</span>
+(or equivalently, the <span class="math inline">\(S^{2}_{p}\)</span>).</p></li>
+<li><p>We can then create the column, <span class="math inline">\(p\)</span>, that counts the number of variables included in the model
+(including the intercept). This involves some code that is a bit more complicated, but it is
+essentially summing the number of <code>TRUE</code>s appearing in each row (i.e. we are performing a
+horizontal sum rather than the usual vertical sum).</p></li>
+<li><p>We then compute the mean square error, <span class="math inline">\(S^{2}_{p}\)</span> for each model.</p></li>
+<li><p>We then drop the columns that we won't be using.</p></li>
+<li><p>Finally, we can plot our results.</p></li>
+</ol>
+<div id="a-custom-tidy-function" class="section level3" number="4.3.1">
+<h3>
+<span class="header-section-number">4.3.1</span> A custom tidy function<a class="anchor" aria-label="anchor" href="#a-custom-tidy-function"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can access the source code used to tidy objects of class <code>regsubsets</code> by calling
+<code>broom:::tidy.regsubsets</code> (three colons).</p>
+<div class="sourceCode" id="cb238"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">broom</span><span class="fu">:::</span><span class="va"><a href="https://broom.tidymodels.org/reference/tidy.regsubsets.html">tidy.regsubsets</a></span></code></pre></div>
+<pre><code>## function (x, ...) 
+## {
+##     s &lt;- summary(x)
+##     inclusions &lt;- as_tibble(s$which)
+##     metrics &lt;- with(s, tibble(r.squared = rsq, adj.r.squared = adjr2, 
+##         BIC = bic, mallows_cp = cp))
+##     bind_cols(inclusions, metrics)
+## }
+## &lt;bytecode: 0x0000000030c92ae8&gt;
+## &lt;environment: namespace:broom&gt;</code></pre>
+<p>Consulting the documentation of <code>?leaps::regsubsets()</code>, we can create a custom function that also
+includes the SSE of each model.</p>
+<div class="sourceCode" id="cb240"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy.regsubsets2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+  <span class="va">inclusions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">which</span><span class="op">)</span>
+  <span class="va">metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">s</span>, <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>r.squared <span class="op">=</span> <span class="va">rsq</span>, adj.r.squared <span class="op">=</span> <span class="va">adjr2</span>, 
+                            BIC <span class="op">=</span> <span class="va">bic</span>, mallows_cp <span class="op">=</span> <span class="va">cp</span>, SSE_p <span class="op">=</span> <span class="va">rss</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span><span class="va">inclusions</span>, <span class="va">metrics</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="getting-the-results" class="section level3" number="4.3.2">
+<h3>
+<span class="header-section-number">4.3.2</span> Getting the results<a class="anchor" aria-label="anchor" href="#getting-the-results"><i class="fas fa-link"></i></a>
+</h3>
+<p>Recall that</p>
+<p><span class="math display">\[\widehat{\sigma}^{2}_{p} \,=\, S^{2}_{p} \,=\, \frac{SSE_{p}}{n-p}\]</span></p>
+<p>where <span class="math inline">\(n\)</span> is the number of observations in your data, and <span class="math inline">\(p\)</span> is the number of parameters including
+the intercept.</p>
+<div class="sourceCode" id="cb241"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">rock</span><span class="op">)</span>
+
+<span class="va">all_models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/leaps/man/regsubsets.html">regsubsets</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="va">.</span>, data<span class="op">=</span><span class="va">rock</span>, method<span class="op">=</span><span class="st">"exhaustive"</span>, nbest<span class="op">=</span><span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">tidy.regsubsets2</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/c_across.html">c_across</a></span><span class="op">(</span><span class="fu">where</span><span class="op">(</span><span class="va">is.logical</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>s.squared_p <span class="op">=</span> <span class="va">SSE_p</span> <span class="op">/</span> <span class="op">(</span><span class="va">n</span> <span class="op">-</span> <span class="va">p</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">r.squared</span>, <span class="va">BIC</span>, <span class="va">SSE_p</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">all_models</span></code></pre></div>
+<pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 7 x 8</span><span>
+##   `(Intercept)` peri  shape perm  adj.r.squared mallows_cp     p s.squared_p
+##   </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>       </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;">1</span><span> TRUE          TRUE  FALSE FALSE        0.669       20.8      2    2</span><span style="text-decoration: underline;">380</span><span>718.
+## </span><span style="color: #555555;">2</span><span> TRUE          FALSE FALSE TRUE         0.139      125.       2    6</span><span style="text-decoration: underline;">201</span><span>808.
+## </span><span style="color: #555555;">3</span><span> TRUE          FALSE TRUE  FALSE        0.012</span><span style="text-decoration: underline;">2</span><span>     150.       2    7</span><span style="text-decoration: underline;">115</span><span>420.
+## </span><span style="color: #555555;">4</span><span> TRUE          TRUE  FALSE TRUE         0.764        3.20     3    1</span><span style="text-decoration: underline;">696</span><span>625.
+## </span><span style="color: #555555;">5</span><span> TRUE          TRUE  TRUE  FALSE        0.701       15.4      3    2</span><span style="text-decoration: underline;">152</span><span>972.
+## </span><span style="color: #555555;">6</span><span> TRUE          FALSE TRUE  TRUE         0.122      126.       3    6</span><span style="text-decoration: underline;">323</span><span>336.
+## </span><span style="color: #555555;">7</span><span> TRUE          TRUE  TRUE  TRUE         0.765        4        4    1</span><span style="text-decoration: underline;">689</span><span>242.
+</span></code></pre>
+<p>In choosing a model, we want a model that has a high adjusted <span class="math inline">\(R^{2}\)</span>, <span class="math inline">\(C_{p} \approx p\)</span>, low
+<span class="math inline">\(S^{2}_{p}\)</span>, and as few predictors as possible. From the results above, models 4 and 7 are quite
+similar with model 7 (the full model) being only slightly better.</p>
+</div>
+<div id="plotting-the-results" class="section level3" number="4.3.3">
+<h3>
+<span class="header-section-number">4.3.3</span> Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">all_models</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">p</span>, y<span class="op">=</span><span class="va">mallows_cp</span><span class="op">)</span>,<span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>caption<span class="op">=</span><span class="st">"p is the number of parameter estimates including the intercept"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="04_files/figure-html/unnamed-chunk-13-1.svg" width="672" style="display: block; margin: auto;"></div>
+</div>
+</div>
+<div id="stepwise-selection" class="section level2" number="4.4">
+<h2>
+<span class="header-section-number">4.4</span> Stepwise selection<a class="anchor" aria-label="anchor" href="#stepwise-selection"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let's revisit the penguins data from
+<a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a>, specifically the subset of
+penguins of species Adelie from the island Biscoe.</p>
+<div class="sourceCode" id="cb243"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">adeliebiscoe</span> <span class="op">&lt;-</span> <span class="fu">palmerpenguins</span><span class="fu">::</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/reference/penguins.html">penguins</a></span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"Adelie"</span>, <span class="va">island</span> <span class="op">==</span> <span class="st">"Biscoe"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>
+    bill_length <span class="op">=</span> <span class="va">bill_length_mm</span>,
+    bill_depth <span class="op">=</span> <span class="va">bill_depth_mm</span>,
+    flipper_length <span class="op">=</span> <span class="va">flipper_length_mm</span>,
+    body_mass <span class="op">=</span> <span class="va">body_mass_g</span>,
+  <span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">body_mass</span>, <span class="va">bill_length</span>, <span class="va">bill_depth</span>, <span class="va">flipper_length</span><span class="op">)</span></code></pre></div>
+<p>We are interested in performing stepwise selection using <code>body_mass</code> as the response. We commence
+the model building process by including the variable that is most correlated to <code>body_mass</code>.</p>
+<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">adeliebiscoe</span><span class="op">)</span></code></pre></div>
+<pre><code>##                body_mass bill_length bill_depth flipper_length
+## body_mass      1.0000000   0.6477493  0.6516595      0.5261972
+## bill_length    0.6477493   1.0000000  0.4681935      0.3366548
+## bill_depth     0.6516595   0.4681935  1.0000000      0.2727782
+## flipper_length 0.5261972   0.3366548  0.2727782      1.0000000</code></pre>
+<p><code>bill_depth</code> is the most correlated with <code>body_mass</code> (remember to look at the absolute value of the
+correlation, not just value itself).</p>
+<p>Start here next time...</p>
+</div>
+<div id="backward-selection" class="section level2" number="4.5">
+<h2>
+<span class="header-section-number">4.5</span> Backward selection<a class="anchor" aria-label="anchor" href="#backward-selection"><i class="fas fa-link"></i></a>
+</h2>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="lab-5-october-13.html"><span class="header-section-number">3</span> Lab 5 — October 13</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#lab-7-november-10"><span class="header-section-number">4</span> Lab 7 — November 10</a></li>
+<li><a class="nav-link" href="#packages-1"><span class="header-section-number">4.1</span> Packages</a></li>
+<li>
+<a class="nav-link" href="#weighted-linear-regression-via-lm"><span class="header-section-number">4.2</span> Weighted linear regression (via lm)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#problem-i"><span class="header-section-number">4.2.1</span> Problem (i)</a></li>
+<li><a class="nav-link" href="#solution"><span class="header-section-number">4.2.2</span> Solution</a></li>
+<li><a class="nav-link" href="#problem-ii"><span class="header-section-number">4.2.3</span> Problem (ii)</a></li>
+<li><a class="nav-link" href="#solution-1"><span class="header-section-number">4.2.4</span> Solution</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#all-possible-models"><span class="header-section-number">4.3</span> All possible models</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#a-custom-tidy-function"><span class="header-section-number">4.3.1</span> A custom tidy function</a></li>
+<li><a class="nav-link" href="#getting-the-results"><span class="header-section-number">4.3.2</span> Getting the results</a></li>
+<li><a class="nav-link" href="#plotting-the-results"><span class="header-section-number">4.3.3</span> Plotting the results</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#stepwise-selection"><span class="header-section-number">4.4</span> Stepwise selection</a></li>
+<li><a class="nav-link" href="#backward-selection"><span class="header-section-number">4.5</span> Backward selection</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/adamoshen/3553f21/blob/main/04.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/adamoshen/3553f21/edit/main/04.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on November 10, 2021.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

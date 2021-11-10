@@ -1,0 +1,294 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  echo=TRUE, message=FALSE, warning=FALSE, fig.align="center", dev="svglite"
+)
+
+old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
+options(crayon.enabled=TRUE)
+```
+
+# Lab 7 &mdash; November 10
+
+## Packages
+
+```{r}
+library(tibble)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(broom)
+library(leaps)
+theme_set(theme_bw())
+```
+
+We will be using the [leaps](https://cran.r-project.org/package=leaps) package to aid us in
+computing all possible models from a set of variables and obtaining the corresponding Mallows'
+$C_{p}$ values for all of these models. The [leaps](https://cran.r-project.org/package=leaps)
+package can also be used for best subset selection, forward selection, and backward selection. In
+this lab, while we will be covering an example on backward selection, we will be doing it manually
+to throroughly illustrate the process.
+
+
+## Weighted linear regression (via `lm`)
+
+Last time, we saw how to compute the weighted least squares estimates for $\beta$ using matrices.
+Now, let's take a look at how to do it via the `lm()` function. The data we will use for this
+example is the data from Table 2.1 (page 51).
+
+I entered the data manually myself, so let's double-check that my values are correct. The resulting
+regression equation should be $\widehat{Y}_{i} = 1.426 + 0.316X_{i}$ (page 51).
+
+```{r}
+table2.1 <- read.table("./data/table2.1_DS.txt", header=TRUE) %>%
+  as_tibble()
+
+lm(Y ~ X, data=table2.1) %>%
+  coef()
+```
+
+Looks good!
+
+
+### Problem (i)
+
+Suppose we are told that the 16th observation has variance $16\sigma^{2}$ rather than $\sigma^{2}$.
+Obtain the parameter estimates using weighted least squares.
+
+
+### Solution
+
+If the 16th observation has variance $16\sigma^{2}$, then
+
+\[\textbf{Var}(\varepsilon) \,=\, \sigma^{2}V \,=\,
+\begin{bmatrix}1\\
+&1\\
+& &\ddots\\
+& & &16\\
+& & & &\ddots\\
+& & & & &1\\
+& & & & & &1
+\end{bmatrix}\]
+
+The weight matrix, $V^{-1}$, is calculated as the inverse of $V$. We know that the inverse of
+a diagonal matrix is the same matrix but with the diagonal elements reciprocated. Thus we have
+
+\[V^{-1} \,=\,
+\begin{bmatrix}1\\
+&1\\
+& &\ddots\\
+& & &1/16\\
+& & & &\ddots\\
+& & & & &1\\
+& & & & & &1
+\end{bmatrix}\]
+
+The weights we will supply to `lm()` will be a vector of 15 ones, followed by the value $1/16$,
+followed by 7 ones. Instead of typing the number `1` 15 times, we can use the `rep()` function
+which repeats a value $n$ times.
+
+```{r}
+w1 <- c(rep(1, 15), 1/16, rep(1, 7))
+w1
+
+# Check that it has the same length as the data (n=23)
+length(w1)
+
+# Check that the value at position 16 is correct
+w1[16]
+```
+
+Now we can proceed with building the model.
+
+```{r}
+wm1 <- lm(Y ~ X, data=table2.1, weights=w1)
+summary(wm1)
+```
+
+The equation of the fitted line is:
+
+\[\widehat{Y}_{i} \,=\, 1.4421 \,+\, 0.3077X_{i}\]
+
+
+### Problem (ii)
+
+Suppose we are now told that the 16th observation has variance $25\sigma^{2}$ rather than
+$\sigma^{2}$. Obtain the parameter estimates using weighted least squares.
+
+
+### Solution
+
+We repeat the process from before. Since the variance for the 16th observation has been scaled by
+a factor of 25, the weight will be $1/25$.
+
+```{r}
+w2 <- c(rep(1, 15), 1/25, rep(1, 7))
+w2
+
+# Check that it has the same length as the data (n=23)
+length(w2)
+
+# Check that the value at position 16 is correct
+w2[16]
+```
+
+Building a second model,
+
+```{r}
+wm2 <- lm(Y ~ X, data=table2.1, weights=w2)
+summary(wm2)
+```
+
+We can see that in changing our weight for the 16th observation from $1/16$ to $1/25$:
+
+- The value of $\widehat{\beta}_{0}$ has increased (not by much)
+- The value of $\widehat{\beta}_{1}$ has decreased (not by much)
+
+The differences are more apparent when adjusting weights to the 23rd observation of this data set.
+Hint: make a scatterplot!
+
+First, let's add a column of indices to the data.
+
+```{r}
+table2.1 <- table2.1 %>%
+  mutate(obs = 1:n(), .before = everything())
+
+table2.1
+```
+
+Then we can make a scatterplot and label each point with its observation number.
+
+```{r}
+ggplot(table2.1, aes(x=X, y=Y, label=obs))+
+  geom_point(alpha=0.4)+
+  geom_text(hjust="outward", vjust="outward")
+```
+
+Observation 23 definitely stands out from the rest of the data!
+
+
+## All possible models
+
+To be consistent with the textbook, let us define $p$ as the total number of parameters in a model,
+including the intercept). Suppose we are interested in plotting Mallows' $C_{p}$ against $p$ for
+all possible models. 
+
+*(Alternatively, we could consider plotting $C_{p}$ against $p+1$ where $p$ is the number of
+non-intercept parameters).*
+
+Returning to the `rock` data set, an outline of our plan will be as follows:
+
+1. To compute all the possible models in a single line, we employ `leaps::regsubsets()`. In the
+formula argument (`x`), we specify the formula `area ~ .`. This means fix `area` as the response
+variable, and allow *any* other variables appearing in the data set to be added to the candidate
+model (this is so that we don't need to manually type the names of the variables in our data set).
+We also set `nbest=3` to force computation of **all** models when $p < 4$.
+
+2. We then pass the result through a custom function that is derived from `broom::tidy.regsubsets()`
+to obtain the required diagnostic information (including Mallows' $C_{p}$) as a tidy tibble. We need
+a custom function since we also want the $SSE_{p}$ of each model in order to calculate the $MSE_{p}$
+(or equivalently, the $S^{2}_{p}$).
+
+3. We can then create the column, $p$, that counts the number of variables included in the model
+(including the intercept). This involves some code that is a bit more complicated, but it is
+essentially summing the number of `TRUE`s appearing in each row (i.e. we are performing a
+horizontal sum rather than the usual vertical sum).
+
+4. We then compute the mean square error, $S^{2}_{p}$ for each model.
+
+5. We then drop the columns that we won't be using.
+
+6. Finally, we can plot our results.
+
+
+### A custom tidy function
+
+We can access the source code used to tidy objects of class `regsubsets` by calling 
+`broom:::tidy.regsubsets` (three colons).
+
+```{r}
+broom:::tidy.regsubsets
+```
+
+Consulting the documentation of `?leaps::regsubsets()`, we can create a custom function that also
+includes the SSE of each model.
+
+```{r}
+tidy.regsubsets2 <- function(x, ...) {
+  s <- summary(x)
+  inclusions <- as_tibble(s$which)
+  metrics <- with(s, tibble(r.squared = rsq, adj.r.squared = adjr2, 
+                            BIC = bic, mallows_cp = cp, SSE_p = rss))
+  bind_cols(inclusions, metrics)
+}
+```
+
+
+### Getting the results
+
+Recall that
+
+\[\widehat{\sigma}^{2}_{p} \,=\, S^{2}_{p} \,=\, \frac{SSE_{p}}{n-p}\]
+
+where $n$ is the number of observations in your data, and $p$ is the number of parameters including
+the intercept.
+
+```{r}
+n <- nrow(rock)
+
+all_models <- regsubsets(area ~ ., data=rock, method="exhaustive", nbest=3) %>%
+  tidy.regsubsets2() %>%
+  rowwise() %>%
+  mutate(p = sum(c_across(where(is.logical)))) %>%
+  ungroup() %>%
+  mutate(s.squared_p = SSE_p / (n - p)) %>%
+  select(-c(r.squared, BIC, SSE_p))
+
+all_models
+```
+
+In choosing a model, we want a model that has a high adjusted $R^{2}$, $C_{p} \approx p$, low
+$S^{2}_{p}$, and as few predictors as possible. From the results above, models 4 and 7 are quite
+similar with model 7 (the full model) being only slightly better.
+
+
+### Plotting the results
+
+```{r}
+ggplot(all_models, aes(x=p, y=mallows_cp),)+
+  geom_point()+
+  labs(caption="p is the number of parameter estimates including the intercept")
+```
+
+
+## Stepwise selection
+
+Let's revisit the penguins data from 
+[palmerpenguins](https://allisonhorst.github.io/palmerpenguins/), specifically the subset of
+penguins of species Adelie from the island Biscoe.
+
+```{r}
+adeliebiscoe <- palmerpenguins::penguins %>%
+  drop_na() %>%
+  filter(species == "Adelie", island == "Biscoe") %>%
+  rename(
+    bill_length = bill_length_mm,
+    bill_depth = bill_depth_mm,
+    flipper_length = flipper_length_mm,
+    body_mass = body_mass_g,
+  ) %>%
+  select(body_mass, bill_length, bill_depth, flipper_length)
+```
+
+We are interested in performing stepwise selection using `body_mass` as the response. We commence
+the model building process by including the variable that is most correlated to `body_mass`.
+
+```{r}
+cor(adeliebiscoe)
+```
+
+`bill_depth` is the most correlated with `body_mass` (remember to look at the absolute value of the
+correlation, not just value itself).
+
+Start here next time...
+
+## Backward selection

@@ -182,7 +182,7 @@ begin fitting our linear model.</p>
 ## F-statistic:  2459 on 1 and 232 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>From the regression output, we have that <span class="math inline">\(\widehat{\beta}_{0} = 0.892\)</span> and
 <span class="math inline">\(\widehat{\beta}_{1} = 1.337\)</span>. The equation of the fitted line is:</p>
-<p><span class="math display">\[\widehat{y}_{i} \,=\, 0.892 \,+\, 1.337x_{i}\]</span></p>
+<p><span class="math display">\[\widehat{Y}_{i} \,=\, 0.892 \,+\, 1.337X_{i}\]</span></p>
 <p>We can interpret <span class="math inline">\(\widehat{\beta}_{0} = 0.892\)</span> as the mean highway miles per gallon when the city
 miles per gallon has a value of zero. However, this doesn't really make sense in the context of our
 data since you can't have a car that travels zero city miles on a gallon on gas.</p>
@@ -552,7 +552,7 @@ of time but I will apply the transformation to my predictor in the formula speci
 ## Multiple R-squared:  0.5668, Adjusted R-squared:  0.5649 
 ## F-statistic: 303.6 on 1 and 232 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>The equation of the fitted line is:</p>
-<p><span class="math display">\[\widehat{y}_{i} \,=\, 6.445 \,-\, 0.039x_{i}^{2}\]</span></p>
+<p><span class="math display">\[\widehat{Y}_{i} \,=\, 6.445 \,-\, 0.039X_{i}^{2}\]</span></p>
 <p>where <span class="math inline">\(\widehat{y}_{i}\)</span> is the sum of the log highway miles per gallon and the log city miles per
 gallon. Due to how the model was constructed, if I wanted to predict the sum of the log highway
 miles per gallon and the log city highway miles per gallon for a particular vehicle, I would supply
@@ -648,7 +648,7 @@ corresponds with the first row of <code>mpg2</code>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on November 09, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on November 10, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

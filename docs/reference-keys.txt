@@ -84,3 +84,16 @@ predict-the-mean-response-value-at-a-given-point
 obtain-the-standard-error-of-the-mean-response-at-the-given-point
 weighted-least-squares
 simple-linear-regression-simultaneous-confidence-regions
+lab-7-november-10
+packages-1
+weighted-linear-regression-via-lm
+problem-i
+solution
+problem-ii
+solution-1
+all-possible-models
+a-custom-tidy-function
+getting-the-results
+plotting-the-results
+stepwise-selection
+backward-selection
