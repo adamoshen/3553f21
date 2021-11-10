@@ -119,7 +119,7 @@ summary(lm_miles)
 From the regression output, we have that $\widehat{\beta}_{0} = 0.892$ and 
 $\widehat{\beta}_{1} = 1.337$. The equation of the fitted line is:
 
-\[\widehat{y}_{i} \,=\, 0.892 \,+\, 1.337x_{i}\]
+\[\widehat{Y}_{i} \,=\, 0.892 \,+\, 1.337X_{i}\]
 
 We can interpret $\widehat{\beta}_{0} = 0.892$ as the mean highway miles per gallon when the city
 miles per gallon has a value of zero. However, this doesn't really make sense in the context of our
@@ -433,7 +433,7 @@ summary(lm_log_miles)
 
 The equation of the fitted line is:
 
-\[\widehat{y}_{i} \,=\, 6.445 \,-\, 0.039x_{i}^{2}\]
+\[\widehat{Y}_{i} \,=\, 6.445 \,-\, 0.039X_{i}^{2}\]
 
 where $\widehat{y}_{i}$ is the sum of the log highway miles per gallon and the log city miles per
 gallon. Due to how the model was constructed, if I wanted to predict the sum of the log highway

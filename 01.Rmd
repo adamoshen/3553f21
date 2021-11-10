@@ -494,7 +494,7 @@ summary(slr_model)
 
 From the information above, our fitted regression line has equation:
 
-\[\widehat{y}_{i} \,=\, 13.62 \,-\, 0.08x_{i} \quad i=1,\ldots,n\]
+\[\widehat{Y}_{i} \,=\, 13.62 \,-\, 0.08X_{i} \quad i=1,\ldots,n\]
 
 
 ### Is an intercept-only model appropriate?
@@ -548,7 +548,7 @@ summary(rock_slr_model)
 
 The equation of the fitted line is:
 
-\[\widehat{y}_{i} \,=\, 8465 \,-\, 5855x_{i}, \quad i=1,\ldots,n\]
+\[\widehat{Y}_{i} \,=\, 8465 \,-\, 5855X_{i}, \quad i=1,\ldots,n\]
 
 Testing the hypotheses:
 
@@ -603,7 +603,7 @@ summary(rock_intercept_model)
 
 From the output above, the equation of the fitted line is:
 
-\[\widehat{y}_{i} \,=\, 7187.7, \quad i=1,\ldots,n\]
+\[\widehat{Y}_{i} \,=\, 7187.7, \quad i=1,\ldots,n\]
 
 
 ### Visualising the intercept-only fit
