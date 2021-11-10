@@ -138,6 +138,10 @@ wm2 <- lm(Y ~ X, data=table2.1, weights=w2)
 summary(wm2)
 ```
 
+The equation of the fitted line is:
+
+\[\widehat{Y}_{i} \,=\, 1.4425 \,+\, 0.3075X_{i}\]
+
 We can see that in changing our weight for the 16th observation from $1/16$ to $1/25$:
 
 - The value of $\widehat{\beta}_{0}$ has increased (not by much)
@@ -169,7 +173,7 @@ Observation 23 definitely stands out from the rest of the data!
 ## All possible models
 
 To be consistent with the textbook, let us define $p$ as the total number of parameters in a model,
-including the intercept). Suppose we are interested in plotting Mallows' $C_{p}$ against $p$ for
+including the intercept. Suppose we are interested in plotting Mallows' $C_{p}$ against $p$ for
 all possible models. 
 
 *(Alternatively, we could consider plotting $C_{p}$ against $p+1$ where $p$ is the number of
@@ -254,7 +258,7 @@ similar with model 7 (the full model) being only slightly better.
 ### Plotting the results
 
 ```{r}
-ggplot(all_models, aes(x=p, y=mallows_cp),)+
+ggplot(all_models, aes(x=p, y=mallows_cp))+
   geom_point()+
   labs(caption="p is the number of parameter estimates including the intercept")
 ```
