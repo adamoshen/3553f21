@@ -113,7 +113,7 @@ Obtain the parameter estimates using weighted least squares.</p>
 </h3>
 <p>If the 16th observation has variance <span class="math inline">\(16\sigma^{2}\)</span>, then</p>
 <p><span class="math display">\[\textbf{Var}(\varepsilon) \,=\, \sigma^{2}V \,=\,
-\begin{bmatrix}1\\
+\sigma^{2}\begin{bmatrix}1\\
 &amp;1\\
 &amp; &amp;\ddots\\
 &amp; &amp; &amp;16\\
@@ -303,7 +303,7 @@ horizontal sum rather than the usual vertical sum).</p></li>
 ##         BIC = bic, mallows_cp = cp))
 ##     bind_cols(inclusions, metrics)
 ## }
-## &lt;bytecode: 0x0000000030c92ae8&gt;
+## &lt;bytecode: 0x000000002fe74758&gt;
 ## &lt;environment: namespace:broom&gt;</code></pre>
 <p>Consulting the documentation of <code>?leaps::regsubsets()</code>, we can create a custom function that also
 includes the SSE of each model.</p>

@@ -60,7 +60,7 @@ Obtain the parameter estimates using weighted least squares.
 If the 16th observation has variance $16\sigma^{2}$, then
 
 \[\textbf{Var}(\varepsilon) \,=\, \sigma^{2}V \,=\,
-\begin{bmatrix}1\\
+\sigma^{2}\begin{bmatrix}1\\
 &1\\
 & &\ddots\\
 & & &16\\
