@@ -305,7 +305,7 @@ horizontal sum rather than the usual vertical sum).</p></li>
 ##         BIC = bic, mallows_cp = cp))
 ##     bind_cols(inclusions, metrics)
 ## }
-## &lt;bytecode: 0x0000000030c71f60&gt;
+## &lt;bytecode: 0x0000000030c93ed8&gt;
 ## &lt;environment: namespace:broom&gt;</code></pre>
 <p>Consulting the documentation of <code>?leaps::regsubsets()</code>, we can create a custom function that also
 includes the SSE of each model.</p>
@@ -394,7 +394,7 @@ value of <span class="math inline">\(S^{2}_{4}\)</span> from our previous result
 ##   </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>       </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
 ## </span><span style="color: #555555;">1</span><span> TRUE          FALSE FALSE FALSE             0       154.     1    7</span><span style="text-decoration: underline;">203</span><span>045.
 </span></code></pre>
-<p>Binding this to the previous output:</p>
+<p>Binding this to the main output:</p>
 <div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">all_models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">intercept_lm_results</span>, <span class="va">all_models</span><span class="op">)</span>
 
@@ -452,7 +452,7 @@ correlated to <code>body_mass</code>.</p>
 ## bill_depth     0.6516595   0.4681935  1.0000000      0.2727782
 ## flipper_length 0.5261972   0.3366548  0.2727782      1.0000000</code></pre>
 <p><code>bill_depth</code> is the most correlated with <code>body_mass</code> (remember to look at the absolute value of the
-correlation, not just value itself).</p>
+correlation).</p>
 <p>Start here next time...</p>
 </div>
 <div id="backward-selection" class="section level2" number="4.5">

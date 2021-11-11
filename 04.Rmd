@@ -304,7 +304,7 @@ intercept_lm_results <- tibble(
 intercept_lm_results
 ```
 
-Binding this to the previous output:
+Binding this to the main output:
 
 ```{r}
 all_models <- bind_rows(intercept_lm_results, all_models)
@@ -350,7 +350,7 @@ cor(adeliebiscoe)
 ```
 
 `bill_depth` is the most correlated with `body_mass` (remember to look at the absolute value of the
-correlation, not just value itself).
+correlation).
 
 Start here next time...
 
