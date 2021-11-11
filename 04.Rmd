@@ -197,7 +197,7 @@ a custom function since we also want the $SSE_{p}$ of each model in order to cal
 essentially summing the number of `TRUE`s appearing in each row (i.e. we are performing a
 horizontal sum rather than the usual vertical sum).
 
-4. We then compute the mean square error, $S^{2}_{p}$ for each model.
+4. We then compute the mean square error, $S^{2}_{p}$, for each model.
 
 5. We then drop the columns that we won't be using.
 
@@ -255,9 +255,62 @@ $S^{2}_{p}$, and as few predictors as possible. From the results above, models 4
 similar with model 7 (the full model) being only slightly better.
 
 
-### Obtaining the values for an intercept-only model
+### Obtaining the values for the intercept-only model
 
-TO DO
+We first fit the intercept-only model.
+
+```{r}
+rock_intercept_lm <- lm(area ~ 1, data=rock)
+```
+
+The formula for Mallows' $C_{p}$ is given on page 332 of the textbook:
+
+\[C_{p} \,=\, \frac{SSE_{p}}{S^{2}} \,-\, (n - 2p)\]
+
+where $S^{2}$ is the estimate of the error term variance for the maximal model $(p=4)$. Note that
+the value for $n$ has already been initialised as a variable in our workspace. We can extract the
+value of $S^{2}_{4}$ from our previous results using:
+
+```{r}
+s.squared_4 <- all_models %>%
+  slice_tail(n=1) %>%
+  pull(s.squared_p)
+```
+
+We have the relationship that
+
+\[S^{2}_{1} \,=\, MSE_{1} \,=\, \frac{SSE_{1}}{\text{df}_{1}}\]
+
+Rearranging gives
+
+\[SSE_{1} \,=\, \text{df}_{1} * S^{2}_{1}\]
+
+Mimicking the structure of `all_models`, the corresponding values for our intercept-only model are:
+
+```{r}
+intercept_lm_results <- tibble(
+  `(Intercept)` = TRUE,
+  peri = FALSE,
+  shape = FALSE,
+  perm = FALSE,
+  adj.r.squared = summary(rock_intercept_lm)$adj.r.squared,
+  s.squared_p = summary(rock_intercept_lm)$sigma^2,
+  p = summary(rock_intercept_lm)$df[1],
+  df = summary(rock_intercept_lm)$df[2],
+  mallows_cp = (s.squared_p * df) / s.squared_4 - (n - 2 * p)
+) %>%
+  select(where(is.logical), adj.r.squared, mallows_cp, p, s.squared_p)
+
+intercept_lm_results
+```
+
+Binding this to the previous output:
+
+```{r}
+all_models <- bind_rows(intercept_lm_results, all_models)
+
+all_models
+```
 
 
 ### Plotting the results

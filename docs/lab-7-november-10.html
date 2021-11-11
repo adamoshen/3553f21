@@ -285,7 +285,7 @@ a custom function since we also want the <span class="math inline">\(SSE_{p}\)</
 (including the intercept). This involves some code that is a bit more complicated, but it is
 essentially summing the number of <code>TRUE</code>s appearing in each row (i.e. we are performing a
 horizontal sum rather than the usual vertical sum).</p></li>
-<li><p>We then compute the mean square error, <span class="math inline">\(S^{2}_{p}\)</span> for each model.</p></li>
+<li><p>We then compute the mean square error, <span class="math inline">\(S^{2}_{p}\)</span>, for each model.</p></li>
 <li><p>We then drop the columns that we won't be using.</p></li>
 <li><p>Finally, we can plot our results.</p></li>
 </ol>
@@ -305,7 +305,7 @@ horizontal sum rather than the usual vertical sum).</p></li>
 ##         BIC = bic, mallows_cp = cp))
 ##     bind_cols(inclusions, metrics)
 ## }
-## &lt;bytecode: 0x000000002fe737b0&gt;
+## &lt;bytecode: 0x0000000030c71f60&gt;
 ## &lt;environment: namespace:broom&gt;</code></pre>
 <p>Consulting the documentation of <code>?leaps::regsubsets()</code>, we can create a custom function that also
 includes the SSE of each model.</p>
@@ -353,21 +353,74 @@ the intercept.</p>
 <span class="math inline">\(S^{2}_{p}\)</span>, and as few predictors as possible. From the results above, models 4 and 7 are quite
 similar with model 7 (the full model) being only slightly better.</p>
 </div>
-<div id="obtaining-the-values-for-an-intercept-only-model" class="section level3" number="4.3.3">
+<div id="obtaining-the-values-for-the-intercept-only-model" class="section level3" number="4.3.3">
 <h3>
-<span class="header-section-number">4.3.3</span> Obtaining the values for an intercept-only model<a class="anchor" aria-label="anchor" href="#obtaining-the-values-for-an-intercept-only-model"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.3.3</span> Obtaining the values for the intercept-only model<a class="anchor" aria-label="anchor" href="#obtaining-the-values-for-the-intercept-only-model"><i class="fas fa-link"></i></a>
 </h3>
-<p>TO DO</p>
+<p>We first fit the intercept-only model.</p>
+<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rock_intercept_lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">area</span> <span class="op">~</span> <span class="fl">1</span>, data<span class="op">=</span><span class="va">rock</span><span class="op">)</span></code></pre></div>
+<p>The formula for Mallows' <span class="math inline">\(C_{p}\)</span> is given on page 332 of the textbook:</p>
+<p><span class="math display">\[C_{p} \,=\, \frac{SSE_{p}}{S^{2}} \,-\, (n - 2p)\]</span></p>
+<p>where <span class="math inline">\(S^{2}\)</span> is the estimate of the error term variance for the maximal model <span class="math inline">\((p=4)\)</span>. Note that
+the value for <span class="math inline">\(n\)</span> has already been initialised as a variable in our workspace. We can extract the
+value of <span class="math inline">\(S^{2}_{4}\)</span> from our previous results using:</p>
+<div class="sourceCode" id="cb243"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">s.squared_4</span> <span class="op">&lt;-</span> <span class="va">all_models</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice_tail</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">s.squared_p</span><span class="op">)</span></code></pre></div>
+<p>We have the relationship that</p>
+<p><span class="math display">\[S^{2}_{1} \,=\, MSE_{1} \,=\, \frac{SSE_{1}}{\text{df}_{1}}\]</span></p>
+<p>Rearranging gives</p>
+<p><span class="math display">\[SSE_{1} \,=\, \text{df}_{1} * S^{2}_{1}\]</span></p>
+<p>Mimicking the structure of <code>all_models</code>, the corresponding values for our intercept-only model are:</p>
+<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">intercept_lm_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
+  `(Intercept)` <span class="op">=</span> <span class="cn">TRUE</span>,
+  peri <span class="op">=</span> <span class="cn">FALSE</span>,
+  shape <span class="op">=</span> <span class="cn">FALSE</span>,
+  perm <span class="op">=</span> <span class="cn">FALSE</span>,
+  adj.r.squared <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rock_intercept_lm</span><span class="op">)</span><span class="op">$</span><span class="va">adj.r.squared</span>,
+  s.squared_p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rock_intercept_lm</span><span class="op">)</span><span class="op">$</span><span class="va">sigma</span><span class="op">^</span><span class="fl">2</span>,
+  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rock_intercept_lm</span><span class="op">)</span><span class="op">$</span><span class="va">df</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,
+  df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">rock_intercept_lm</span><span class="op">)</span><span class="op">$</span><span class="va">df</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,
+  mallows_cp <span class="op">=</span> <span class="op">(</span><span class="va">s.squared_p</span> <span class="op">*</span> <span class="va">df</span><span class="op">)</span> <span class="op">/</span> <span class="va">s.squared_4</span> <span class="op">-</span> <span class="op">(</span><span class="va">n</span> <span class="op">-</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">p</span><span class="op">)</span>
+<span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu">where</span><span class="op">(</span><span class="va">is.logical</span><span class="op">)</span>, <span class="va">adj.r.squared</span>, <span class="va">mallows_cp</span>, <span class="va">p</span>, <span class="va">s.squared_p</span><span class="op">)</span>
+
+<span class="va">intercept_lm_results</span></code></pre></div>
+<pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 1 x 8</span><span>
+##   `(Intercept)` peri  shape perm  adj.r.squared mallows_cp     p s.squared_p
+##   </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>       </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;">1</span><span> TRUE          FALSE FALSE FALSE             0       154.     1    7</span><span style="text-decoration: underline;">203</span><span>045.
+</span></code></pre>
+<p>Binding this to the previous output:</p>
+<div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">all_models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">intercept_lm_results</span>, <span class="va">all_models</span><span class="op">)</span>
+
+<span class="va">all_models</span></code></pre></div>
+<pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 8 x 8</span><span>
+##   `(Intercept)` peri  shape perm  adj.r.squared mallows_cp     p s.squared_p
+##   </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;lgl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>       </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;">1</span><span> TRUE          FALSE FALSE FALSE        0          154.       1    7</span><span style="text-decoration: underline;">203</span><span>045.
+## </span><span style="color: #555555;">2</span><span> TRUE          TRUE  FALSE FALSE        0.669       20.8      2    2</span><span style="text-decoration: underline;">380</span><span>718.
+## </span><span style="color: #555555;">3</span><span> TRUE          FALSE FALSE TRUE         0.139      125.       2    6</span><span style="text-decoration: underline;">201</span><span>808.
+## </span><span style="color: #555555;">4</span><span> TRUE          FALSE TRUE  FALSE        0.012</span><span style="text-decoration: underline;">2</span><span>     150.       2    7</span><span style="text-decoration: underline;">115</span><span>420.
+## </span><span style="color: #555555;">5</span><span> TRUE          TRUE  FALSE TRUE         0.764        3.20     3    1</span><span style="text-decoration: underline;">696</span><span>625.
+## </span><span style="color: #555555;">6</span><span> TRUE          TRUE  TRUE  FALSE        0.701       15.4      3    2</span><span style="text-decoration: underline;">152</span><span>972.
+## </span><span style="color: #555555;">7</span><span> TRUE          FALSE TRUE  TRUE         0.122      126.       3    6</span><span style="text-decoration: underline;">323</span><span>336.
+## </span><span style="color: #555555;">8</span><span> TRUE          TRUE  TRUE  TRUE         0.765        4        4    1</span><span style="text-decoration: underline;">689</span><span>242.
+</span></code></pre>
 </div>
 <div id="plotting-the-results" class="section level3" number="4.3.4">
 <h3>
 <span class="header-section-number">4.3.4</span> Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb246"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">all_models</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">p</span>, y<span class="op">=</span><span class="va">mallows_cp</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>caption<span class="op">=</span><span class="st">"p is the number of parameter estimates including the intercept"</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="04_files/figure-html/unnamed-chunk-13-1.svg" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="04_files/figure-html/unnamed-chunk-17-1.svg" width="672" style="display: block; margin: auto;"></div>
 </div>
 </div>
 <div id="stepwise-selection" class="section level2" number="4.4">
@@ -377,7 +430,7 @@ similar with model 7 (the full model) being only slightly better.</p>
 <p>Let's revisit the penguins data from
 <a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a>, specifically the subset of
 penguins of species Adelie from the island Biscoe.</p>
-<div class="sourceCode" id="cb243"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb247"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">adeliebiscoe</span> <span class="op">&lt;-</span> <span class="fu">palmerpenguins</span><span class="fu">::</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/reference/penguins.html">penguins</a></span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"Adelie"</span>, <span class="va">island</span> <span class="op">==</span> <span class="st">"Biscoe"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -391,7 +444,7 @@ penguins of species Adelie from the island Biscoe.</p>
 <p>We are interested in performing stepwise selection using <code>body_mass</code> as the response. As recommended
 in the lecture notes, we commence the model building process by including the variable that is most
 correlated to <code>body_mass</code>.</p>
-<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">adeliebiscoe</span><span class="op">)</span></code></pre></div>
 <pre><code>##                body_mass bill_length bill_depth flipper_length
 ## body_mass      1.0000000   0.6477493  0.6516595      0.5261972
@@ -429,7 +482,7 @@ correlation, not just value itself).</p>
 <a class="nav-link" href="#all-possible-models"><span class="header-section-number">4.3</span> All possible models</a><ul class="nav navbar-nav">
 <li><a class="nav-link" href="#a-custom-tidy-function"><span class="header-section-number">4.3.1</span> A custom tidy function</a></li>
 <li><a class="nav-link" href="#getting-the-results"><span class="header-section-number">4.3.2</span> Getting the results</a></li>
-<li><a class="nav-link" href="#obtaining-the-values-for-an-intercept-only-model"><span class="header-section-number">4.3.3</span> Obtaining the values for an intercept-only model</a></li>
+<li><a class="nav-link" href="#obtaining-the-values-for-the-intercept-only-model"><span class="header-section-number">4.3.3</span> Obtaining the values for the intercept-only model</a></li>
 <li><a class="nav-link" href="#plotting-the-results"><span class="header-section-number">4.3.4</span> Plotting the results</a></li>
 </ul>
 </li>
@@ -452,7 +505,7 @@ correlation, not just value itself).</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on November 10, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on November 11, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
