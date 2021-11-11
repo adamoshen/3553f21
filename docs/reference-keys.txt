@@ -94,6 +94,7 @@ solution-1
 all-possible-models
 a-custom-tidy-function
 getting-the-results
+obtaining-the-values-for-an-intercept-only-model
 plotting-the-results
 stepwise-selection
 backward-selection

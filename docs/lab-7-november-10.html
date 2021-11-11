@@ -305,7 +305,7 @@ horizontal sum rather than the usual vertical sum).</p></li>
 ##         BIC = bic, mallows_cp = cp))
 ##     bind_cols(inclusions, metrics)
 ## }
-## &lt;bytecode: 0x000000002fe84a58&gt;
+## &lt;bytecode: 0x000000002fe737b0&gt;
 ## &lt;environment: namespace:broom&gt;</code></pre>
 <p>Consulting the documentation of <code>?leaps::regsubsets()</code>, we can create a custom function that also
 includes the SSE of each model.</p>
@@ -353,9 +353,15 @@ the intercept.</p>
 <span class="math inline">\(S^{2}_{p}\)</span>, and as few predictors as possible. From the results above, models 4 and 7 are quite
 similar with model 7 (the full model) being only slightly better.</p>
 </div>
-<div id="plotting-the-results" class="section level3" number="4.3.3">
+<div id="obtaining-the-values-for-an-intercept-only-model" class="section level3" number="4.3.3">
 <h3>
-<span class="header-section-number">4.3.3</span> Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.3.3</span> Obtaining the values for an intercept-only model<a class="anchor" aria-label="anchor" href="#obtaining-the-values-for-an-intercept-only-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>TO DO</p>
+</div>
+<div id="plotting-the-results" class="section level3" number="4.3.4">
+<h3>
+<span class="header-section-number">4.3.4</span> Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"><i class="fas fa-link"></i></a>
 </h3>
 <div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">all_models</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">p</span>, y<span class="op">=</span><span class="va">mallows_cp</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
@@ -382,8 +388,9 @@ penguins of species Adelie from the island Biscoe.</p>
     body_mass <span class="op">=</span> <span class="va">body_mass_g</span>,
   <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">body_mass</span>, <span class="va">bill_length</span>, <span class="va">bill_depth</span>, <span class="va">flipper_length</span><span class="op">)</span></code></pre></div>
-<p>We are interested in performing stepwise selection using <code>body_mass</code> as the response. We commence
-the model building process by including the variable that is most correlated to <code>body_mass</code>.</p>
+<p>We are interested in performing stepwise selection using <code>body_mass</code> as the response. As recommended
+in the lecture notes, we commence the model building process by including the variable that is most
+correlated to <code>body_mass</code>.</p>
 <div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">adeliebiscoe</span><span class="op">)</span></code></pre></div>
 <pre><code>##                body_mass bill_length bill_depth flipper_length
@@ -422,7 +429,8 @@ correlation, not just value itself).</p>
 <a class="nav-link" href="#all-possible-models"><span class="header-section-number">4.3</span> All possible models</a><ul class="nav navbar-nav">
 <li><a class="nav-link" href="#a-custom-tidy-function"><span class="header-section-number">4.3.1</span> A custom tidy function</a></li>
 <li><a class="nav-link" href="#getting-the-results"><span class="header-section-number">4.3.2</span> Getting the results</a></li>
-<li><a class="nav-link" href="#plotting-the-results"><span class="header-section-number">4.3.3</span> Plotting the results</a></li>
+<li><a class="nav-link" href="#obtaining-the-values-for-an-intercept-only-model"><span class="header-section-number">4.3.3</span> Obtaining the values for an intercept-only model</a></li>
+<li><a class="nav-link" href="#plotting-the-results"><span class="header-section-number">4.3.4</span> Plotting the results</a></li>
 </ul>
 </li>
 <li><a class="nav-link" href="#stepwise-selection"><span class="header-section-number">4.4</span> Stepwise selection</a></li>

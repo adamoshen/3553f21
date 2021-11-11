@@ -255,6 +255,11 @@ $S^{2}_{p}$, and as few predictors as possible. From the results above, models 4
 similar with model 7 (the full model) being only slightly better.
 
 
+### Obtaining the values for an intercept-only model
+
+TO DO
+
+
 ### Plotting the results
 
 ```{r}
@@ -283,8 +288,9 @@ adeliebiscoe <- palmerpenguins::penguins %>%
   select(body_mass, bill_length, bill_depth, flipper_length)
 ```
 
-We are interested in performing stepwise selection using `body_mass` as the response. We commence
-the model building process by including the variable that is most correlated to `body_mass`.
+We are interested in performing stepwise selection using `body_mass` as the response. As recommended
+in the lecture notes, we commence the model building process by including the variable that is most
+correlated to `body_mass`.
 
 ```{r}
 cor(adeliebiscoe)
