@@ -16,13 +16,19 @@ library(tibble)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
+library(readr)
 library(broom)
 library(leaps)
 theme_set(theme_bw())
 ```
 
+[readr](https://readr.tidyverse.org/) is another package from
+[tidyverse](https://tidyverse.org/packages) for reading in various types of data. Many of its
+functions work similar to the base-R equivalents but work a bit better, are smarter, and read data
+in as a tibble.
+
 We will be using the [leaps](https://cran.r-project.org/package=leaps) package to aid us in
-computing all possible models from a set of variables and obtaining the corresponding Mallows'
+computing all possible models from a set of predictors and obtaining the corresponding Mallows'
 $C_{p}$ values for all of these models. The [leaps](https://cran.r-project.org/package=leaps)
 package can also be used for best subset selection, forward selection, and backward selection. In
 this lab, while we will be covering an example on backward selection, we will be doing it manually
@@ -341,6 +347,13 @@ adeliebiscoe <- palmerpenguins::penguins %>%
   select(body_mass, bill_length, bill_depth, flipper_length)
 ```
 
+For the following, we will use:
+
+\[\alpha_{\text{entry}} = 0.05, \quad \alpha_{\text{exit}} = 0.05\]
+
+
+### Building the base model
+
 We are interested in performing stepwise selection using `body_mass` as the response. As recommended
 in the lecture notes, we commence the model building process by including the variable that is most
 correlated to `body_mass`.
@@ -352,6 +365,300 @@ cor(adeliebiscoe)
 `bill_depth` is the most correlated with `body_mass` (remember to look at the absolute value of the
 correlation).
 
-Start here next time...
+```{r}
+step1 <- lm(body_mass ~ bill_depth, data=adeliebiscoe)
+
+summary(step1)
+```
+
+From the summary output, the $t$-test of `bill_depth` is significant so we can continue considering
+predictors to add to the model.
+
+
+### Adding a predictor, round 1
+
+Note that we can perform the partial $F$-tests of single variable additions using the usual method
+of building the candidate model and then calling `anova()` on the reduced and full models.
+
+```{r}
+step2a <- lm(body_mass ~ bill_depth + bill_length, data=adeliebiscoe)
+step2b <- lm(body_mass ~ bill_depth + flipper_length, data=adeliebiscoe)
+
+anova(step1, step2a)
+anova(step1, step2b)
+```
+
+This can become a lot of work at each step and can become tedious if there are many predictors to
+consider at each step. Instead, we can perform the partial $F$-tests of single variable additions
+using the `add1()` function.
+
+```{r}
+add1(step1, ~ . + bill_length + flipper_length, test="F")
+```
+
+The second argument to `add1()` is the scope, where we list all predictors (using formula syntax)
+that are eligible to be added to the main model. Notice that the results of the partial $F$-tests
+are identical to when we had constructed the models individually before (`step2a` and `step2b`).
+
+The variable that gets added to our model is the one with the highest $F$-value. Since each of these
+$F$-values have the same numerator and denominator degrees of freedom, this is also equivalent to
+adding the variable that has the smallest $p$-value associated to its partial $F$-test (so long as
+it is less than $\alpha_{\text{entry}}$). Since the $F$-test of adding `bill_length` to the base
+model results in the smallest $p$-value that is less than $\alpha_{\text{entry}}$, `bill_length`
+is added to the base model.
+
+```{r}
+step2 <- update(step1, . ~ . + bill_length)
+```
+
+
+### Dropping a predictor, round 1
+
+Now we check whether there are any predictors that can be dropped. As before, we can construct
+multiple models that differ by single term deletions and perform the partial $F$-tests by
+calling `anova()` on the reduced and full models. We can also use the equivalent of `add1()` for
+single term deletions, `drop1()`.
+
+```{r}
+drop1(step2, ~ ., test="F")
+```
+
+The second argument to `drop1()` is the scope (similar to `add1()`), where we list all predictors
+(using formula syntax) that are eligible to be dropped from the main model. Here, all predictors
+currently in the model are eligible to be dropped.
+
+Recall the hypotheses associated to dropping a single variable:
+
+\[H_{0}: \beta_{1} = 0, \quad H_{A}: \beta_{1} \neq 0\]
+\[H_{0}: \beta_{2} = 0, \quad H_{A}: \beta_{2} \neq 0\]
+
+For a variable to be dropped from the model, we need to fail to reject the null hypothesis. So we
+are looking for small $F$-values, or equivalently, large $p$-values that are greater than
+$\alpha_{\text{exit}}$. Since we do not have any here, we do not drop any of the predictors in the
+current model.
+
+
+### Adding a predictor, round 2
+
+At this stage, we only have one more variable left in our data set that can be added to the model.
+
+```{r}
+add1(step2, ~ . + flipper_length, test="F")
+```
+
+Since the $p$-value for this $F$-test is less than $\alpha_{\text{entry}}$, we add `flipper_length`
+into the main model.
+
+```{r}
+step3 <- update(step2, . ~ . + flipper_length)
+```
+
+
+### Dropping a predictor, round 2
+
+```{r}
+drop1(step3, ~ ., test="F")
+```
+
+As before, predictors that should be considered for dropping are those that have a $p$-value greater
+than $\alpha_{\text{exit}}$. Since we do not have any, we do not drop any of the predictors in our
+model.
+
+
+### The final model
+
+```{r}
+summary(step3)
+```
+
+The final model is:
+
+\[\widehat{Y}_{i} \,=\, -6122.000 \,+\, 165.196X_{1,\,i} + 70.743X_{2,\,i} \,+\, 21.397X_{3,\,i}\]
+
+Note that our adjusted R-squared value is 0.6246, which is not terrible, but not great. However,
+recall that in the last lab, removing the intercept from the model did result in a jump in the
+adjusted R-squared from 0.6246 to 0.9905.
+
 
 ## Backward selection
+
+In backward selection, we start with the full model and at each step, consider dropping predictors.
+As we had seen for the Adelie Biscoe data, performing the $F$-test for single term deletions on the
+model that contained all predictors, none were eligible for dropping. For this example, let us
+consider the 
+[Scooby Doo data set](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-07-13/readme.md),
+which has many variables.
+
+```{r, eval=FALSE}
+scoobydoo <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-13/scoobydoo.csv")
+```
+
+```{r, echo=FALSE, eval=FALSE}
+download.file(
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-13/scoobydoo.csv",
+  "./data/scoobydoo.csv"
+)
+```
+
+```{r, echo=FALSE}
+scoobydoo <- read_csv("./data/scoobydoo.csv")
+```
+
+```{r}
+names(scoobydoo)
+```
+
+
+### Data prep
+
+For this example, we will only keep a subset of the variables. In addition, some of the variables
+that should be of type numeric were read in as a strings due to the presence of the string `"NULL"`
+(note that the string `"NULL"` is not the same as `NA`).
+
+```{r}
+scoobydoo %>%
+  count(jinkies)
+```
+
+Therefore, we want to remove all episodes that contain `"NULL"` values in selected columns and
+coerce the remaining values to numeric.
+
+```{r}
+scoobydoo <- scoobydoo %>%
+  select(
+    imdb, engagement, run_time, monster_amount, suspects_amount, culprit_amount,
+    jeepers, jinkies, my_glasses, zoinks
+  ) %>%
+  filter(across(where(is.character), ~ . != "NULL")) %>%
+  mutate(across(where(is.character), as.numeric))
+```
+
+In the line containing `filter()`, we are filtering over all character-type columns to only retain
+episodes that do not contain any `"NULL"` values. Specifying the filtering condition this way
+allows us to do less typing. Otherwise we would need to type out all the variables of interest:
+
+```{r, eval=FALSE}
+filter(imdb != "NULL", jeepers != "NULL", jinkies != "NULL", etc.)
+```
+
+Note that the portion `~ . != "NULL"` is a lambda function / anonymous function, not a mathematical
+formula, and is the short-hand equivalent to:
+
+```{r, eval=FALSE}
+function(x) {
+  x != "NULL"
+}
+```
+
+```{r}
+scoobydoo
+```
+
+Now we are ready to start building models. We are interested in a creating a model that predicts
+the IMDB score. As we are performing backward selection, we start with the model containing all
+predictors. For the following example, we will use $\alpha_{\text{exit}} = 0.05$.
+
+```{r}
+back1 <- lm(imdb ~ ., data=scoobydoo)
+
+summary(back1)
+```
+
+
+### Dropping a predictor, round 1
+
+```{r}
+drop1(back1, ~ ., test="F")
+```
+
+Remember that when we are dropping predictors, in the related hypothesis test, we want to fail to
+reject the null hypothesis. Therefore we are looking for $p$-values that are greater than
+$\alpha_{\text{exit}} = 0.05$. From the output above, there are many predictors that are eligible to
+be dropped. Therefore, we look for the predictor corresponding to the largest $p$-value greater than
+$\alpha_{\text{exit}} = 0.05$. This is `culprit_amount` with a $p$-value of 0.643.
+
+```{r}
+back2 <- update(back1, . ~ . - culprit_amount)
+```
+
+
+### Dropping a predictor, round 2
+
+```{r}
+drop1(back2, ~ ., test="F")
+```
+
+The variable with the largest $p$-value greater than $\alpha_{\text{exit}} = 0.05$ is `zoinks`.
+
+```{r}
+back3 <- update(back2, . ~ . - zoinks)
+```
+
+
+### Dropping a predictor, round 3
+
+```{r}
+drop1(back3, ~ ., test="F")
+```
+
+The variable with the largest $p$-value greater than $\alpha_{\text{exit}} = 0.05$ is `jeepers`.
+
+```{r}
+back4 <- update(back3, . ~ . - jeepers)
+```
+
+
+### Dropping a predictor, round 4
+
+```{r}
+drop1(back4, ~ ., test="F")
+```
+
+The variable with the largest $p$-value greater than $\alpha_{\text{exit}} = 0.05$ is `engagement`.
+
+```{r}
+back5 <- update(back4, . ~ . - engagement)
+```
+
+
+### Dropping a predictor, round 5
+
+```{r}
+drop1(back5, ~ ., test="F")
+```
+
+The variable with the largest $p$-value greater than $\alpha_{\text{exit}} = 0.05$ is `my_glasses`.
+
+```{r}
+back6 <- update(back5, . ~ . - my_glasses)
+```
+
+
+### Dropping a predictor, round 6
+
+```{r}
+drop1(back6, ~ ., test="F")
+```
+
+The remaining single term deletions have $p$-values that are less than
+$\alpha_{\text{exit}} = 0.05$. Therefore, we stop here.
+
+
+### The final model
+
+```{r}
+summary(back6)
+```
+
+The final model is:
+
+\[\widehat{Y}_{i} \,=\, 8.2645 \,-\, 0.0114X_{1,\,i} \,-\, 0.0524X_{2,\,i} - 0.0647X_{3,\,i} - 0.0579X_{4,\,i}\]
+
+Interestingly, this says that the number of jinkies in an episode will negatively impact your IMDB
+score &#x1F602;!
+
+Note also, that while all the remaining predictors in our model are significant, we have a very
+poor adjusted R-squared value of 0.3336. This means that we have only explained 33.36% of the
+variation in IMDB ratings by using these predictors. As such, this model still has room for
+improvement (though do keep in mind that only a small subset of variables were included in
+this example for the sake of brevity).
