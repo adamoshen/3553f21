@@ -511,9 +511,9 @@ names(scoobydoo)
 
 ### Data prep
 
-For this example, we will only keep a subset of the variables. In addition, some of the variables
-that should be of type numeric were read in as a strings due to the presence of the string `"NULL"`
-(note that the string `"NULL"` is not the same as `NA`).
+For this example, we will only keep a subset of the variables for the sake of brevity. In addition,
+some of the variables that should be of type numeric were read in as a strings due to the presence
+of the string `"NULL"` (note that the string `"NULL"` is not the same as `NA`).
 
 ```{r}
 scoobydoo %>%
@@ -550,12 +550,14 @@ function(x) {
 }
 ```
 
-```{r}
+Previewing our data:
+
+```{r, R.options=list(width=500)}
 scoobydoo
 ```
 
 Now we are ready to start building models. We are interested in a creating a model that predicts
-the IMDB score. As we are performing backward selection, we start with the model containing all
+the IMDB rating. As we are performing backward selection, we start with the model containing all
 predictors. For the following example, we will use $\alpha_{\text{exit}} = 0.05$.
 
 ```{r}
@@ -654,11 +656,12 @@ The final model is:
 
 \[\widehat{Y}_{i} \,=\, 8.2645 \,-\, 0.0114X_{1,\,i} \,-\, 0.0524X_{2,\,i} - 0.0647X_{3,\,i} - 0.0579X_{4,\,i}\]
 
-Interestingly, this says that the number of jinkies in an episode will negatively impact your IMDB
-score &#x1F602;!
+Interestingly, this says that the number of jinkies in an episode has a (small) negative impact on
+the IMDB rating &#x1F602;!
 
-Note also, that while all the remaining predictors in our model are significant, we have a very
-poor adjusted R-squared value of 0.3336. This means that we have only explained 33.36% of the
-variation in IMDB ratings by using these predictors. As such, this model still has room for
-improvement (though do keep in mind that only a small subset of variables were included in
-this example for the sake of brevity).
+While all the remaining predictors in our model are significant, we have a very poor adjusted
+R-squared value of 0.3336. This means that we have only explained 33.36% of the variation in
+IMDB ratings by using these predictors. In fact, our original model with all the predictors had an
+adjusted R-squared value of 0.3340. As such, the final model still has room for improvement
+(though do keep in mind that only a small subset of variables were included in this example for the
+sake of brevity).

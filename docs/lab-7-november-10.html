@@ -310,7 +310,7 @@ horizontal sum rather than the usual vertical sum).</p></li>
 ##         BIC = bic, mallows_cp = cp))
 ##     bind_cols(inclusions, metrics)
 ## }
-## &lt;bytecode: 0x00000000303a31d0&gt;
+## &lt;bytecode: 0x00000000311960a0&gt;
 ## &lt;environment: namespace:broom&gt;</code></pre>
 <p>Consulting the documentation of <code>?leaps::regsubsets()</code>, we can create a custom function that also
 includes the SSE of each model.</p>
@@ -710,9 +710,9 @@ which has many variables.</p>
 <h3>
 <span class="header-section-number">4.5.1</span> Data prep<a class="anchor" aria-label="anchor" href="#data-prep"><i class="fas fa-link"></i></a>
 </h3>
-<p>For this example, we will only keep a subset of the variables. In addition, some of the variables
-that should be of type numeric were read in as a strings due to the presence of the string <code>"NULL"</code>
-(note that the string <code>"NULL"</code> is not the same as <code>NA</code>).</p>
+<p>For this example, we will only keep a subset of the variables for the sake of brevity. In addition,
+some of the variables that should be of type numeric were read in as a strings due to the presence
+of the string <code>"NULL"</code> (note that the string <code>"NULL"</code> is not the same as <code>NA</code>).</p>
 <div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scoobydoo</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">jinkies</span><span class="op">)</span></code></pre></div>
@@ -755,26 +755,26 @@ formula, and is the short-hand equivalent to:</p>
 <code class="sourceCode R"><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">x</span> <span class="op">!=</span> <span class="st">"NULL"</span>
 <span class="op">}</span></code></pre></div>
+<p>Previewing our data:</p>
 <div class="sourceCode" id="cb275"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scoobydoo</span></code></pre></div>
 <pre class="fansi fansi-output"><code>## <span style="color: #555555;"># A tibble: 369 x 10</span><span>
-##     imdb engagement run_time monster_amount suspects_amount culprit_amount
-##    </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>    </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>          </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>           </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>          </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
-## </span><span style="color: #555555;"> 1</span><span>   8.1        556       21              1               2              1
-## </span><span style="color: #555555;"> 2</span><span>   8.1        479       22              1               2              1
-## </span><span style="color: #555555;"> 3</span><span>   8          455       21              1               0              1
-## </span><span style="color: #555555;"> 4</span><span>   7.8        426       21              1               2              1
-## </span><span style="color: #555555;"> 5</span><span>   7.5        391       21              1               1              1
-## </span><span style="color: #555555;"> 6</span><span>   8.4        384       21              1               2              1
-## </span><span style="color: #555555;"> 7</span><span>   7.6        358       21              1               1              1
-## </span><span style="color: #555555;"> 8</span><span>   8.2        358       21              1               2              1
-## </span><span style="color: #555555;"> 9</span><span>   8.1        371       21              1               1              1
-## </span><span style="color: #555555;">10</span><span>   8          346       21              1               1              1
-## </span><span style="color: #555555;"># ... with 359 more rows, and 4 more variables: jeepers &lt;dbl&gt;, jinkies &lt;dbl&gt;,</span><span>
-## </span><span style="color: #555555;">#   my_glasses &lt;dbl&gt;, zoinks &lt;dbl&gt;</span><span>
+##     imdb engagement run_time monster_amount suspects_amount culprit_amount jeepers jinkies my_glasses zoinks
+##    </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>    </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>          </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>           </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>          </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>  </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>
+## </span><span style="color: #555555;"> 1</span><span>   8.1        556       21              1               2              1       0       0          1      1
+## </span><span style="color: #555555;"> 2</span><span>   8.1        479       22              1               2              1       0       0          0      3
+## </span><span style="color: #555555;"> 3</span><span>   8          455       21              1               0              1       0       0          0      1
+## </span><span style="color: #555555;"> 4</span><span>   7.8        426       21              1               2              1       0       0          0      2
+## </span><span style="color: #555555;"> 5</span><span>   7.5        391       21              1               1              1       0       0          1      0
+## </span><span style="color: #555555;"> 6</span><span>   8.4        384       21              1               2              1       1       0          0      2
+## </span><span style="color: #555555;"> 7</span><span>   7.6        358       21              1               1              1       0       0          0      1
+## </span><span style="color: #555555;"> 8</span><span>   8.2        358       21              1               2              1       0       0          1      0
+## </span><span style="color: #555555;"> 9</span><span>   8.1        371       21              1               1              1       0       0          0      0
+## </span><span style="color: #555555;">10</span><span>   8          346       21              1               1              1       0       0          0      0
+## </span><span style="color: #555555;"># ... with 359 more rows</span><span>
 </span></code></pre>
 <p>Now we are ready to start building models. We are interested in a creating a model that predicts
-the IMDB score. As we are performing backward selection, we start with the model containing all
+the IMDB rating. As we are performing backward selection, we start with the model containing all
 predictors. For the following example, we will use <span class="math inline">\(\alpha_{\text{exit}} = 0.05\)</span>.</p>
 <div class="sourceCode" id="cb276"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">back1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">imdb</span> <span class="op">~</span> <span class="va">.</span>, data<span class="op">=</span><span class="va">scoobydoo</span><span class="op">)</span>
@@ -992,13 +992,14 @@ be dropped. Therefore, we look for the predictor corresponding to the largest <s
 ## F-statistic: 47.04 on 4 and 364 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>The final model is:</p>
 <p><span class="math display">\[\widehat{Y}_{i} \,=\, 8.2645 \,-\, 0.0114X_{1,\,i} \,-\, 0.0524X_{2,\,i} - 0.0647X_{3,\,i} - 0.0579X_{4,\,i}\]</span></p>
-<p>Interestingly, this says that the number of jinkies in an episode will negatively impact your IMDB
-score 😂!</p>
-<p>Note also, that while all the remaining predictors in our model are significant, we have a very
-poor adjusted R-squared value of 0.3336. This means that we have only explained 33.36% of the
-variation in IMDB ratings by using these predictors. As such, this model still has room for
-improvement (though do keep in mind that only a small subset of variables were included in
-this example for the sake of brevity).</p>
+<p>Interestingly, this says that the number of jinkies in an episode has a (small) negative impact on
+the IMDB rating 😂!</p>
+<p>While all the remaining predictors in our model are significant, we have a very poor adjusted
+R-squared value of 0.3336. This means that we have only explained 33.36% of the variation in
+IMDB ratings by using these predictors. In fact, our original model with all the predictors had an
+adjusted R-squared value of 0.3340. As such, the final model still has room for improvement
+(though do keep in mind that only a small subset of variables were included in this example for the
+sake of brevity).</p>
 
 </div>
 </div>
