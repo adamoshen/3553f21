@@ -286,7 +286,7 @@ We also set <code>nbest=3</code> to force computation of <strong>all</strong> mo
 to obtain the required diagnostic information (including Mallows' <span class="math inline">\(C_{p}\)</span>) as a tidy tibble. We need
 a custom function since we also want the <span class="math inline">\(SSE_{p}\)</span> of each model in order to calculate the <span class="math inline">\(MSE_{p}\)</span>
 (or equivalently, the <span class="math inline">\(S^{2}_{p}\)</span>).</p></li>
-<li><p>We can then create the column, <span class="math inline">\(p\)</span>, that counts the number of variables included in the model
+<li><p>We can then create the column, <span class="math inline">\(p\)</span>, that counts the number of predictors included in the model
 (including the intercept). This involves some code that is a bit more complicated, but it is
 essentially summing the number of <code>TRUE</code>s appearing in each row (i.e. we are performing a
 horizontal sum rather than the usual vertical sum).</p></li>
@@ -310,7 +310,7 @@ horizontal sum rather than the usual vertical sum).</p></li>
 ##         BIC = bic, mallows_cp = cp))
 ##     bind_cols(inclusions, metrics)
 ## }
-## &lt;bytecode: 0x0000000030390cb0&gt;
+## &lt;bytecode: 0x0000000031193358&gt;
 ## &lt;environment: namespace:broom&gt;</code></pre>
 <p>Consulting the documentation of <code>?leaps::regsubsets()</code>, we can create a custom function that also
 includes the SSE of each model.</p>
@@ -493,7 +493,7 @@ predictors to add to the model.</p>
 <h3>
 <span class="header-section-number">4.4.2</span> Adding a predictor, round 1<a class="anchor" aria-label="anchor" href="#adding-a-predictor-round-1"><i class="fas fa-link"></i></a>
 </h3>
-<p>Note that we can perform the partial <span class="math inline">\(F\)</span>-tests of single variable additions using the usual method
+<p>Note that we can perform the partial <span class="math inline">\(F\)</span>-tests of single predictor additions using the usual method
 of building the candidate model and then calling <code><a href="https://rdrr.io/r/stats/anova.html">anova()</a></code> on the reduced and full models.</p>
 <div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">step2a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">body_mass</span> <span class="op">~</span> <span class="va">bill_depth</span> <span class="op">+</span> <span class="va">bill_length</span>, data<span class="op">=</span><span class="va">adeliebiscoe</span><span class="op">)</span>
@@ -521,7 +521,7 @@ of building the candidate model and then calling <code><a href="https://rdrr.io/
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>This can become a lot of work at each step and can become tedious if there are many predictors to
-consider at each step. Instead, we can perform the partial <span class="math inline">\(F\)</span>-tests of single variable additions
+consider at each step. Instead, we can perform the partial <span class="math inline">\(F\)</span>-tests of single predictor additions
 using the <code><a href="https://rdrr.io/r/stats/add1.html">add1()</a></code> function.</p>
 <div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/add1.html">add1</a></span><span class="op">(</span><span class="va">step1</span>, <span class="op">~</span> <span class="va">.</span> <span class="op">+</span> <span class="va">bill_length</span> <span class="op">+</span> <span class="va">flipper_length</span>, test<span class="op">=</span><span class="st">"F"</span><span class="op">)</span></code></pre></div>
@@ -568,7 +568,7 @@ single term deletions, which is <code><a href="https://rdrr.io/r/stats/add1.html
 ## bill_length  1   1538118 5885163 523.37  14.507 0.0004594 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<p>The first argument to <code><a href="https://rdrr.io/r/stats/add1.html">drop1()</a></code> is the model from which we are considering dropping variables from.
+<p>The first argument to <code><a href="https://rdrr.io/r/stats/add1.html">drop1()</a></code> is the model from which we are considering dropping predictors from.
 The second argument is the scope (similar to <code><a href="https://rdrr.io/r/stats/add1.html">add1()</a></code>), where we list all predictors (using formula
 syntax) that are eligible to be dropped from the main model. Here, all predictors currently in the
 model under consideration are eligible to be dropped.</p>
@@ -714,7 +714,8 @@ which is abundant in variables.</p>
 </h3>
 <p>For this example, we will only keep a subset of the variables for the sake of brevity. In addition,
 some of the variables that should be of type numeric were read in as strings due to the presence
-of the string <code>"NULL"</code> (note that the string <code>"NULL"</code> is not the same as <code>NA</code>). For example:</p>
+of the string <code>"NULL"</code> (note that the string <code>"NULL"</code> is not the same as <code>NULL</code>, which is also not
+the same as <code>NA</code>). For example:</p>
 <div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scoobydoo</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">jinkies</span><span class="op">)</span></code></pre></div>
@@ -1069,7 +1070,7 @@ sake of brevity).</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on November 17, 2021.</p>
+    <p>"<strong>Stat 3553: Regression Modelling</strong>: Fall 2021" was written by Adam Shen. It was last built on November 18, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

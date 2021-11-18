@@ -198,7 +198,7 @@ to obtain the required diagnostic information (including Mallows' $C_{p}$) as a 
 a custom function since we also want the $SSE_{p}$ of each model in order to calculate the $MSE_{p}$
 (or equivalently, the $S^{2}_{p}$).
 
-3. We can then create the column, $p$, that counts the number of variables included in the model
+3. We can then create the column, $p$, that counts the number of predictors included in the model
 (including the intercept). This involves some code that is a bit more complicated, but it is
 essentially summing the number of `TRUE`s appearing in each row (i.e. we are performing a
 horizontal sum rather than the usual vertical sum).
@@ -377,7 +377,7 @@ predictors to add to the model.
 
 ### Adding a predictor, round 1
 
-Note that we can perform the partial $F$-tests of single variable additions using the usual method
+Note that we can perform the partial $F$-tests of single predictor additions using the usual method
 of building the candidate model and then calling `anova()` on the reduced and full models.
 
 ```{r}
@@ -389,7 +389,7 @@ anova(step1, step2b)
 ```
 
 This can become a lot of work at each step and can become tedious if there are many predictors to
-consider at each step. Instead, we can perform the partial $F$-tests of single variable additions
+consider at each step. Instead, we can perform the partial $F$-tests of single predictor additions
 using the `add1()` function.
 
 ```{r}
@@ -424,7 +424,7 @@ single term deletions, which is `drop1()`.
 drop1(step2, ~ ., test="F")
 ```
 
-The first argument to `drop1()` is the model from which we are considering dropping variables from.
+The first argument to `drop1()` is the model from which we are considering dropping predictors from.
 The second argument is the scope (similar to `add1()`), where we list all predictors (using formula
 syntax) that are eligible to be dropped from the main model. Here, all predictors currently in the
 model under consideration are eligible to be dropped.
@@ -515,7 +515,8 @@ names(scoobydoo)
 
 For this example, we will only keep a subset of the variables for the sake of brevity. In addition,
 some of the variables that should be of type numeric were read in as strings due to the presence
-of the string `"NULL"` (note that the string `"NULL"` is not the same as `NA`). For example:
+of the string `"NULL"` (note that the string `"NULL"` is not the same as `NULL`, which is also not
+the same as `NA`). For example:
 
 ```{r}
 scoobydoo %>%
