@@ -355,7 +355,7 @@ For the following, we will use:
 ### Building the base model
 
 We are interested in performing stepwise selection using `body_mass` as the response. As recommended
-in the lecture notes, we commence the model building process by including the variable that is most
+in the lecture notes, we commence the model building process by including the predictor that is most
 correlated to `body_mass`.
 
 ```{r}
@@ -396,16 +396,17 @@ using the `add1()` function.
 add1(step1, ~ . + bill_length + flipper_length, test="F")
 ```
 
-The second argument to `add1()` is the scope, where we list all predictors (using formula syntax)
-that are eligible to be added to the main model. Notice that the results of the partial $F$-tests
-are identical to when we had constructed the models individually before (`step2a` and `step2b`).
+The first argument to `add1()` is the base model which we are considering adding predictors to. The
+second argument is the scope, where we list all predictors (using formula syntax) that are eligible
+to be added to the main model. Notice that the results of the partial $F$-tests are identical to
+the previous results when we had constructed the models individually (`step2a` and `step2b`).
 
-The variable that gets added to our model is the one with the highest $F$-value. Since each of these
-$F$-values have the same numerator and denominator degrees of freedom, this is also equivalent to
-adding the variable that has the smallest $p$-value associated to its partial $F$-test (so long as
-it is less than $\alpha_{\text{entry}}$). Since the $F$-test of adding `bill_length` to the base
-model results in the smallest $p$-value that is less than $\alpha_{\text{entry}}$, `bill_length`
-is added to the base model.
+The predictor that gets added to our model is the one associated to the highest $F$-value. Since
+each of these $F$-values have the same numerator and denominator degrees of freedom, this is also
+equivalent to adding the predictor that has the smallest $p$-value associated to its partial
+$F$-test (so long as it is less than $\alpha_{\text{entry}}$). Since the $F$-test of adding
+`bill_length` to the base model results in the smallest $p$-value that is less than
+$\alpha_{\text{entry}}$, `bill_length` is added to the base model.
 
 ```{r}
 step2 <- update(step1, . ~ . + bill_length)
@@ -417,24 +418,25 @@ step2 <- update(step1, . ~ . + bill_length)
 Now we check whether there are any predictors that can be dropped. As before, we can construct
 multiple models that differ by single term deletions and perform the partial $F$-tests by
 calling `anova()` on the reduced and full models. We can also use the equivalent of `add1()` for
-single term deletions, `drop1()`.
+single term deletions, which is `drop1()`.
 
 ```{r}
 drop1(step2, ~ ., test="F")
 ```
 
-The second argument to `drop1()` is the scope (similar to `add1()`), where we list all predictors
-(using formula syntax) that are eligible to be dropped from the main model. Here, all predictors
-currently in the model are eligible to be dropped.
+The first argument to `drop1()` is the model from which we are considering dropping variables from.
+The second argument is the scope (similar to `add1()`), where we list all predictors (using formula
+syntax) that are eligible to be dropped from the main model. Here, all predictors currently in the
+model under consideration are eligible to be dropped.
 
-Recall the hypotheses associated to dropping a single variable:
+Recall that the hypotheses associated to dropping a single predictor are:
 
 \[H_{0}: \beta_{1} = 0, \quad H_{A}: \beta_{1} \neq 0\]
 \[H_{0}: \beta_{2} = 0, \quad H_{A}: \beta_{2} \neq 0\]
 
-For a variable to be dropped from the model, we need to fail to reject the null hypothesis. So we
+For a predictor to be dropped from the model, we need to fail to reject the null hypothesis. So we
 are looking for small $F$-values, or equivalently, large $p$-values that are greater than
-$\alpha_{\text{exit}}$. Since we do not have any here, we do not drop any of the predictors in the
+$\alpha_{\text{exit}}$. Since we do not have any here, we do not drop any of the predictors from the
 current model.
 
 
@@ -484,10 +486,10 @@ adjusted R-squared from 0.6246 to 0.9905.
 
 In backward selection, we start with the full model and at each step, consider dropping predictors.
 As we had seen for the Adelie Biscoe data, performing the $F$-test for single term deletions on the
-model that contained all predictors, none were eligible for dropping. For this example, let us
-consider the 
+model that contained all predictors, none were eligible for dropping. Therefore, for this example,
+let us consider another data set &mdash; the
 [Scooby Doo data set](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-07-13/readme.md),
-which has many variables.
+which is abundant in variables.
 
 ```{r, eval=FALSE}
 scoobydoo <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-13/scoobydoo.csv")
@@ -512,8 +514,8 @@ names(scoobydoo)
 ### Data prep
 
 For this example, we will only keep a subset of the variables for the sake of brevity. In addition,
-some of the variables that should be of type numeric were read in as a strings due to the presence
-of the string `"NULL"` (note that the string `"NULL"` is not the same as `NA`).
+some of the variables that should be of type numeric were read in as strings due to the presence
+of the string `"NULL"` (note that the string `"NULL"` is not the same as `NA`). For example:
 
 ```{r}
 scoobydoo %>%
@@ -535,7 +537,7 @@ scoobydoo <- scoobydoo %>%
 
 In the line containing `filter()`, we are filtering over all character-type columns to only retain
 episodes that do not contain any `"NULL"` values. Specifying the filtering condition this way
-allows us to do less typing. Otherwise we would need to type out all the variables of interest:
+allows us to do less typing. Otherwise, we would need to type out all the variables of interest:
 
 ```{r, eval=FALSE}
 filter(imdb != "NULL", jeepers != "NULL", jinkies != "NULL", etc.)
@@ -556,7 +558,7 @@ Previewing our data:
 scoobydoo
 ```
 
-Now we are ready to start building models. We are interested in a creating a model that predicts
+Now we are ready to start building models. We are interested in creating a model that predicts
 the IMDB rating. As we are performing backward selection, we start with the model containing all
 predictors. For the following example, we will use $\alpha_{\text{exit}} = 0.05$.
 
@@ -576,7 +578,7 @@ drop1(back1, ~ ., test="F")
 Remember that when we are dropping predictors, in the related hypothesis test, we want to fail to
 reject the null hypothesis. Therefore we are looking for $p$-values that are greater than
 $\alpha_{\text{exit}} = 0.05$. From the output above, there are many predictors that are eligible to
-be dropped. Therefore, we look for the predictor corresponding to the largest $p$-value greater than
+be dropped. Therefore, we select the predictor corresponding to the largest $p$-value greater than
 $\alpha_{\text{exit}} = 0.05$. This is `culprit_amount` with a $p$-value of 0.643.
 
 ```{r}

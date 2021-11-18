@@ -310,7 +310,7 @@ horizontal sum rather than the usual vertical sum).</p></li>
 ##         BIC = bic, mallows_cp = cp))
 ##     bind_cols(inclusions, metrics)
 ## }
-## &lt;bytecode: 0x00000000311960a0&gt;
+## &lt;bytecode: 0x0000000030390cb0&gt;
 ## &lt;environment: namespace:broom&gt;</code></pre>
 <p>Consulting the documentation of <code>?leaps::regsubsets()</code>, we can create a custom function that also
 includes the SSE of each model.</p>
@@ -453,7 +453,7 @@ penguins of species Adelie from the island Biscoe.</p>
 <span class="header-section-number">4.4.1</span> Building the base model<a class="anchor" aria-label="anchor" href="#building-the-base-model"><i class="fas fa-link"></i></a>
 </h3>
 <p>We are interested in performing stepwise selection using <code>body_mass</code> as the response. As recommended
-in the lecture notes, we commence the model building process by including the variable that is most
+in the lecture notes, we commence the model building process by including the predictor that is most
 correlated to <code>body_mass</code>.</p>
 <div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">adeliebiscoe</span><span class="op">)</span></code></pre></div>
@@ -535,15 +535,16 @@ using the <code><a href="https://rdrr.io/r/stats/add1.html">add1()</a></code> fu
 ## flipper_length  1   1341736 4543427 513.98  12.108 0.0012047 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<p>The second argument to <code><a href="https://rdrr.io/r/stats/add1.html">add1()</a></code> is the scope, where we list all predictors (using formula syntax)
-that are eligible to be added to the main model. Notice that the results of the partial <span class="math inline">\(F\)</span>-tests
-are identical to when we had constructed the models individually before (<code>step2a</code> and <code>step2b</code>).</p>
-<p>The variable that gets added to our model is the one with the highest <span class="math inline">\(F\)</span>-value. Since each of these
-<span class="math inline">\(F\)</span>-values have the same numerator and denominator degrees of freedom, this is also equivalent to
-adding the variable that has the smallest <span class="math inline">\(p\)</span>-value associated to its partial <span class="math inline">\(F\)</span>-test (so long as
-it is less than <span class="math inline">\(\alpha_{\text{entry}}\)</span>). Since the <span class="math inline">\(F\)</span>-test of adding <code>bill_length</code> to the base
-model results in the smallest <span class="math inline">\(p\)</span>-value that is less than <span class="math inline">\(\alpha_{\text{entry}}\)</span>, <code>bill_length</code>
-is added to the base model.</p>
+<p>The first argument to <code><a href="https://rdrr.io/r/stats/add1.html">add1()</a></code> is the base model which we are considering adding predictors to. The
+second argument is the scope, where we list all predictors (using formula syntax) that are eligible
+to be added to the main model. Notice that the results of the partial <span class="math inline">\(F\)</span>-tests are identical to
+the previous results when we had constructed the models individually (<code>step2a</code> and <code>step2b</code>).</p>
+<p>The predictor that gets added to our model is the one associated to the highest <span class="math inline">\(F\)</span>-value. Since
+each of these <span class="math inline">\(F\)</span>-values have the same numerator and denominator degrees of freedom, this is also
+equivalent to adding the predictor that has the smallest <span class="math inline">\(p\)</span>-value associated to its partial
+<span class="math inline">\(F\)</span>-test (so long as it is less than <span class="math inline">\(\alpha_{\text{entry}}\)</span>). Since the <span class="math inline">\(F\)</span>-test of adding
+<code>bill_length</code> to the base model results in the smallest <span class="math inline">\(p\)</span>-value that is less than
+<span class="math inline">\(\alpha_{\text{entry}}\)</span>, <code>bill_length</code> is added to the base model.</p>
 <div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">step2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span><span class="op">(</span><span class="va">step1</span>, <span class="va">.</span> <span class="op">~</span> <span class="va">.</span> <span class="op">+</span> <span class="va">bill_length</span><span class="op">)</span></code></pre></div>
 </div>
@@ -554,7 +555,7 @@ is added to the base model.</p>
 <p>Now we check whether there are any predictors that can be dropped. As before, we can construct
 multiple models that differ by single term deletions and perform the partial <span class="math inline">\(F\)</span>-tests by
 calling <code><a href="https://rdrr.io/r/stats/anova.html">anova()</a></code> on the reduced and full models. We can also use the equivalent of <code><a href="https://rdrr.io/r/stats/add1.html">add1()</a></code> for
-single term deletions, <code><a href="https://rdrr.io/r/stats/add1.html">drop1()</a></code>.</p>
+single term deletions, which is <code><a href="https://rdrr.io/r/stats/add1.html">drop1()</a></code>.</p>
 <div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/add1.html">drop1</a></span><span class="op">(</span><span class="va">step2</span>, <span class="op">~</span> <span class="va">.</span>, test<span class="op">=</span><span class="st">"F"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Single term deletions
@@ -567,15 +568,16 @@ single term deletions, <code><a href="https://rdrr.io/r/stats/add1.html">drop1()
 ## bill_length  1   1538118 5885163 523.37  14.507 0.0004594 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<p>The second argument to <code><a href="https://rdrr.io/r/stats/add1.html">drop1()</a></code> is the scope (similar to <code><a href="https://rdrr.io/r/stats/add1.html">add1()</a></code>), where we list all predictors
-(using formula syntax) that are eligible to be dropped from the main model. Here, all predictors
-currently in the model are eligible to be dropped.</p>
-<p>Recall the hypotheses associated to dropping a single variable:</p>
+<p>The first argument to <code><a href="https://rdrr.io/r/stats/add1.html">drop1()</a></code> is the model from which we are considering dropping variables from.
+The second argument is the scope (similar to <code><a href="https://rdrr.io/r/stats/add1.html">add1()</a></code>), where we list all predictors (using formula
+syntax) that are eligible to be dropped from the main model. Here, all predictors currently in the
+model under consideration are eligible to be dropped.</p>
+<p>Recall that the hypotheses associated to dropping a single predictor are:</p>
 <p><span class="math display">\[H_{0}: \beta_{1} = 0, \quad H_{A}: \beta_{1} \neq 0\]</span>
 <span class="math display">\[H_{0}: \beta_{2} = 0, \quad H_{A}: \beta_{2} \neq 0\]</span></p>
-<p>For a variable to be dropped from the model, we need to fail to reject the null hypothesis. So we
+<p>For a predictor to be dropped from the model, we need to fail to reject the null hypothesis. So we
 are looking for small <span class="math inline">\(F\)</span>-values, or equivalently, large <span class="math inline">\(p\)</span>-values that are greater than
-<span class="math inline">\(\alpha_{\text{exit}}\)</span>. Since we do not have any here, we do not drop any of the predictors in the
+<span class="math inline">\(\alpha_{\text{exit}}\)</span>. Since we do not have any here, we do not drop any of the predictors from the
 current model.</p>
 </div>
 <div id="adding-a-predictor-round-2" class="section level3" number="4.4.4">
@@ -660,10 +662,10 @@ adjusted R-squared from 0.6246 to 0.9905.</p>
 </h2>
 <p>In backward selection, we start with the full model and at each step, consider dropping predictors.
 As we had seen for the Adelie Biscoe data, performing the <span class="math inline">\(F\)</span>-test for single term deletions on the
-model that contained all predictors, none were eligible for dropping. For this example, let us
-consider the
+model that contained all predictors, none were eligible for dropping. Therefore, for this example,
+let us consider another data set — the
 <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-07-13/readme.md">Scooby Doo data set</a>,
-which has many variables.</p>
+which is abundant in variables.</p>
 <div class="sourceCode" id="cb268"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scoobydoo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-13/scoobydoo.csv"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
@@ -711,8 +713,8 @@ which has many variables.</p>
 <span class="header-section-number">4.5.1</span> Data prep<a class="anchor" aria-label="anchor" href="#data-prep"><i class="fas fa-link"></i></a>
 </h3>
 <p>For this example, we will only keep a subset of the variables for the sake of brevity. In addition,
-some of the variables that should be of type numeric were read in as a strings due to the presence
-of the string <code>"NULL"</code> (note that the string <code>"NULL"</code> is not the same as <code>NA</code>).</p>
+some of the variables that should be of type numeric were read in as strings due to the presence
+of the string <code>"NULL"</code> (note that the string <code>"NULL"</code> is not the same as <code>NA</code>). For example:</p>
 <div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scoobydoo</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">jinkies</span><span class="op">)</span></code></pre></div>
@@ -746,7 +748,7 @@ coerce the remaining values to numeric.</p>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu">where</span><span class="op">(</span><span class="va">is.character</span><span class="op">)</span>, <span class="va">as.numeric</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>In the line containing <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>, we are filtering over all character-type columns to only retain
 episodes that do not contain any <code>"NULL"</code> values. Specifying the filtering condition this way
-allows us to do less typing. Otherwise we would need to type out all the variables of interest:</p>
+allows us to do less typing. Otherwise, we would need to type out all the variables of interest:</p>
 <div class="sourceCode" id="cb273"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">imdb</span> <span class="op">!=</span> <span class="st">"NULL"</span>, <span class="va">jeepers</span> <span class="op">!=</span> <span class="st">"NULL"</span>, <span class="va">jinkies</span> <span class="op">!=</span> <span class="st">"NULL"</span>, <span class="va">etc.</span><span class="op">)</span></code></pre></div>
 <p>Note that the portion <code>~ . != "NULL"</code> is a lambda function / anonymous function, not a mathematical
@@ -773,7 +775,7 @@ formula, and is the short-hand equivalent to:</p>
 ## </span><span style="color: #555555;">10</span><span>   8          346       21              1               1              1       0       0          0      0
 ## </span><span style="color: #555555;"># ... with 359 more rows</span><span>
 </span></code></pre>
-<p>Now we are ready to start building models. We are interested in a creating a model that predicts
+<p>Now we are ready to start building models. We are interested in creating a model that predicts
 the IMDB rating. As we are performing backward selection, we start with the model containing all
 predictors. For the following example, we will use <span class="math inline">\(\alpha_{\text{exit}} = 0.05\)</span>.</p>
 <div class="sourceCode" id="cb276"><pre class="downlit sourceCode r">
@@ -834,7 +836,7 @@ predictors. For the following example, we will use <span class="math inline">\(\
 <p>Remember that when we are dropping predictors, in the related hypothesis test, we want to fail to
 reject the null hypothesis. Therefore we are looking for <span class="math inline">\(p\)</span>-values that are greater than
 <span class="math inline">\(\alpha_{\text{exit}} = 0.05\)</span>. From the output above, there are many predictors that are eligible to
-be dropped. Therefore, we look for the predictor corresponding to the largest <span class="math inline">\(p\)</span>-value greater than
+be dropped. Therefore, we select the predictor corresponding to the largest <span class="math inline">\(p\)</span>-value greater than
 <span class="math inline">\(\alpha_{\text{exit}} = 0.05\)</span>. This is <code>culprit_amount</code> with a <span class="math inline">\(p\)</span>-value of 0.643.</p>
 <div class="sourceCode" id="cb280"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">back2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span><span class="op">(</span><span class="va">back1</span>, <span class="va">.</span> <span class="op">~</span> <span class="va">.</span> <span class="op">-</span> <span class="va">culprit_amount</span><span class="op">)</span></code></pre></div>
