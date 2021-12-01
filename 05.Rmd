@@ -30,7 +30,7 @@ iteratively reweighted least squares (IRWLS).
 
 Consider the data below, that is similar to Table 12.3 in the handout, but with the number of
 responses in the first experiment changed from 0 to 2. Note that the code in the `logitfit1` file
-uses a value of 0.0001 rather than 0 to prevent the resulting model deviance from being `NaN`.
+uses a value of 0.0001 rather than 0 to prevent its resulting model deviance from being `NaN`.
 
 | Current (mA) | Trials | Responses | Proportion of Responses |
 |:------------:|:------:|:---------:|:-----------------------:|
@@ -147,17 +147,39 @@ ggplot(data=NULL, aes(x=current))+
 
 ### Analysis of deviance
 
-to do: deviance, log-likelihoods, degrees of freedom, test statistic
+The analogue of the residual sum of squares for GLMs is the deviance. We can compute the deviance
+of a GLM by passing our GLM into the deviance function.
 
-```{r, eval=FALSE}
+```{r}
 deviance(full_model)
+```
 
-anova(full_model, test="Chisq")
+Similar to the residual sum of squares in OLS, the deviance has degrees of freedom $n - p - 1$,
+where $n$ is the number of observations, and $p$ is the number of non-intercept parameters in the
+model.
 
+We can perform a test for model usefulness, i.e.
+
+\[H_{0}: \beta_{1} = 0, \quad H_{A}: \beta_{1} \neq 0\]
+
+by computing the difference in the deviance of the reduced model (with degrees of freedom
+$n - q - 1$) with the deviance of the full model (with degrees of freedom $n - p - 1$). Then the
+test statistic is
+
+\[G^{2} \,=\, \mathcal{D}_{\text{reduced}} \,-\, \mathcal{D}_{\text{full}}\]
+
+which has a chi-square distribution on $p - q$ degrees of freedom.
+
+Similar to OLS, we can pass our reduced and full GLMs into the `anova()` function, with the
+additional specification of `test="Chisq"`.
+
+```{r}
 reduced_model <- update(full_model, . ~ 1)
 
 anova(reduced_model, full_model, test="Chisq")
 ```
 
-
+The test statistic has a value of 228.68, and follows a chi-square distribution on 1 degree of
+freedom. As the $p$-value is less than 0.05, we can reject the null hypothesis and conclude
+that the full model is an improvement over the reduced model.
 
