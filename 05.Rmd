@@ -124,10 +124,9 @@ predict(full_model, type="response")
 
 ### Visualising the fit
 
-Visualising the fit of a logistic regression model is slightly different from visualising the
-fit of an OLS model. Unlike with straight line fits where we can just connect the dots and it would
-result in a straight line, here, we need to draw the predicted curve with a sufficient number of
-points to get as close as possible to the true shape of the predicted curve.
+Since our data is quite small, unlike with straight line fits where we can just proceed to connect
+the dots and still obtain a straight line, here, we need to supplement our data with a sufficient
+number of grid points to get as close as possible to the true shape of the predicted curve.
 
 ```{r}
 fitted_vals <- full_model %>%
@@ -148,7 +147,11 @@ ggplot(data=NULL, aes(x=current))+
 
 ### Analysis of deviance
 
-```{r}
+to do: deviance, log-likelihoods, degrees of freedom, test statistic
+
+```{r, eval=FALSE}
+deviance(full_model)
+
 anova(full_model, test="Chisq")
 
 reduced_model <- update(full_model, . ~ 1)
