@@ -125,9 +125,9 @@ predict(full_model, type="response")
 ### Visualising the fit
 
 Visualising the fit of a logistic regression model is slightly different from visualising the
-fit of an OLS model. Unlike with straight line fits where we can just connect the dots, we need
-to draw the "true" curve with a sufficient number of points to get as close as possible to the
-true shape of the curve.
+fit of an OLS model. Unlike with straight line fits where we can just connect the dots and it would
+result in a straight line, here, we need to draw the predicted curve with a sufficient number of
+points to get as close as possible to the true shape of the predicted curve.
 
 ```{r}
 fitted_vals <- full_model %>%
