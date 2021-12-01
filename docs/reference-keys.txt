@@ -112,3 +112,11 @@ dropping-a-predictor-round-4
 dropping-a-predictor-round-5
 dropping-a-predictor-round-6
 the-final-model-1
+lab-9-december-1
+packages-2
+logistic-regression-with-binomial-n-1-data
+shocking-some-cows
+fitting-the-model
+obtaining-the-predicted-probabilities
+visualising-the-fit-1
+analysis-of-deviance

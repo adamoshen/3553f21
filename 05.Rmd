@@ -1,0 +1,160 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  echo=TRUE, message=FALSE, warning=FALSE, fig.align="center", dev="svglite"
+)
+
+old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
+options(crayon.enabled=TRUE)
+```
+
+# Lab 9 &mdash; December 1
+
+## Packages
+
+```{r}
+library(tibble)
+library(dplyr)
+library(ggplot2)
+theme_set(theme_bw())
+```
+
+
+## Logistic regression with binomial ($n > 1$) data
+
+**Note**: For your assignment, you should use the code provided in the `logitfit1` file on
+Brightspace. However, the code and output shown below are equivalent and also fitted via
+iteratively reweighted least squares (IRWLS).
+
+
+### Shocking some cows
+
+Consider the data below, that is similar to Table 12.3 in the handout, but with the number of
+responses in the first experiment changed from 0 to 2. Note that the code in the `logitfit1` file
+uses a value of 0.0001 rather than 0 to prevent the resulting model deviance from being `NaN`.
+
+| Current (mA) | Trials | Responses | Proportion of Responses |
+|:------------:|:------:|:---------:|:-----------------------:|
+| 0            | 70     | 2         | 0.029                   |
+| 1            | 70     | 9         | 0.129                   |
+| 2            | 70     | 21        | 0.300                   |
+| 3            | 70     | 47        | 0.671                   |
+| 4            | 70     | 60        | 0.857                   |
+| 5            | 70     | 63        | 0.900                   |
+
+For the $i^{\text{th}}$ experiment:
+
+- $x_{i}$ is the amount of current applied
+- $n_{i}$ is the number of trials
+- $y_{i}$ is the number of responses
+- $n_{i} - y_{i}$ is the number of no-responses
+- $y_{i} / n_{i}$ is the proportion of responses
+
+We wish to fit the model:
+
+\[E\left(\frac{y_{i}}{n_{i}}\right) \,=\, \theta_{i} \,=\, \frac{\exp{(\beta_{0} + \beta_{1}x)}}
+{1 + \exp{(\beta_{0} + \beta_{1}x)}}\]
+
+Inputting the data into R:
+
+```{r}
+cows <- tibble(
+  current = 0:5,
+  trials = rep(70, 6),
+  responses = c(2, 9, 21, 47, 60, 63),
+  proportion = responses / trials
+)
+
+cows
+```
+
+
+### Fitting the model
+
+When fitting the model, we represent the dependent variable as a matrix of successes and failures.
+As such the representation of our dependent variable will look like:
+
+```{r}
+with(cows, cbind(responses, no_responses = trials - responses))
+```
+
+Fitting the model now:
+
+```{r}
+full_model <- glm(cbind(responses, trials - responses) ~ current, family=binomial, data=cows)
+```
+
+Note that in the `family` argument, we specify `binomial` but we do not need to wrap it in quotes
+as it is a special object.
+
+```{r}
+summary(full_model)
+```
+
+This gives us the fitted equation on the predictor scale (log-odds):
+
+\[\widehat{\eta}_{i} \,=\, \widehat{\beta}_{0} + \widehat{\beta}_{1}X_{i} \,=\, -3.1020 + 1.1837X_{i}\]
+
+To transform it onto the response scale (probabilities), we use the relationship that:
+
+\[\widehat{\eta}_{i} \,=\, g(\widehat{\theta}_{i}) \,=\, \log{\left(\frac{\widehat{\theta}_{i}}{1 - \widehat{\theta}_{i}}\right)}\]
+
+thus,
+
+\[\widehat{\theta}_{i} \,=\, g^{-1}(\widehat{\eta}_{i}) \,=\, \frac{\exp{(\widehat{\eta}_{i})}}{1 + \exp{(\widehat{\eta}_{i})}}\]
+
+
+### Obtaining the predicted probabilities
+
+As with the OLS linear models, we can pass a GLM into the `predict()` function which will then
+call `predict.glm()`.
+
+```{r}
+predict(full_model)
+```
+
+However, notice that that some of these values are outside of $[0,1]$! This is because these are
+the predicted values on the predictor scale (log-odds). If we want the predicted values on the
+response scale (probabilities), from the documentation (`?predict.glm`), we need to specify that
+`type="response"`.
+
+```{r}
+predict(full_model, type="response")
+```
+
+
+### Visualising the fit
+
+Visualising the fit of a logistic regression model is slightly different from visualising the
+fit of an OLS model. Unlike with straight line fits where we can just connect the dots, we need
+to draw the "true" curve with a sufficient number of points to get as close as possible to the
+true shape of the curve.
+
+```{r}
+fitted_vals <- full_model %>%
+  predict(newdata = tibble(current=seq(0, 5, 0.01)), type="response") %>%
+  as_tibble_col(column_name=".fitted") %>%
+  add_column(current=seq(0, 5, 0.01), .before=".fitted")
+
+fitted_vals
+```
+
+```{r}
+ggplot(data=NULL, aes(x=current))+
+  geom_point(data=cows, aes(y=proportion))+
+  geom_line(data=fitted_vals, aes(y=.fitted), colour="#3366FF", lwd=1.5, alpha=0.6)+
+  labs(x="Current (mA)", y="Proportion of responses to electric shock")
+```
+
+
+### Analysis of deviance
+
+```{r}
+anova(full_model, test="Chisq")
+
+reduced_model <- update(full_model, . ~ 1)
+
+anova(reduced_model, full_model, test="Chisq")
+```
+
+
+
